@@ -1,189 +1,286 @@
 /**
  * =========================================================================
- * certificateInfo - IPA 資格情報 更新監視 & Slack通知スクリプト (GAS版)
+ * certificateInfo - 主要認定機関 資格情報更新監視 & Slack通知スクリプト (GAS版)
  * =========================================================================
+ * 
+ * 【対応認定機関】
+ * 1. IPA（情報処理推進機構）
+ * 2. Amazon Web Services (AWS)
+ * 3. Microsoft（Learn Catalog API）
+ * 4. LPI & LPI-Japan (Linux / OSS)
  * 
  * 【設定手順】
  * 1. スプレッドシートのメニュー「拡張機能」>「Apps Script」を開きます。
- * 2. このコードをそのままエディタ（Code.gs）に貼り付けます。
- * 3. プロジェクトの設定（歯車アイコン）>「スクリプト プロパティ」に以下を追加します：
+ * 2. このコードをエディタに貼り付けて保存します。
+ * 3. プロジェクト設定（歯車アイコン）>「スクリプト プロパティ」に以下を設定します：
  *    - キー: SLACK_WEBHOOK_URL
  *    - 値: CW-Consulting の Slack Incoming Webhook URL
- * 4. 左メニューの「トリガー（時計アイコン）」を開き、checkIpaUpdates を「時間主導型」で毎日（例: 9時〜10時）定期実行するように設定します。
+ * 4. 左メニュー「トリガー（時計アイコン）」から、checkAllCertificateUpdates を時間主導型で定期実行（例: 毎日午前9時）設定します。
  */
 
-const IPA_NEWS_URL = 'https://www.ipa.go.jp/shiken/index.html';
-const BASE_URL = 'https://www.ipa.go.jp';
-
-// 監視対象資格一覧
-const IPA_QUALIFICATIONS = [
-  { no: 1, name: '基本情報技術者試験', aliases: ['基本情報', 'FE'] },
-  { no: 2, name: '応用情報技術者試験(旧:ソフトウェア開発技術者試験)', aliases: ['応用情報', 'AP'] },
-  { no: 3, name: 'ネットワークスペシャリスト試験', aliases: ['ネットワークスペシャリスト', 'NW'] },
-  { no: 4, name: 'データベーススペシャリスト試験', aliases: ['データベーススペシャリスト', 'DB'] },
-  { no: 5, name: 'エンベデッドシステムスペシャリスト試験', aliases: ['エンベデッドシステムスペシャリスト', 'エンべデッド', 'ES'] },
-  { no: 6, name: 'ITサービスマネージャ試験', aliases: ['ITサービスマネージャ', 'SM'] },
-  { no: 7, name: '情報処理安全確保支援士試験', aliases: ['情報処理安全確保支援士', '登録情報セキュリティスペシャリスト', '支援士', 'RISS'] },
-  { no: 8, name: 'システムアーキテクト試験', aliases: ['システムアーキテクト', 'SA'] },
-  { no: 9, name: 'ITストラテジスト試験', aliases: ['ITストラテジスト', 'ST'] },
-  { no: 10, name: 'プロジェクトマネージャ試験', aliases: ['プロジェクトマネージャ', 'PM'] },
-  { no: 11, name: 'システム監査技術者試験', aliases: ['システム監査技術者', 'AU'] },
-  { no: 12, name: 'ITパスポート試験', aliases: ['ITパスポート', 'iパス', 'IP'] },
-  { no: 13, name: '情報セキュリティマネジメント試験', aliases: ['情報セキュリティマネジメント', 'セキュマネ', 'SG'] },
-];
+const ENDPOINTS = {
+  IPA: 'https://www.ipa.go.jp/shiken/index.html',
+  AWS: 'https://aws.amazon.com/jp/blogs/training-and-certification/feed/',
+  AWS_EN: 'https://aws.amazon.com/blogs/training-and-certification/feed/',
+  MICROSOFT: 'https://learn.microsoft.com/api/catalog/',
+  LPI: 'https://www.lpi.org/feed/',
+  LINUC: 'https://linuc.org/news/'
+};
 
 /**
- * 定期実行エントリポイント
+ * 定期実行メイン関数
  */
-function checkIpaUpdates() {
-  console.log('IPA試験情報の更新チェックを開始します...');
-
-  // 1. IPA試験情報トップページを取得
-  const response = UrlFetchApp.fetch(IPA_NEWS_URL, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; certificateInfo-GAS-bot/1.0)',
-      'Accept-Language': 'ja'
-    },
-    muteHttpExceptions: true
-  });
-
-  if (response.getResponseCode() !== 200) {
-    console.error(`IPAサイトへのアクセスに失敗しました: HTTP ${response.getResponseCode()}`);
-    return;
-  }
-
-  const html = response.getContentText('UTF-8');
-  const currentItems = parseIpaNews(html);
-  console.log(`取得成功: ${currentItems.length} 件`);
-
-  // 2. 前回の保存済みURLリストを取得
+function checkAllCertificateUpdates() {
+  console.log('=== 資格情報更新チェック開始 ===');
   const properties = PropertiesService.getScriptProperties();
-  const savedUrlsRaw = properties.getProperty('IPA_SAVED_URLS');
-  const savedUrls = savedUrlsRaw ? JSON.parse(savedUrlsRaw) : [];
-
-  if (savedUrls.length === 0) {
-    // 初回実行時は現在のURLを保存して終了
-    console.log('初回実行のため、現在のURLをベースラインとして保存します。');
-    const urlsToSave = currentItems.map(i => i.url);
-    properties.setProperty('IPA_SAVED_URLS', JSON.stringify(urlsToSave));
-    return;
-  }
-
-  // 3. 差分検知
-  const savedSet = new Set(savedUrls);
-  const diffs = currentItems.filter(item => !savedSet.has(item.url));
-
-  if (diffs.length === 0) {
-    console.log('新着・更新情報はありませんでした。');
-    return;
-  }
-
-  console.log(`【更新検知】 ${diffs.length} 件の新着情報を検出しました！`);
-
-  // 4. Slackへ通知
   const webhookUrl = properties.getProperty('SLACK_WEBHOOK_URL');
-  for (const diff of diffs) {
-    postToSlack(diff, webhookUrl);
+
+  // 1. IPA
+  try {
+    checkIpa(properties, webhookUrl);
+  } catch (e) {
+    console.error('IPA チェック失敗:', e.message);
   }
 
-  // 5. 状態を更新
-  const updatedUrls = currentItems.map(i => i.url);
-  properties.setProperty('IPA_SAVED_URLS', JSON.stringify(updatedUrls));
-  properties.setProperty('IPA_LAST_UPDATED', new Date().toISOString());
-  console.log('状態を更新しました。');
+  Utilities.sleep(1500);
+
+  // 2. AWS
+  try {
+    checkAws(properties, webhookUrl);
+  } catch (e) {
+    console.error('AWS チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+
+  // 3. Microsoft
+  try {
+    checkMicrosoft(properties, webhookUrl);
+  } catch (e) {
+    console.error('Microsoft チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+
+  // 4. LPI & LinuC
+  try {
+    checkLpi(properties, webhookUrl);
+  } catch (e) {
+    console.error('LPI チェック失敗:', e.message);
+  }
+
+  console.log('=== 全プロバイダーのチェック完了 ===');
 }
 
 /**
- * HTMLから新着情報をパースする
+ * IPA チェック処理
  */
-function parseIpaNews(html) {
+function checkIpa(properties, webhookUrl) {
+  const res = UrlFetchApp.fetch(ENDPOINTS.IPA, { muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) return;
+  const html = res.getContentText('UTF-8');
+
   const items = [];
-  const aRegex = /<a\s+[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-  let aMatch;
-
-  while ((aMatch = aRegex.exec(html)) !== null) {
-    const fullTag = aMatch[0];
-    const rawHref = aMatch[1];
-    const innerHtml = aMatch[2];
-
-    if (!fullTag.includes('news-list__inner')) continue;
-
-    let url = rawHref.trim();
-    if (url && !url.startsWith('http')) {
-      url = BASE_URL + (url.startsWith('/') ? '' : '/') + url;
-    }
-
-    const dateMatch = innerHtml.match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
-    const dateStr = dateMatch ? dateMatch[1].replace(/<[^>]+>/g, '').trim() : '';
-
-    const ttlMatch = innerHtml.match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
-    const title = ttlMatch ? ttlMatch[1].replace(/<[^>]+>/g, '').trim().replace(/\s+/g, ' ') : '';
-
-    if (title && url) {
-      const matchedQuals = matchQualifications(title);
+  const regex = /<a\s+[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = regex.exec(html)) !== null) {
+    if (!m[0].includes('news-list__inner')) continue;
+    let url = m[1].trim();
+    if (!url.startsWith('http')) url = 'https://www.ipa.go.jp' + (url.startsWith('/') ? '' : '/') + url;
+    const dMatch = m[2].match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
+    const tMatch = m[2].match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    if (tMatch) {
       items.push({
-        date: dateStr,
-        title: title,
-        url: url,
-        relatedQualifications: matchedQuals
+        provider: 'IPA（情報処理推進機構）',
+        date: dMatch ? dMatch[1].replace(/<[^>]+>/g, '').trim() : '',
+        title: tMatch[1].replace(/<[^>]+>/g, '').trim(),
+        url: url
       });
     }
   }
 
-  return items;
+  handleDiff('IPA', items, properties, webhookUrl, 'url');
 }
 
 /**
- * 資格名マッチング
+ * AWS チェック処理
  */
-function matchQualifications(text) {
-  const matched = [];
-  for (const q of IPA_QUALIFICATIONS) {
-    if (text.includes(q.name) || q.aliases.some(alias => text.includes(alias))) {
-      matched.push(q.name);
+function checkAws(properties, webhookUrl) {
+  let res = UrlFetchApp.fetch(ENDPOINTS.AWS, { muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) {
+    res = UrlFetchApp.fetch(ENDPOINTS.AWS_EN, { muteHttpExceptions: true });
+  }
+  if (res.getResponseCode() !== 200) return;
+  const xml = res.getContentText('UTF-8');
+
+  const items = [];
+  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+  let m;
+  while ((m = itemRegex.exec(xml)) !== null) {
+    const tMatch = m[1].match(/<title>([\s\S]*?)<\/title>/i);
+    const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
+    const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+    if (tMatch && lMatch) {
+      items.push({
+        provider: 'Amazon Web Services (AWS)',
+        title: tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
+        url: lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
+        date: dMatch ? dMatch[1].trim() : ''
+      });
     }
   }
-  if (text.includes('高度試験') && matched.length === 0) {
-    matched.push('高度試験（複数区分対象）');
-  }
-  return matched;
+
+  handleDiff('AWS', items, properties, webhookUrl, 'url');
 }
 
 /**
- * Slackへのメッセージ投稿
+ * Microsoft チェック処理
  */
-function postToSlack(item, webhookUrl) {
-  if (!webhookUrl) {
-    console.warn('SLACK_WEBHOOK_URL が設定されていないため、Slack通知をスキップしました。');
+function checkMicrosoft(properties, webhookUrl) {
+  const res = UrlFetchApp.fetch(ENDPOINTS.MICROSOFT, { muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) return;
+  const json = JSON.parse(res.getContentText('UTF-8'));
+  const certs = json.certifications || [];
+
+  const items = certs.map(c => ({
+    provider: 'Microsoft',
+    uid: c.uid,
+    title: c.title,
+    url: c.url,
+    date: c.last_modified
+  }));
+
+  handleDiff('MICROSOFT', items, properties, webhookUrl, 'uid', 'date');
+}
+
+/**
+ * LPI & LinuC チェック処理
+ */
+function checkLpi(properties, webhookUrl) {
+  const items = [];
+
+  // LPI RSS
+  try {
+    const resLpi = UrlFetchApp.fetch(ENDPOINTS.LPI, { muteHttpExceptions: true });
+    if (resLpi.getResponseCode() === 200) {
+      const xml = resLpi.getContentText('UTF-8');
+      const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+      let m;
+      while ((m = itemRegex.exec(xml)) !== null) {
+        const tMatch = m[1].match(/<title>([\s\S]*?)<\/title>/i);
+        const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
+        const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+        if (tMatch && lMatch) {
+          items.push({
+            provider: 'LPI (Linux Professional Institute)',
+            title: tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
+            url: lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
+            date: dMatch ? dMatch[1].trim() : ''
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error('LPI取得エラー:', e.message);
+  }
+
+  // LinuC News
+  try {
+    const resLinuc = UrlFetchApp.fetch(ENDPOINTS.LINUC, {
+      headers: {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+      },
+      muteHttpExceptions: true
+    });
+    if (resLinuc.getResponseCode() === 200) {
+      const html = resLinuc.getContentText('UTF-8');
+      const regex = /<li class="app-news-item">([\s\S]*?)<\/li>/gi;
+      let m;
+      while ((m = regex.exec(html)) !== null) {
+        const dMatch = m[1].match(/<span class="app-news-date">([\s\S]*?)<\/span>/i);
+        const lMatch = m[1].match(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+        if (lMatch) {
+          let url = lMatch[1].trim();
+          if (!url.startsWith('http')) url = 'https://linuc.org' + (url.startsWith('/') ? '' : '/') + url;
+          items.push({
+            provider: 'LPI-Japan (LinuC)',
+            title: lMatch[2].replace(/<[^>]+>/g, '').trim(),
+            url: url,
+            date: dMatch ? dMatch[1].trim() : ''
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.error('LinuC取得エラー:', e.message);
+  }
+
+  handleDiff('LPI', items, properties, webhookUrl, 'url');
+}
+
+/**
+ * 差分検知とSlack通知
+ */
+function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey = null) {
+  const propKey = `SAVED_STATE_${key}`;
+  const savedRaw = properties.getProperty(propKey);
+  const savedList = savedRaw ? JSON.parse(savedRaw) : [];
+
+  if (savedList.length === 0) {
+    properties.setProperty(propKey, JSON.stringify(items.slice(0, 50)));
+    console.log(`[${key}] 初回ベースライン保存完了 (${items.length}件)`);
     return;
   }
 
-  const qualsText = item.relatedQualifications.length > 0
-    ? item.relatedQualifications.join(', ')
-    : 'IPA試験全般 / その他';
+  const prevMap = new Map();
+  for (const s of savedList) {
+    if (s[idKey]) prevMap.set(s[idKey], s);
+  }
+
+  const diffs = [];
+  for (const curr of items) {
+    const id = curr[idKey];
+    if (!id) continue;
+    if (!prevMap.has(id)) {
+      diffs.push({ ...curr, type: '新着' });
+    } else if (updateKey && curr[updateKey] && prevMap.get(id)[updateKey] !== curr[updateKey]) {
+      diffs.push({ ...curr, type: '更新' });
+    }
+  }
+
+  if (diffs.length > 0) {
+    console.log(`[${key}] 差分検知: ${diffs.length} 件`);
+    for (const diff of diffs) {
+      sendSlackNotification(diff, webhookUrl);
+    }
+    properties.setProperty(propKey, JSON.stringify(items.slice(0, 50)));
+  } else {
+    console.log(`[${key}] 変更なし`);
+  }
+}
+
+/**
+ * Slack通知送信
+ */
+function sendSlackNotification(item, webhookUrl) {
+  if (!webhookUrl) return;
 
   const payload = {
-    text: `📢 *【IPA資格情報 新着通知】*`,
     blocks: [
       {
         type: 'header',
         text: {
           type: 'plain_text',
-          text: '📢 IPA資格情報 更新のお知らせ',
+          text: `📢 【${item.provider}】資格情報 ${item.type || '新着'}通知`,
           emoji: true
         }
       },
       {
         type: 'section',
         fields: [
-          {
-            type: 'mrkdwn',
-            text: `*対象資格:*\n${qualsText}`
-          },
-          {
-            type: 'mrkdwn',
-            text: `*公開日:*\n${item.date}`
-          }
+          { type: 'mrkdwn', text: `*公開・更新日:*\n${item.date || '未記載'}` },
+          { type: 'mrkdwn', text: `*認定機関:*\n${item.provider}` }
         ]
       },
       {
@@ -193,19 +290,14 @@ function postToSlack(item, webhookUrl) {
           text: `*タイトル:*\n<${item.url}|${item.title}>`
         }
       },
-      {
-        type: 'divider'
-      }
+      { type: 'divider' }
     ]
   };
 
-  const options = {
+  UrlFetchApp.fetch(webhookUrl, {
     method: 'post',
     contentType: 'application/json',
     payload: JSON.stringify(payload),
     muteHttpExceptions: true
-  };
-
-  const res = UrlFetchApp.fetch(webhookUrl, options);
-  console.log(`Slack投稿完了: HTTP ${res.getResponseCode()}`);
+  });
 }

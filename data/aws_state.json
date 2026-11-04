@@ -1,0 +1,99 @@
+[
+  {
+    "title": "Register now: Updated Developer Associate and Solutions Architect Professional exams",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/register-now-updated-developer-associate-and-solutions-architect-professional-exams/",
+    "date": "Tue, 27 Oct 2026 17:43:33 +0000",
+    "description": "Registration is now open for two updated exams: AWS Certified Developer - Associate (DVA-C03) and AWS Certified Solutions Architect - Professional (SAP-C03).",
+    "relatedQualifications": [
+      {
+        "no": 15,
+        "name": "AWS認定 Associate系"
+      },
+      {
+        "no": 16,
+        "name": "AWS認定 Professional系"
+      }
+    ]
+  },
+  {
+    "title": "New digital courses for how to optimize AI compute and containers on AWS",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/new-digital-courses-for-how-to-optimize-ai-compute-and-containers-on-aws/",
+    "date": "Tue, 20 Oct 2026 21:54:28 +0000",
+    "description": "Two new AWS Skill Builder courses teach you how to match the right AWS compute to your AI workloads and boost Amazon EKS efficiency to improve both performance and cost. Learn to optimize AI hardware across the AI pipeline and maximize Amazon EKS with EKS Auto Mode, AWS Graviton, and Amazon EC2 Spot Instances.",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Build, deploy, and harden AI agents: Three new AWS Jam experiences now available",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/build-deploy-and-harden-ai-agents-three-new-aws-jam-experiences-now-available/",
+    "date": "Wed, 30 Sep 2026 17:04:27 +0000",
+    "description": "You write specs that guide AI coding agents, deploy agents on managed runtimes, and orchestrate multi-agent systems across production workloads. Now you can build those skills in a live AWS environment.&amp;nbsp; Today, we’re launching three new AWS Jam experiences focused on agentic AI development: AWS Jam – Spec Driven Development with Kiro, AWS Jam – […]",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Prove your agentic AI skills: Two new microcredentials now available",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/prove-your-agentic-ai-skills-two-new-microcredentials-now-available/",
+    "date": "Tue, 29 Sep 2026 17:37:57 +0000",
+    "description": "An AI agent is only as trustworthy as the identity controls and data layer behind it. If you’re the one building those, it’s time to validate — and showcase — exactly what you can do. Today, two new microcredentials focused on agentic AI are now available: AWS Securing Agent Identities Demonstrated and AWS Databases for […]",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Certification updates from AWS Training and Certification: September 2026",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/september-2026-new-offerings/",
+    "date": "Tue, 01 Sep 2026 13:31:15 +0000",
+    "description": "AWS Certification is updating three exams to reflect how cloud roles have evolved – AWS Certified Machine Learning Engineer – Associate (MLA-C02), AWS Certified Solutions Architect – Professional (SAP-C03), and AWS Certified Developer – Associate (DVA-C03). This blog covers what’s changing, why, and the key dates you need to know. Beta registration now open: AWS […]",
+    "relatedQualifications": [
+      {
+        "no": 15,
+        "name": "AWS認定 Associate系"
+      },
+      {
+        "no": 16,
+        "name": "AWS認定 Professional系"
+      },
+      {
+        "no": 17,
+        "name": "AWS認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "title": "Introducing AWS Certified AI Business Strategist: Built for the people who scale AI",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/introducing-aws-certified-ai-business-strategist-built-for-the-people-who-scale-ai/",
+    "date": "Tue, 01 Sep 2026 13:27:08 +0000",
+    "description": "Every AI&amp;nbsp;initiative has two kinds of work happening at once.&amp;nbsp;There’s&amp;nbsp;the building: the models, the infrastructure, the code. And&amp;nbsp;there’s&amp;nbsp;the&amp;nbsp;deciding: which investments to fund, how to measure success, what governance to put in place, when to scale and when to stop. AWS has credentialed&amp;nbsp;technical&amp;nbsp;builders for years. Starting September 1,&amp;nbsp;we’re&amp;nbsp;credentialing the&amp;nbsp;professionals&amp;nbsp;who drive AI adoption alongside them.&amp;nbsp; AWS Certified […]",
+    "relatedQualifications": [
+      {
+        "no": 18,
+        "name": "AWS Certified AI Business Strategist"
+      }
+    ]
+  },
+  {
+    "title": "Announcing Lab Maker Build, Save, and Share: Create custom AWS Labs and share them across your organization",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/announcing-lab-maker-build-save-and-share-create-custom-aws-labs-and-share-them-across-your-organization/",
+    "date": "Tue, 25 Aug 2026 22:17:37 +0000",
+    "description": "Today, we’re excited to announce Build, Save, and Share for Lab Maker on AWS Skill Builder. With this launch AWS Skill Builder Team Subscription customers can now save their AI-generated custom labs, relaunch them with one click, and share them with their organization through a new Lab Creation Hub. Building custom labs is powerful. Sharing […]",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Introducing Contests and Tournaments: New ways to practice and compete in AWS Card Clash",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/introducing-contests-and-tournaments-new-ways-to-practice-and-compete-in-aws-card-clash/",
+    "date": "Tue, 25 Aug 2026 18:08:54 +0000",
+    "description": "Cloud learning is more effective when learners can apply what they have learned, compare approaches with others, and choose an experience that fits the moment. Sometimes a team needs a flexible challenge that participants can complete across a week or across time zones.&amp;nbsp;Other times, a community wants the energy of direct competition, a live bracket, […]",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Introducing the new AWS Cloud Quest: AI-powered practice, hands-on building, and a path to official AWS badges",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/introducing-the-new-aws-cloud-quest-ai-powered-practice-hands-on-building-and-a-path-to-official-aws-badges/",
+    "date": "Tue, 11 Aug 2026 17:18:26 +0000",
+    "description": "Today we're announcing a major refresh to AWS Cloud Quest, the 3D, role-based learning game on AWS Skill Builder.",
+    "relatedQualifications": []
+  },
+  {
+    "title": "Prove your data analytics skills: Three new microcredentials now available",
+    "url": "https://aws.amazon.com/blogs/training-and-certification/prove-your-data-analytics-skills-three-new-microcredentials-now-available/",
+    "date": "Thu, 30 Jul 2026 17:08:37 +0000",
+    "description": "Today,&amp;nbsp;we're&amp;nbsp;launching three new&amp;nbsp;microcredentials&amp;nbsp;focused on Data Analytics:&amp;nbsp;AWS Data Streaming Demonstrated,&amp;nbsp;AWS Data Lakehouse Demonstrated, and&amp;nbsp;AWS Data Visualization Demonstrated. Each one&amp;nbsp;validates&amp;nbsp;your hands-on ability to diagnose&amp;nbsp;real issues&amp;nbsp;and implement solutions in a live AWS environment, under time pressure, with no hints.&amp;nbsp;",
+    "relatedQualifications": []
+  }
+]

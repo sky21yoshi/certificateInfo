@@ -1,0 +1,379 @@
+[
+  {
+    "uid": "certification.azure-for-sap-workloads-specialty",
+    "title": "Microsoft Certified: Azure for SAP Workloads Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-for-sap-workloads-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-04-21T14:43:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-developer",
+    "title": "Microsoft Certified: Azure Developer Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-07-31T18:27:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 20,
+        "name": "Azure認定 Associate系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-iot-developer-specialty",
+    "title": "Microsoft Certified: Azure IoT Developer Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-iot-developer-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2025-02-05T01:17:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-cosmos-db-developer-specialty",
+    "title": "Microsoft Certified: Azure Cosmos DB AI Developer Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-cosmos-db-developer-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-27T19:19:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.identity-and-access-administrator",
+    "title": "Microsoft Certified: Identity and Access Administrator Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/identity-and-access-administrator/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 31,
+        "name": "Identity and Access Administrator Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.windows-server-hybrid-administrator",
+    "title": "Microsoft Certified: Windows Server Administrator Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/windows-server-hybrid-administrator/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-21T22:54:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 35,
+        "name": "Windows Server Hybrid Administrator Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-fundamentals",
+    "title": "Microsoft Certified: Azure Fundamentals",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-07-20T21:35:00+00:00",
+    "type": "fundamentals",
+    "relatedQualifications": [
+      {
+        "no": 19,
+        "name": "Azure認定 fundamentals系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-developer-erlr",
+    "title": "Microsoft Certified: Azure Developer Associate (Legacy)",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer-legacy/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-03-11T17:19:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 20,
+        "name": "Azure認定 Associate系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.security-operations-analyst",
+    "title": "Microsoft Certified: Security Operations Analyst Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 27,
+        "name": "Security Operations Analyst Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.power-apps-and-d365-solution-architect-expert",
+    "title": "Microsoft Certified: Dynamics 365 + Power Platform Solution Architect Expert",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-apps-and-d365-solution-architect-expert/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2025-02-05T01:17:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 32,
+        "name": "Power Platform Solution Architect Expert"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-administrator",
+    "title": "Microsoft Certified: Azure Administrator Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-11-03T00:40:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 20,
+        "name": "Azure認定 Associate系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-administrator-erlr",
+    "title": "Microsoft Certified: Azure Administrator Associate (Legacy)",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator-legacy/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2023-12-01T07:03:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 20,
+        "name": "Azure認定 Associate系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.devops-engineer",
+    "title": "Microsoft Certified: DevOps Engineer Expert",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/devops-engineer/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 21,
+        "name": "Azure認定 Expert系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.power-platform-solution-architect-expert",
+    "title": "Microsoft Certified: Power Platform Solution Architect Expert",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-solution-architect-expert/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-06-30T23:44:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 32,
+        "name": "Power Platform Solution Architect Expert"
+      }
+    ]
+  },
+  {
+    "uid": "certification.m365-teams-support-engineer-specialty",
+    "title": "Microsoft 365 Certified: Teams Support Engineer Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-support-engineer-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2025-02-05T01:17:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.m365-teams-administrator-associate",
+    "title": "Microsoft 365 Certified: Teams Administrator Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-administrator-associate/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-27T19:19:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 30,
+        "name": "Teams Administrator Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-virtual-desktop-specialty",
+    "title": "Microsoft Certified: Azure Virtual Desktop Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-virtual-desktop-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-27T19:19:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.power-platform-developer-associate",
+    "title": "Microsoft Certified: Power Platform Developer Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-11-04T00:12:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 39,
+        "name": "Power Platform Developer Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.modern-desktop",
+    "title": "Microsoft 365 Certified: Endpoint Administrator Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/modern-desktop/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-27T19:19:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 29,
+        "name": "Endpoint Administrator Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.m365-exchange-online-support-engineer-specialty",
+    "title": "Microsoft 365 Certified: Exchange Online Support Engineer Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-exchange-online-support-engineer-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2025-02-05T01:17:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-solutions-architect",
+    "title": "Microsoft Certified: Azure Solutions Architect Expert",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-solutions-architect/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 21,
+        "name": "Azure認定 Expert系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.m365-collaboration-communications-systems-engineer",
+    "title": "Microsoft 365 Certified: Collaboration Communications Systems Engineer Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-collaboration-communications-systems-engineer/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T20:24:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 28,
+        "name": "Collaboration Communications Systems Engineer Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.data-analyst-associate",
+    "title": "Microsoft Certified: Power BI Data Analyst Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 38,
+        "name": "Power BI Data Analyst Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-support-engineer-for-connectivity-specialty",
+    "title": "Microsoft Certified: Azure Support Engineer for Connectivity Specialty",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-support-engineer-for-connectivity-specialty/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2025-02-05T01:17:00+00:00",
+    "type": "specialty",
+    "relatedQualifications": [
+      {
+        "no": 22,
+        "name": "Azure認定 Specialty系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.cybersecurity-architect-expert",
+    "title": "Microsoft Certified: Cybersecurity Architect Expert",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/cybersecurity-architect-expert/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-30T21:22:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 34,
+        "name": "Cybersecurity Architect Expert"
+      }
+    ]
+  },
+  {
+    "uid": "certification.agentic-devops-engineer-expert",
+    "title": "Microsoft Certified: Agentic DevOps Engineer Expert (beta)",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/agentic-devops-engineer-expert/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-15T23:49:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 21,
+        "name": "Azure認定 Expert系"
+      }
+    ]
+  },
+  {
+    "uid": "certification.power-automate-rpa-developer-associate",
+    "title": "Microsoft Certified: Power Automate RPA Developer Associate",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-automate-rpa-developer-associate/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-07-01T18:50:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 37,
+        "name": "Power Automate RPA Developer Associate"
+      }
+    ]
+  },
+  {
+    "uid": "certification.power-platform-fundamentals",
+    "title": "Microsoft Certified: Power Platform Fundamentals",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2026-10-27T19:19:00+00:00",
+    "type": "fundamentals",
+    "relatedQualifications": [
+      {
+        "no": 36,
+        "name": "Power Platform Fundamentals"
+      }
+    ]
+  },
+  {
+    "uid": "certification.azure-solutions-architect-erlr",
+    "title": "Microsoft Certified: Azure Solutions Architect Expert (Legacy)",
+    "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-solutions-architect-legacy/?WT.mc_id=api_CatalogApi",
+    "lastModified": "2023-12-01T07:03:00+00:00",
+    "type": "role-based",
+    "relatedQualifications": [
+      {
+        "no": 21,
+        "name": "Azure認定 Expert系"
+      }
+    ]
+  }
+]
