@@ -1,0 +1,111 @@
+No	認定機関	資格名	資格情報取得元	最終更新日時
+1	IPA（独立行政法人 情報処理推進機構）	基本情報技術者試験	https://www.ipa.go.jp/shiken/kubun/fe.html	
+2	IPA（独立行政法人 情報処理推進機構）	応用情報技術者試験(旧:ソフトウェア開発技術者試験)	https://www.ipa.go.jp/shiken/kubun/ap.html	
+3	IPA（独立行政法人 情報処理推進機構）	ネットワークスペシャリスト試験	https://www.ipa.go.jp/shiken/kubun/nw.html	
+4	IPA（独立行政法人 情報処理推進機構）	データベーススペシャリスト試験	https://www.ipa.go.jp/shiken/kubun/db.html	
+5	IPA（独立行政法人 情報処理推進機構）	エンベデッドシステムスペシャリスト試験	https://www.ipa.go.jp/shiken/kubun/es.html	
+6	IPA（独立行政法人 情報処理推進機構）	ITサービスマネージャ試験	https://www.ipa.go.jp/shiken/kubun/sm.html	
+7	IPA（独立行政法人 情報処理推進機構）	情報処理安全確保支援士試験	https://www.ipa.go.jp/shiken/kubun/sg_riss.html	
+8	IPA（独立行政法人 情報処理推進機構）	システムアーキテクト試験	https://www.ipa.go.jp/shiken/kubun/sa.html	
+9	IPA（独立行政法人 情報処理推進機構）	ITストラテジスト試験	https://www.ipa.go.jp/shiken/kubun/st.html	
+10	IPA（独立行政法人 情報処理推進機構）	プロジェクトマネージャ試験	https://www.ipa.go.jp/shiken/kubun/pm.html	
+11	IPA（独立行政法人 情報処理推進機構）	システム監査技術者試験	https://www.ipa.go.jp/shiken/kubun/au.html	
+12	IPA（独立行政法人 情報処理推進機構）	ITパスポート試験	https://www.ipa.go.jp/shiken/kubun/ip.html	
+13	IPA（独立行政法人 情報処理推進機構）	情報セキュリティマネジメント試験	https://www.ipa.go.jp/shiken/kubun/sg.html	
+14	Amazon Web Services (AWS)	AWS認定 Practitioner系	https://aws.amazon.com/jp/certification/certified-cloud-practitioner/	
+15	Amazon Web Services (AWS)	AWS認定 Associate系	https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/	
+16	Amazon Web Services (AWS)	AWS認定 Professional系	https://aws.amazon.com/jp/certification/certified-solutions-architect-professional/	
+17	Amazon Web Services (AWS)	AWS認定 Specialty系	https://aws.amazon.com/jp/certification/our-certifications/	
+18	Amazon Web Services (AWS)	AWS Certified AI Business Strategist	https://aws.amazon.com/jp/certification/certified-ai-practitioner/	
+19	Microsoft（マイクロソフト）	Azure認定 fundamentals系	https://learn.microsoft.com/ja-jp/credentials/certifications/azure-fundamentals/	
+20	Microsoft（マイクロソフト）	Azure認定 Associate系	https://learn.microsoft.com/ja-jp/credentials/certifications/azure-administrator/	
+21	Microsoft（マイクロソフト）	Azure認定 Expert系	https://learn.microsoft.com/ja-jp/credentials/certifications/azure-solutions-architect/	
+22	Microsoft（マイクロソフト）	Azure認定 Specialty系	https://learn.microsoft.com/ja-jp/credentials/browse/?expanded=azure&credential_types=certification	
+23	Microsoft（マイクロソフト）	Microsoft認定 初級	https://learn.microsoft.com/ja-jp/credentials/browse/?levels=beginner&credential_types=certification	
+24	Microsoft（マイクロソフト）	Microsoft認定 中級（アソシエイト）	https://learn.microsoft.com/ja-jp/credentials/browse/?levels=intermediate&credential_types=certification	
+25	Microsoft（マイクロソフト）	Microsoft認定 上級（エキスパート）	https://learn.microsoft.com/ja-jp/credentials/browse/?levels=advanced&credential_types=certification	
+26	Microsoft（マイクロソフト）	MCT(マイクロソフト認定トレーナー)	https://learn.microsoft.com/ja-jp/credentials/certifications/mct-certification/	
+27	Microsoft（マイクロソフト）	Security Operations Analyst Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/security-operations-analyst/	
+28	Microsoft（マイクロソフト）	Collaboration Communications Systems Engineer Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/collaboration-communications-systems-engineer/	
+29	Microsoft（マイクロソフト）	Endpoint Administrator Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/endpoint-administrator/	
+30	Microsoft（マイクロソフト）	Teams Administrator Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/teams-administrator-associate/	
+31	Microsoft（マイクロソフト）	Identity and Access Administrator Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/identity-and-access-administrator/	
+32	Microsoft（マイクロソフト）	Power Platform Solution Architect Expert	https://learn.microsoft.com/ja-jp/credentials/certifications/power-platform-solution-architect-expert/	
+33	Microsoft（マイクロソフト）	Information Protection and Compliance Administrator Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/information-protection-and-compliance-administrator/	
+34	Microsoft（マイクロソフト）	Cybersecurity Architect Expert	https://learn.microsoft.com/ja-jp/credentials/certifications/cybersecurity-architect-expert/	
+35	Microsoft（マイクロソフト）	Windows Server Hybrid Administrator Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/windows-server-hybrid-administrator/	
+36	Microsoft（マイクロソフト）	Power Platform Fundamentals	https://learn.microsoft.com/ja-jp/credentials/certifications/power-platform-fundamentals/	
+37	Microsoft（マイクロソフト）	Power Automate RPA Developer Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/power-automate-rpa-developer-associate/	
+38	Microsoft（マイクロソフト）	Power BI Data Analyst Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/power-bi-data-analyst-associate/	
+39	Microsoft（マイクロソフト）	Power Platform Developer Associate	https://learn.microsoft.com/ja-jp/credentials/certifications/power-platform-developer-associate/	
+40	Google Cloud（グーグル）	GCP　Leader系	https://cloud.google.com/learn/certification/cloud-digital-leader?hl=ja	
+41	Google Cloud（グーグル）	GCP認定　Associate系	https://cloud.google.com/learn/certification/cloud-engineer?hl=ja	
+42	Google Cloud（グーグル）	GCP認定 Professional系	https://cloud.google.com/learn/certification/directory?hl=ja	
+43	Cisco Systems（シスコシステムズ）	CCNA	https://www.cisco.com/c/ja_jp/training-events/career-certifications/certifications/associate/ccna.html	
+44	Cisco Systems（シスコシステムズ）	ENCOR	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/350-401-encor.html	
+45	Cisco Systems（シスコシステムズ）	ENARSI	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-410-enarsi.html	
+46	Cisco Systems（シスコシステムズ）	ENSDWI	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-415-ensdwi.html	
+47	Cisco Systems（シスコシステムズ）	ENSLD	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-420-ensld.html	
+48	Cisco Systems（シスコシステムズ）	ENWLSI	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-425-enwlsi.html	
+49	Cisco Systems（シスコシステムズ）	ENAUTO	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-435-enauto.html	
+50	Cisco Systems（シスコシステムズ）	ENWLSD	https://www.cisco.com/c/ja_jp/training-events/career-certifications/exams/current-exams/300-430-enwlsd.html	
+51	Cisco Systems（シスコシステムズ）	CCNP Enterprise	https://www.cisco.com/c/ja_jp/training-events/career-certifications/certifications/professional/ccnp-enterprise.html	
+52	Cisco Systems（シスコシステムズ）	CCIE Enterprise Infrastructure	https://www.cisco.com/c/ja_jp/training-events/career-certifications/certifications/expert/ccie-enterprise-infrastructure.html	
+53	Linux Professional Institute (LPI)	LPIC-1	https://www.lpi.org/ja/our-certifications/lpic-1-overview/	
+54	Linux Professional Institute (LPI)	LPIC-2	https://www.lpi.org/ja/our-certifications/lpic-2-overview/	
+55	Linux Professional Institute (LPI)	LPIC-3	https://www.lpi.org/ja/our-certifications/lpic-3-overview/	
+56	LPI-Japan（エルピーアイジャパン）	LinuC-1	https://linuc.org/linuc1/	
+57	LPI-Japan（エルピーアイジャパン）	LinuC-2	https://linuc.org/linuc2/	
+58	LPI-Japan（エルピーアイジャパン）	LinuC-3	https://linuc.org/linuc3/	
+59	LPI-Japan（エルピーアイジャパン）	HTML5プロフェッショナル認定試験	https://html5exam.jp/	
+60	Oracle（オラクル）	Oracle Certified Java Programmer, Bronze SE	https://education.oracle.com/ja/oracle-certified-java-programmer-bronze-se/trackp_350	
+61	Oracle（オラクル）	ORACLE MASTER Bronze DBA	https://www.oracle.com/jp/education/certification/ombronzedba-2741548-ja.html	
+62	Oracle（オラクル）	ORACLE MASTER Silver Oracle Database	https://www.oracle.com/jp/education/certification/omsilverdb-2741549-ja.html	
+63	Oracle（オラクル）	Oracle Certified Java Programmer, Silver SE 11	https://education.oracle.com/ja/java-se-11-developer/pexam_1Z0-819	
+64	Oracle（オラクル）	ORACLE MASTER Gold Oracle Database	https://www.oracle.com/jp/education/certification/omgolddb-2741550-ja.html	
+65	Oracle（オラクル）	Oracle Certified Java Programmer, Gold SE	https://education.oracle.com/ja/oracle-certified-professional-java-se-11-developer/trackp_OCPJSE11	
+66	Oracle（オラクル）	ORACLE MASTER Platinum	https://www.oracle.com/jp/education/certification/omplatinum-2741551-ja.html	
+67	Broadcom（旧 VMware）	VCP(VMware Certied Professional)	https://www.vmware.com/learning/certification/vcp-dcv.html	
+68	Broadcom（旧 VMware）	VCAP(VMware Certified Advanced Processional)	https://www.vmware.com/learning/certification/vcap-dcv-deploy.html	
+69	Broadcom（旧 VMware）	VCDX(VMware Certified Design Expert)	https://www.vmware.com/learning/certification/vcdx.html	
+70	Broadcom（旧 VMware）	VCTA（VMware Certified Technical Associate）	https://www.vmware.com/learning/certification/vcta-dcv.html	
+71	CompTIA（コンプティア）	IT Fundamentals	https://www.comptia.jp/certif/core/comptia_itf/	
+72	CompTIA（コンプティア）	A+	https://www.comptia.jp/certif/core/comptia_a/	
+73	CompTIA（コンプティア）	Network+	https://www.comptia.jp/certif/core/comptia_network/	
+74	CompTIA（コンプティア）	Security+	https://www.comptia.jp/certif/core/comptia_security/	
+75	CompTIA（コンプティア）	Cloud+	https://www.comptia.jp/certif/infrastructure/comptia_cloud/	
+76	CompTIA（コンプティア）	Linux+	https://www.comptia.jp/certif/infrastructure/comptia_linux/	
+77	CompTIA（コンプティア）	Server+	https://www.comptia.jp/certif/infrastructure/comptia_server/	
+78	CompTIA（コンプティア）	CASP	https://www.comptia.jp/certif/cybersecurity/comptia_casp/	
+79	CompTIA（コンプティア）	F	https://www.comptia.jp/certif/core/comptia_itf/	
+80	CompTIA（コンプティア）	PenTest+	https://www.comptia.jp/certif/cybersecurity/comptia_pentest/	
+81	CompTIA（コンプティア）	Project+	https://www.comptia.jp/certif/additional/comptia_project/	
+82	CompTIA（コンプティア）	CTT+	https://www.comptia.jp/certif/additional/comptia_ctt/	
+83	CompTIA（コンプティア）	Cloud Essentials	https://www.comptia.jp/certif/additional/comptia_cloud_essentials/	
+84	Cloud Native Computing Foundation (CNCF) / Linux Foundation	認定Kubernetes管理者（CKA-JP）	https://training.linuxfoundation.org/ja/certification/certified-kubernetes-administrator-cka/	
+85	Cloud Native Computing Foundation (CNCF) / Linux Foundation	認定Kubernetesアプリケーション開発者（CKAD-JP）	https://training.linuxfoundation.org/ja/certification/certified-kubernetes-application-developer-ckad/	
+86	Cloud Native Computing Foundation (CNCF) / Linux Foundation	認定Kubernetesセキュリティスペシャリスト（CKS-JP）	https://training.linuxfoundation.org/ja/certification/certified-kubernetes-security-specialist-cks/	
+87	Cloud Native Computing Foundation (CNCF) / Linux Foundation	認定Kubernetesクラウドネイティブアソシエイト（KCNA-JP）	https://training.linuxfoundation.org/ja/certification/kubernetes-cloud-native-associate-kcna/	
+88	Anthropic（アンスロピック）	Claude Certified Associate – Foundations（CCAO-F）	https://anthropic.com/	
+89	Anthropic（アンスロピック）	Claude Certified Architect – Foundations（CCAR-F）	https://anthropic.com/	
+90	Anthropic（アンスロピック）	Claude Certified Developer – Foundations（CCDV-F）	https://anthropic.com/	
+91	Anthropic（アンスロピック）	Claude Certified Architect – Professional（CCAR-P）	https://anthropic.com/	
+92	UiPath（ユーアイパス）	UiPath Automation Developer Associate	https://www.uipath.com/ja/learning/certification	
+93	UiPath（ユーアイパス）	UiPath Automation Developer Professional	https://www.uipath.com/ja/learning/certification	
+94	UiPath（ユーアイパス）	UiPath Agentic Automation Associate	https://www.uipath.com/ja/learning/certification	
+95	UiPath（ユーアイパス）	UiPath Agentic Automation Professional	https://www.uipath.com/ja/learning/certification	
+96	サーティファイ（Certify）	C言語プログラミング能力検定試験3級	https://www.sikaku.gr.jp/js/cp/	
+97	サーティファイ（Certify）	C言語プログラミング能力検定試験2級	https://www.sikaku.gr.jp/js/cp/	
+98	サーティファイ（Certify）	C言語プログラミング能力検定試験1級	https://www.sikaku.gr.jp/js/cp/	
+99	一般社団法人Pythonエンジニア育成推進協会	Python3 エンジニア認定基礎試験	https://www.pythonic-exam.com/exam/basic	
+100	一般社団法人Pythonエンジニア育成推進協会	Python3 エンジニア認定データ分析試験	https://www.pythonic-exam.com/exam/data-analyst	
+101	一般社団法人日本プロジェクトマネジメント協会（PMAJ）	プロジェクトマネジメント・コーディネーター(PMC)	https://www.pmaj.or.jp/shikaku/pmc.html	
+102	一般社団法人日本プロジェクトマネジメント協会（PMAJ）	プロジェクトマネジメント・スペシャリスト(PMS)	https://www.pmaj.or.jp/shikaku/pms.html	
+103	一般社団法人日本プロジェクトマネジメント協会（PMAJ）	プログラムマネジャー・レジスタード(PMR)	https://www.pmaj.or.jp/shikaku/pmr.html	
+104	Project Management Institute (PMI)	PMP試験	https://www.pmi-japan.org/pmp_license/	
+105	ISACA（情報システムコントロール協会）	CISA（Certified Information Systems Auditor）	https://www.isaca.gr.jp/cisa/	
+106	PeopleCert（AXELOS）	ITIL Foundation	https://www.peoplecert.org/ways-to-certify/peoplecert-and-axelos	
+107	Fortinet（フォーティネット）	Fortinet / FCP Certified Professional	https://www.fortinet.com/jp/training-certification	
+108	Palo Alto Networks（パロアルトネットワークス）	Paloalto / Network Security Professional	https://www.paloaltonetworks.jp/services/education/certification	
+109	NTTアドバンステクノロジ（NTT-AT）	WinActor RPA技術者検定アソシエイト	https://winactor.biz/certificate/associate.html	
+110	NTTアドバンステクノロジ（NTT-AT）	WinActor RPA技術者検定エキスパート	https://winactor.biz/certificate/expert.html	

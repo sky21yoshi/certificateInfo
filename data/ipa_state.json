@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2026年10月30日",
+    "title": "プロフェッショナルデジタルスキル（データ・AI）試験（仮称） 科目Bのサンプル問題を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260622.html",
+    "relatedQualifications": []
+  },
+  {
+    "date": "2026年10月30日",
+    "title": "プロフェッショナルデジタルスキル（データ・AI）試験（仮称） 科目Bのシラバス案を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260630.html",
+    "relatedQualifications": []
+  },
+  {
+    "date": "2026年10月28日",
+    "title": "令和8年度 前期特別措置試験受験の方の試験会場・受験番号等がマイページで確認可能となりました",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261028.html",
+    "relatedQualifications": []
+  },
+  {
+    "date": "2026年10月26日",
+    "title": "ITパスポート試験合格者の学習実態等に関するアンケート結果を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/kubun/ip/ip_goukaku_anq_all.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "date": "2026年10月26日",
+    "title": "令和8年度前期試験 高度試験及び情報処理安全確保支援士試験の申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/r08zen_exam.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  }
+]
