@@ -1,9 +1,13 @@
 /**
  * IPA（独立行政法人 情報処理推進機構）の試験情報スクレイパー
+ * 
+ * 対象URL:
+ * - 本年度: https://www.ipa.go.jp/news/{本年度}/index.html?=exam
+ * - 前年度: https://www.ipa.go.jp/news/{前年度}/index.html?=exam
+ * - 前々年度: https://www.ipa.go.jp/news/{前々年度}/index.html?=exam
  */
 
 const BASE_URL = 'https://www.ipa.go.jp';
-const NEWS_URL = `${BASE_URL}/shiken/index.html`;
 
 // 監視対象のIPA資格一覧（キーワード判定用）
 const IPA_QUALIFICATIONS = [
@@ -21,6 +25,33 @@ const IPA_QUALIFICATIONS = [
   { no: 12, name: 'ITパスポート試験', aliases: ['ITパスポート', 'iパス', 'IP'] },
   { no: 13, name: '情報セキュリティマネジメント試験', aliases: ['情報セキュリティマネジメント', 'セキュマネ', 'SG'] },
 ];
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * 日本の年度（4月始まり）を取得
+ * @param {Date} [date] 
+ * @returns {number}
+ */
+function getFiscalYear(date = new Date()) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 1-12
+  return month >= 4 ? year : year - 1;
+}
+
+/**
+ * 本年度、前年度、前々年度のスクレイピング対象URLリストを生成
+ * @param {Date} [date] 
+ * @returns {Array<{year: number, label: string, url: string}>}
+ */
+function getIpaNewsTargetUrls(date = new Date()) {
+  const currentFY = getFiscalYear(date);
+  return [
+    { year: currentFY, label: '本年度', url: `${BASE_URL}/news/${currentFY}/index.html?=exam` },
+    { year: currentFY - 1, label: '前年度', url: `${BASE_URL}/news/${currentFY - 1}/index.html?=exam` },
+    { year: currentFY - 2, label: '前々年度', url: `${BASE_URL}/news/${currentFY - 2}/index.html?=exam` },
+  ];
+}
 
 /**
  * お知らせのタイトルから関連する資格名を判定する
@@ -44,48 +75,54 @@ function matchQualifications(text) {
 }
 
 /**
- * HTMLから新着情報アイテムを抽出する
+ * 年度別ニュースHTMLから試験関連の新着情報アイテムを抽出する
  * @param {string} html 
+ * @param {number} [fiscalYear] 対象年度
  * @returns {Array<object>}
  */
-function parseNewsItems(html) {
+function parseNewsItems(html, fiscalYear = null) {
   const items = [];
   
-  // news-list 内の <a> タグを抽出
-  const aRegex = /<a\s+[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-  let aMatch;
+  // <li ... class="news-list__item" ...> の開始位置でブロック分割
+  const parts = html.split(/<li\s+[^>]*class="[^"]*news-list__item[^"]*"/i);
 
-  while ((aMatch = aRegex.exec(html)) !== null) {
-    const fullTag = aMatch[0];
-    const rawHref = aMatch[1];
-    const innerHtml = aMatch[2];
+  for (let i = 1; i < parts.length; i++) {
+    const block = parts[i];
 
-    // news-list__inner クラスを持つリンクのみを対象とする
-    if (!fullTag.includes('news-list__inner')) {
-      continue;
-    }
+    // data-search 属性の確認
+    const searchMatch = block.match(/^([^>]*)data-search="([^"]*)"/i);
+    const dataSearch = searchMatch ? searchMatch[2] : '';
 
-    let url = rawHref.trim();
+    // 試験関連（data-search="exam"）またはタイトル/リンクに試験を含むものを抽出
+    const isExamCategory = dataSearch.includes('exam');
+
+    // リンク
+    const aMatch = block.match(/<a\s+[^>]*href="([^"]+)"/i);
+    let url = aMatch ? aMatch[1].trim() : '';
     if (url && !url.startsWith('http')) {
       url = BASE_URL + (url.startsWith('/') ? '' : '/') + url;
     }
 
-    // 日付抽出 (<li class="news-list__date">...</li>)
-    const dateMatch = innerHtml.match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
-    const dateStr = dateMatch ? dateMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+    // 日付 (<li class="news-list__date">...</li>)
+    const dMatch = block.match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
+    const date = dMatch ? dMatch[1].replace(/<[^>]+>/g, '').trim() : '';
 
-    // タイトル抽出 (<p class="news-list__ttl">...</p>)
-    const ttlMatch = innerHtml.match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
-    const title = ttlMatch ? ttlMatch[1].replace(/<[^>]+>/g, '').trim().replace(/\s+/g, ' ') : '';
+    // タイトル (<p class="news-list__ttl">...</p>)
+    const tMatch = block.match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    const title = tMatch ? tMatch[1].replace(/<[^>]+>/g, '').trim().replace(/\s+/g, ' ') : '';
 
     if (title && url) {
       const matched = matchQualifications(title);
-      items.push({
-        date: dateStr,
-        title: title,
-        url: url,
-        relatedQualifications: matched,
-      });
+      // data-search="exam" または 資格名マッチングがあるものを対象とする
+      if (isExamCategory || matched.length > 0 || title.includes('試験')) {
+        items.push({
+          fiscalYear: fiscalYear,
+          date: date,
+          title: title,
+          url: url,
+          relatedQualifications: matched,
+        });
+      }
     }
   }
 
@@ -93,31 +130,63 @@ function parseNewsItems(html) {
 }
 
 /**
- * IPAの試験情報トップページから新着情報を取得する
- * @param {string} [customHtml] テスト用HTML（省略時はWebからfetch）
+ * IPAの3年度分（本年度、前年度、前々年度）のニュースページから新着情報を取得する
+ * @param {object} [mockDataMap] テスト用 { [url]: html }
  * @returns {Promise<Array<object>>}
  */
-async function fetchIpaNews(customHtml = null) {
-  let html = customHtml;
-  if (!html) {
-    const res = await fetch(NEWS_URL, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 certificateInfo-bot/1.0',
-        'Accept': 'text/html,application/xhtml+xml',
-        'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8'
+async function fetchIpaNews(mockDataMap = null) {
+  const targetUrls = getIpaNewsTargetUrls();
+  const allItems = [];
+  const seenUrls = new Set();
+
+  for (let i = 0; i < targetUrls.length; i++) {
+    const target = targetUrls[i];
+    let html = null;
+
+    if (mockDataMap && mockDataMap[target.url]) {
+      html = mockDataMap[target.url];
+    } else if (!mockDataMap) {
+      try {
+        const res = await fetch(target.url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 certificateInfo-bot/1.0',
+            'Accept': 'text/html,application/xhtml+xml',
+            'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8'
+          }
+        });
+        if (res.ok) {
+          html = await res.text();
+        } else {
+          console.warn(`[IPA] ${target.label}(${target.year}年度)の取得をスキップしました (HTTP ${res.status})`);
+        }
+      } catch (err) {
+        console.warn(`[IPA] ${target.label}(${target.year}年度)の取得中にエラー: ${err.message}`);
       }
-    });
-    if (!res.ok) {
-      throw new Error(`IPAサイトへのアクセスに失敗しました: HTTP ${res.status} ${res.statusText}`);
     }
-    html = await res.text();
+
+    if (html) {
+      const items = parseNewsItems(html, target.year);
+      for (const item of items) {
+        if (!seenUrls.has(item.url)) {
+          seenUrls.add(item.url);
+          allItems.push(item);
+        }
+      }
+    }
+
+    // 複数URL取得時のインターバル（負荷軽減）
+    if (!mockDataMap && i < targetUrls.length - 1) {
+      await sleep(1000);
+    }
   }
 
-  return parseNewsItems(html);
+  return allItems;
 }
 
 module.exports = {
   IPA_QUALIFICATIONS,
+  getFiscalYear,
+  getIpaNewsTargetUrls,
   matchQualifications,
   parseNewsItems,
   fetchIpaNews,

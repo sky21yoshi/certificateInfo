@@ -73,33 +73,79 @@ function checkAllCertificateUpdates() {
 }
 
 /**
- * IPA チェック処理
+ * 日本の年度（4月始まり）を取得
+ */
+function getFiscalYear(date) {
+  const d = date || new Date();
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+  return month >= 4 ? year : year - 1;
+}
+
+/**
+ * IPA チェック処理 (本年度、前年度、前々年度)
  */
 function checkIpa(properties, webhookUrl) {
-  const res = UrlFetchApp.fetch(ENDPOINTS.IPA, { muteHttpExceptions: true });
-  if (res.getResponseCode() !== 200) return;
-  const html = res.getContentText('UTF-8');
+  const currentFY = getFiscalYear();
+  const years = [currentFY, currentFY - 1, currentFY - 2];
+  const allItems = [];
+  const seenUrls = new Set();
 
-  const items = [];
-  const regex = /<a\s+[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-  let m;
-  while ((m = regex.exec(html)) !== null) {
-    if (!m[0].includes('news-list__inner')) continue;
-    let url = m[1].trim();
-    if (!url.startsWith('http')) url = 'https://www.ipa.go.jp' + (url.startsWith('/') ? '' : '/') + url;
-    const dMatch = m[2].match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
-    const tMatch = m[2].match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
-    if (tMatch) {
-      items.push({
-        provider: 'IPA（情報処理推進機構）',
-        date: dMatch ? dMatch[1].replace(/<[^>]+>/g, '').trim() : '',
-        title: tMatch[1].replace(/<[^>]+>/g, '').trim(),
-        url: url
+  for (let i = 0; i < years.length; i++) {
+    const y = years[i];
+    const url = `https://www.ipa.go.jp/news/${y}/index.html?=exam`;
+    try {
+      const res = UrlFetchApp.fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) certificateInfo-GAS-bot/1.0',
+          'Accept-Language': 'ja'
+        },
+        muteHttpExceptions: true
       });
+
+      if (res.getResponseCode() === 200) {
+        const html = res.getContentText('UTF-8');
+        const parts = html.split(/<li\s+[^>]*class="[^"]*news-list__item[^"]*"/i);
+
+        for (let j = 1; j < parts.length; j++) {
+          const block = parts[j];
+          const searchMatch = block.match(/^([^>]*)data-search="([^"]*)"/i);
+          const dataSearch = searchMatch ? searchMatch[2] : '';
+          const isExam = dataSearch.includes('exam');
+
+          const aMatch = block.match(/<a\s+[^>]*href="([^"]+)"/i);
+          let linkUrl = aMatch ? aMatch[1].trim() : '';
+          if (linkUrl && !linkUrl.startsWith('http')) {
+            linkUrl = 'https://www.ipa.go.jp' + (linkUrl.startsWith('/') ? '' : '/') + linkUrl;
+          }
+
+          const dMatch = block.match(/<li[^>]*class="[^"]*news-list__date[^"]*"[^>]*>([\s\S]*?)<\/li>/i);
+          const tMatch = block.match(/<p[^>]*class="[^"]*news-list__ttl[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+          const title = tMatch ? tMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+
+          if (title && linkUrl && (isExam || title.includes('試験'))) {
+            if (!seenUrls.has(linkUrl)) {
+              seenUrls.add(linkUrl);
+              allItems.push({
+                provider: 'IPA（情報処理推進機構）',
+                date: dMatch ? dMatch[1].replace(/<[^>]+>/g, '').trim() : '',
+                title: title,
+                url: linkUrl
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`IPA ${y}年度の取得エラー:`, e.message);
+    }
+
+    if (i < years.length - 1) {
+      Utilities.sleep(1000);
     }
   }
 
-  handleDiff('IPA', items, properties, webhookUrl, 'url');
+  handleDiff('IPA', allItems, properties, webhookUrl, 'url');
 }
 
 /**

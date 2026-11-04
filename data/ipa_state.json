@@ -1,23 +1,51 @@
 [
   {
+    "fiscalYear": 2026,
     "date": "2026年10月30日",
     "title": "プロフェッショナルデジタルスキル（データ・AI）試験（仮称） 科目Bのサンプル問題を公表しました",
     "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260622.html",
     "relatedQualifications": []
   },
   {
+    "fiscalYear": 2026,
+    "date": "2026年10月30日",
+    "title": "IPA量子コンピューティング技術勉強会2（量子ソフトウェアの作り方）を開催します",
+    "url": "https://www.ipa.go.jp/jinzai/mitou/event/quantum-study-group-202610.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
     "date": "2026年10月30日",
     "title": "プロフェッショナルデジタルスキル（データ・AI）試験（仮称） 科目Bのシラバス案を公表しました",
     "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260630.html",
     "relatedQualifications": []
   },
   {
+    "fiscalYear": 2026,
+    "date": "2026年10月28日",
+    "title": "【情報処理安全確保支援士】三菱UFJモルガン・スタンレー証券株式会社 二山 晃大様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview18.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
     "date": "2026年10月28日",
     "title": "令和8年度 前期特別措置試験受験の方の試験会場・受験番号等がマイページで確認可能となりました",
     "url": "https://www.ipa.go.jp/news/2026/shiken_20261028.html",
     "relatedQualifications": []
   },
   {
+    "fiscalYear": 2026,
     "date": "2026年10月26日",
     "title": "ITパスポート試験合格者の学習実態等に関するアンケート結果を公表しました",
     "url": "https://www.ipa.go.jp/shiken/kubun/ip/ip_goukaku_anq_all.html",
@@ -29,6 +57,7 @@
     ]
   },
   {
+    "fiscalYear": 2026,
     "date": "2026年10月26日",
     "title": "令和8年度前期試験 高度試験及び情報処理安全確保支援士試験の申込受付を終了しました",
     "url": "https://www.ipa.go.jp/shiken/2026/r08zen_exam.html",
@@ -36,6 +65,1902 @@
       {
         "no": 7,
         "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月22日",
+    "title": "【メンテナンス終了】申込受付システムの再開について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261022.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月21日",
+    "title": "【緊急メンテナンス】申込受付システムの停止について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261021-3.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月21日",
+    "title": "ITパスポート試験（令和8年9月実施）の合格者受験番号一覧を掲載しました",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/openinfo/pass.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月21日",
+    "title": "情報セキュリティマネジメント試験・基本情報技術者試験（令和8年9月実施）の合格者受験番号一覧を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mousikomi/cbt_sg_fe.html#cbt04",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月19日",
+    "title": "令和8年度前期試験の申込受付における障害の解消について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261019.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月16日",
+    "title": "合格証明書交付申請の一時受付休止について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261016.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月15日",
+    "title": "国家資格「情報処理安全確保支援士」2026年10月1日付新規登録者は756名の内訳、登録者総数は26,424名の内訳を公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/reports/data/index.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月13日",
+    "title": "令和8年度前期試験（応用情報技術者試験、高度試験、情報処理安全確保支援士試験）におけるバウチャーチケットの購入申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/r08zen_voucher.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月13日",
+    "title": "【情報処理安全確保支援士】株式会社ブルーオーキッドコンサルティング 野村 陽子様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview17.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月8日",
+    "title": "プレス発表 令和8年度前期試験の申込受付におけるアクセス集中による障害発生について",
+    "url": "https://www.ipa.go.jp/pressrelease/2026/press20261008.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年10月6日",
+    "title": "（お詫び）令和8年度前期試験の申込受付におけるアクセス集中について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261006-2.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年9月17日",
+    "title": "令和8年度前期試験におけるメモ用紙の配布について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260917.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年9月7日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260907.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年9月2日",
+    "title": "【情報処理安全確保支援士】株式会社日立システムズ 宇野 文康様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview16.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年9月1日",
+    "title": "各種申込受付ページにアクセスできない事象について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260901-2.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月28日",
+    "title": "IPA International Advisory Panel (IIAP) 第1回実施状況を公開しました",
+    "url": "https://www.ipa.go.jp/digital/chousa/iiap.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月25日",
+    "title": "IPAフォーラム2026を開催します",
+    "url": "https://www.ipa.go.jp/forum/",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月19日",
+    "title": "令和8年度前期試験（特別措置試験）の案内書を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/annai_pd_08z_toku.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月14日",
+    "title": "【情報処理安全確保支援士】プラスエス代表 大久保 茂人様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview15.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月12日",
+    "title": "【情報処理安全確保支援士】NRIセキュアテクノロジーズ株式会社 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/nri/index.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年8月3日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260803.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月22日",
+    "title": "国家資格「情報処理安全確保支援士」の新規登録をご検討中の方へ 登録のメリットや活用事例等、最新情報を掲載しております",
+    "url": "https://www.ipa.go.jp/jinzai/riss/touroku/toroku-mae.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月10日",
+    "title": "【情報処理安全確保支援士】SCSKセキュリティ 株式会社 瀬口 慶之様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview14.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月9日",
+    "title": "情報セキュリティマネジメント試験・基本情報技術者試験（令和8年5月実施）の合格証書は7月8日（水曜日）発送済です",
+    "url": "https://www.ipa.go.jp/shiken/mousikomi/cbt_sg_fe.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月6日",
+    "title": "令和8年度 応用情報技術者試験、高度試験及び情報処理安全確保支援士試験の申込受付期間及び試験実施期間を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/ap_koudo_sc_kikan.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月6日",
+    "title": "令和8年度後期 特別措置試験の試験実施日を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/r08kouki_tokubetsusochi.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月6日",
+    "title": "令和8年度前期 特別措置試験の申込受付期間及び試験実施日を公表しました",
+    "url": "https://www.ipa.go.jp/shiken/2026/r08zenki_tokubetsusochi.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年7月1日",
+    "title": "情報セキュリティマネジメント試験及び基本情報技術者試験の令和8年度公開問題を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2026r08.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年6月24日",
+    "title": "【情報処理安全確保支援士】株式会社SmartHRの活用事例インタビュー動画を掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/videos.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年6月15日",
+    "title": "第2回 制御システム向けサイバーセキュリティ演習（CyberSTIX）の申込み受付を開始しました",
+    "url": "https://www.ipa.go.jp/jinzai/ics/short-pgm/cyberstix/2026-2.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年6月12日",
+    "title": "「セキュリティ要件適合評価及びラベリング制度（JC-STAR）」における「通信機器★3適合要件」、「ネットワークカメラ★3適合要件」を公開しました",
+    "url": "https://www.ipa.go.jp/security/jc-star/tekigou-kizyun-guide/label3/index.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年6月5日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260605.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年6月1日",
+    "title": "IPAテクニカルウォッチ「AIの動作・分析・利用等の説明に関する意識調査」を公開しました",
+    "url": "https://www.ipa.go.jp/security/reports/technicalwatch/20260601.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月23日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20260423.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月21日",
+    "title": "令和7年度「iパス（ITパスポート試験）」の年間応募者数等について",
+    "url": "https://www.ipa.go.jp/shiken/reports/ip-oubo2025.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月8日",
+    "title": "米CISA発行 Cross-Sector Cybersecurity Performance Goals Ver.2.0(2025-12)の翻訳を公開しました",
+    "url": "https://www.ipa.go.jp/security/controlsystem/cisacpgs.html",
+    "relatedQualifications": [
+      {
+        "no": 8,
+        "name": "システムアーキテクト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月7日",
+    "title": "バウチャーチケット（対象：ITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験）の購入申込受付の開始について",
+    "url": "https://www.ipa.go.jp/shiken/2026/voucher-start.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月2日",
+    "title": "令和8年度（2026年度）ITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験における特別措置試験の実施予定について",
+    "url": "https://www.ipa.go.jp/shiken/2026/tokubetsusochi-2026-yotei.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年4月1日",
+    "title": "国家資格「情報処理安全確保支援士」2026年4月1日付け登録者数は1,859名、登録者総数は26,453名となりました",
+    "url": "https://www.ipa.go.jp/#blockSkip",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月31日",
+    "title": "情報処理技術者試験及び情報処理安全確保支援士試験の見直しの検討状況について",
+    "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2025/20260331.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月30日",
+    "title": "【情報処理安全確保支援士】株式会社群馬銀行 松村 真人様 インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview13.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月27日",
+    "title": "ASM診断および事例集作成業務「中小企業のための実例で学ぶサイバーセキュリティリスク事例集」を公開しました",
+    "url": "https://www.ipa.go.jp/security/reports/sme/asm-jirei.html",
+    "relatedQualifications": [
+      {
+        "no": 6,
+        "name": "ITサービスマネージャ試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月26日",
+    "title": "【情報処理安全確保支援士】日本電気株式会社（NEC）インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/nec/index.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月24日",
+    "title": "2026年5月実施分以降の合格証書における氏名や生年月日の訂正について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20260324.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月19日",
+    "title": "【情報処理安全確保支援士】株式会社SmartHR インタビューを掲載しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/smarthr/index.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年3月13日",
+    "title": "CBT方式で実施するITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験における2026年5月以降の試験実施について",
+    "url": "https://www.ipa.go.jp/shiken/2026/cbt-202605-jisshi.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年2月24日",
+    "title": "令和8年度（2026年度）応用情報技術者試験、高度試験及び情報処理安全確保支援士試験の実施予定について",
+    "url": "https://www.ipa.go.jp/shiken/2026/ap_koudo_sc_yotei.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年2月20日",
+    "title": "【情報処理安全確保支援士】TMI総合法律事務所インタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/tmi/index.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年2月17日",
+    "title": "STAMP/STPAハンズオン教材を更新しました",
+    "url": "https://www.ipa.go.jp/digital/stamp/guidebook.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年1月20日",
+    "title": "令和7年度秋期試験（応用情報技術者試験・高度試験・情報処理安全確保支援士試験）の合格証書は1月19日（月曜日）発送済です",
+    "url": "https://www.ipa.go.jp/shiken/goukaku/happyobi.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年1月16日",
+    "title": "令和7年度秋期試験の採点講評（午後）を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/2025r07.html#aki",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2026年1月9日",
+    "title": "「外部専門家による試験関連入札業務の適正性に関する調査結果の公表並びに提言を踏まえた今後の対応」を公開しました",
+    "url": "https://www.ipa.go.jp/choutatsu/third-party-investigation.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年12月25日",
+    "title": "令和7年度秋期試験（応用情報技術者試験、高度試験、情報処理安全確保支援士試験）の合格者受験番号一覧を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/goukaku/bangou.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年12月25日",
+    "title": "令和7年度秋期情報処理技術者試験（応用情報技術者試験、高度試験）及び情報処理安全確保支援士試験の合格発表について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20251225.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年12月17日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20251217.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月27日",
+    "title": "JC-STAR ★3セキュリティ要件・適合基準へのパブリック・コメントの募集を開始しました",
+    "url": "https://www.ipa.go.jp/security/jc-star/tekigou-kizyun-guide/pubcom/pubcom.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月13日",
+    "title": "ITパスポート試験の企業の声を公開しました（東京電力ホールディングス株式会社）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/company20.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月13日",
+    "title": "ITパスポート試験の合格者の声を公開しました（東京電力エナジーパートナー株式会社）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/success14.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月7日",
+    "title": "2025年日本国際博覧会（大阪・関西万博）におけるIPAの支援業務の報告書を公開しました",
+    "url": "https://www.ipa.go.jp/icscoe/news20251107.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月6日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20251106.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月6日",
+    "title": "国家資格「情報処理安全確保支援士」コニカミノルタ株式会社 川﨑 健様の登録セキスペインタビュー を公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview12.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年11月5日",
+    "title": "情報セキュリティマネジメント試験の活用事例を更新しました（岐阜県）",
+    "url": "https://www.ipa.go.jp/shiken/kubun/sg/example/sg-government.html",
+    "relatedQualifications": [
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月21日",
+    "title": "情報処理安全確保支援士向け「セキュリティマネジメント指導ツール活用セミナー・ケース演習」を公開しました",
+    "url": "https://www.ipa.go.jp/security/sme/shien/riss-katsuyo-semi.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月12日",
+    "title": "令和7年度秋期試験の合格発表スケジュールを掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/20251012_schedule.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月12日",
+    "title": "令和7年度秋期試験における試験会場での忘れ物等について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20251012.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月10日",
+    "title": "令和7年度秋期試験の実施について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20251010-3.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月10日",
+    "title": "【CEATEC2025】 LIFE 2050 ”Live Anywhere / 星の島の学び舎”に講演情報を追加しました",
+    "url": "https://www.ipa.go.jp/life2050/",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月7日",
+    "title": "【CEATEC2025】IPA講演情報詳細を公開しました",
+    "url": "https://www.ipa.go.jp/event/2025/event20251014.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年10月2日",
+    "title": "令和7年度秋期試験の受験票再発行受付期間は10月2日9時30分から10月7日18時までです",
+    "url": "https://www.ipa.go.jp/shiken/2025/chuui_r07a.html#jukenhyou",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年9月29日",
+    "title": "国家資格「情報処理安全確保支援士」 SecureNavi株式会社の活用企業・組織インタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/katsuyo-interview10.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年9月22日",
+    "title": "令和7年度秋期試験のSG・FE（特別措置試験）受験の方は、受験票のダウンロードが可能となりました",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250922.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年9月11日",
+    "title": "国家資格「情報処理安全確保支援士」 株式会社メタテクノ 西島 愛様の登録セキスペインタビュー を公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview11.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年9月5日",
+    "title": "令和7年度秋期試験の受験に関する主な注意事項を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/chuui_r07a.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年8月27日",
+    "title": "令和7年度秋期情報処理技術者試験及び情報処理安全確保支援士試験の応募者数について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250827.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年8月12日",
+    "title": "応用情報技術者試験、高度試験及び情報処理安全確保支援士試験におけるCBT方式での実施について",
+    "url": "https://www.ipa.go.jp/shiken/2026/ap_koudo_sc-cbt.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年8月8日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250808.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年8月7日",
+    "title": "令和7年度秋期試験（情報セキュリティマネジメント試験及び基本情報技術者試験の特別措置試験）の申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/r07aki_exam.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月31日",
+    "title": "情報処理安全確保支援士制度をご活用いただいている企業・組織の事例ページを更新しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/business-case.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月29日",
+    "title": "受験サポートセンターにおける電話回線障害復旧のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2025/20250729-2.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月23日",
+    "title": "情報セキュリティマネジメント試験の活用事例を更新しました（Ｓｋｙ株式会社）",
+    "url": "https://www.ipa.go.jp/shiken/kubun/sg/example/sg-company.html",
+    "relatedQualifications": [
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月23日",
+    "title": "国家資格「情報処理安全確保支援士」 広島情報専門学校 渡邉 慶太様の登録セキスペインタビュー を公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview10.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月18日",
+    "title": "令和7年度春期試験の採点講評（午後）を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/2025r07.html#haru",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月15日",
+    "title": "国家資格「情報処理安全確保支援士」 ペンギンシステム株式会社の活用企業・組織インタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/katsuyo-interview09.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月15日",
+    "title": "令和7年度秋期試験（応用情報技術者試験、高度試験、情報処理安全確保支援士試験）におけるバウチャーチケットの購入申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/r07aki_voucher.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月4日",
+    "title": "令和7年度秋期試験の案内書を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/annai_pd_07a.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月4日",
+    "title": "情報セキュリティマネジメント試験及び基本情報技術者試験の令和7年度公開問題を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2025r07.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年7月3日",
+    "title": "令和7年度春期情報処理技術者試験（応用情報技術者試験、高度試験）及び情報処理安全確保支援士試験の合格発表について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250703.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年6月19日",
+    "title": "国家資格「情報処理安全確保支援士」 株式会社東北電力 新谷 俊夫様の登録セキスペインタビュー を公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview09.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年6月4日",
+    "title": "【外部講演情報更新】9月4日、5日開催 PMシンポジウム2025 「次世代の日本を共に描く」 ～今、必要とされるプログラム&amp;プロジェクトマネジメント～",
+    "url": "https://www.ipa.go.jp/disc/event.html#20250904",
+    "relatedQualifications": [
+      {
+        "no": 10,
+        "name": "プロジェクトマネージャ試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年5月14日",
+    "title": "国家資格「情報処理安全確保支援士」株式会社JTBの活用企業・組織インタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/katsuyo-interview08.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月20日",
+    "title": "令和7年度春期試験の合格発表スケジュールを掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/20250420_schedule.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月20日",
+    "title": "令和7年度春期試験における試験会場での忘れ物等について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250420.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月18日",
+    "title": "令和7年度春期試験の実施について",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250418.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月16日",
+    "title": "CBT方式で実施するITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験における2025年4月26日以降の受験申込みに関する重要なお知らせ",
+    "url": "https://www.ipa.go.jp/shiken/2025/cbt-notice.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月16日",
+    "title": "2025年4月26日以降に発行するバウチャーチケット（対象：ITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験）に関する重要なお知らせ",
+    "url": "https://www.ipa.go.jp/shiken/2025/voucher-notice.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月15日",
+    "title": "STAMPのTipsページにFRAM関連／STPA派生手法等の情報を追加しました",
+    "url": "https://www.ipa.go.jp/digital/stamp/tips.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月14日",
+    "title": "令和6年度「iパス（ITパスポート試験）」の年間応募者数等について",
+    "url": "https://www.ipa.go.jp/shiken/reports/ip-oubo2024.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月10日",
+    "title": "令和7年度春期試験の受験票再発行受付期間は4月10日9時30分から4月15日18時までです",
+    "url": "https://www.ipa.go.jp/shiken/2025/chuui_r07h.html#jukenhyou",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月9日",
+    "title": "令和7年度春期試験 山口試験地の試験会場名について",
+    "url": "https://www.ipa.go.jp/shiken/2025/yamaguchi-r07h.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月7日",
+    "title": "情報処理技術者試験及び情報処理安全確保支援士試験等の運営実施におけるカスタマーハラスメントに対する基本方針の策定について",
+    "url": "https://www.ipa.go.jp/shiken/customer-harassment.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2025,
+    "date": "2025年4月1日",
+    "title": "令和7年度春期試験のSG・FE（特別措置試験）受験の方は、受験票のダウンロードが可能となりました",
+    "url": "https://www.ipa.go.jp/news/2025/shiken_20250401.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月31日",
+    "title": "「京都大学大学院法学研究科附属法政策共同研究センター（KILAP）とのCPS-SoS安全に関するガバナンスアーキテクチャの設計等に係る共同調査研究について」を公開しました",
+    "url": "https://www.ipa.go.jp/digital/architecture/reports/kilap-cps-sos.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月27日",
+    "title": "大学・短大・高専における情報処理技術者試験の活用状況の調査結果を更新しました",
+    "url": "https://www.ipa.go.jp/shiken/about/jirei/daigaku/index.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月27日",
+    "title": "【外部講演情報更新】3月31日開催 EU-JAPAN DIGITAL WEEK 2025 “Smart Connectivity and Computing” Workshop",
+    "url": "https://www.ipa.go.jp/disc/event.html#20250331",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月26日",
+    "title": "「API標準設計ガイド・基礎編」を公開しました",
+    "url": "https://www.ipa.go.jp/digital/data/data-space.html#api_standard_design_guide",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月25日",
+    "title": "JC-STAR ★１（レベル1）の申請受付を開始しました",
+    "url": "https://www.ipa.go.jp/security/jc-star/index.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月18日",
+    "title": "合格証明書における通称の併記について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20250318.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月14日",
+    "title": "令和7年度春期試験の受験に関する主な注意事項を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/chuui_r07h.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年3月5日",
+    "title": "令和7年度春期情報処理技術者試験及び情報処理安全確保支援士試験の応募者数について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20250305.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年2月25日",
+    "title": "国家資格「情報処理安全確保支援士」 大阪府警察本部の活用企業・組織インタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/soshiki/katsuyo-interview07.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年2月20日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20250220.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年2月19日",
+    "title": "ITパスポート試験の学校の声を公開しました（福島県立福島商業高等学校）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/school18.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年2月13日",
+    "title": "令和7年度春期試験（情報セキュリティマネジメント試験及び基本情報技術者試験の特別措置試験）の申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/r07haru_exam.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年2月7日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20250207.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年1月27日",
+    "title": "ITパスポート試験の企業の声を公開しました（東急建設株式会社）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/company19.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年1月21日",
+    "title": "令和7年度春期試験（応用情報技術者試験、高度試験、情報処理安全確保支援士試験）におけるバウチャーチケットの購入申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/r07haru_voucher.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年1月17日",
+    "title": "令和6年度秋期試験の採点講評（午後）を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/2024r06.html#aki",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2025年1月10日",
+    "title": "令和7年度春期試験の案内書を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2025/annai_pd_07h.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年12月27日",
+    "title": "サイバーセキュリティ分野における防衛省・経済産業省・IPAによる包括的な連携協定を締結しました",
+    "url": "https://www.ipa.go.jp/security/renkei/rk20241227.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年12月26日",
+    "title": "令和6年度秋期情報処理技術者試験（応用情報技術者試験、高度試験）及び情報処理安全確保支援士試験の合格発表について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241226.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年12月23日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241223.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年12月23日",
+    "title": "部署名変更のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241223-2.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年12月20日",
+    "title": "【外部講演情報更新】12月21日開催 2024年度 第1回DBSJセミナー「生成AIの安全性における法的課題や活動事例」",
+    "url": "https://www.ipa.go.jp/disc/event.html#20241221",
+    "relatedQualifications": [
+      {
+        "no": 4,
+        "name": "データベーススペシャリスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月26日",
+    "title": "2024年度サイバー危機対応机上演習（CyberCREST）の申込み受付を開始しました",
+    "url": "https://www.ipa.go.jp/jinzai/ics/short-pgm/cybercrest/2024.html",
+    "relatedQualifications": [
+      {
+        "no": 5,
+        "name": "エンベデッドシステムスペシャリスト試験"
+      },
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月22日",
+    "title": "JC-STAR説明会の日程を追加しました",
+    "url": "https://www.ipa.go.jp/security/jc-star/seminar/index.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月20日",
+    "title": "ネットワークスペシャリスト試験における点字による試験の実施について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241120.html",
+    "relatedQualifications": [
+      {
+        "no": 3,
+        "name": "ネットワークスペシャリスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月19日",
+    "title": "ITパスポート試験の企業の声を公開しました（ローレルバンクマシン株式会社）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/company18.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月18日",
+    "title": "NIST発行「Cybersecurity Framework Version 2.0」日本語翻訳版を公開しました",
+    "url": "https://www.ipa.go.jp/security/reports/oversea/nist/about.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月18日",
+    "title": "国家資格「情報処理安全確保支援士」株式会社コネクトワン代表取締役 吉田 晋様の登録セキスペインタビューを公開しました",
+    "url": "https://www.ipa.go.jp/jinzai/riss/interview/riss/riss-interview08.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月8日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241108.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月5日",
+    "title": "デジタル人材育成大賞にデジタル人材育成大賞（IPA特別賞）が設置されました",
+    "url": "https://www.ddhr.jp/news/ddhr-award2024-outline/",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年11月5日",
+    "title": "令和7年度 情報処理技術者試験・情報処理安全確保支援士試験の実施予定について",
+    "url": "https://www.ipa.go.jp/shiken/2025/yotei.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月30日",
+    "title": "「エンベデッドシステムスペシャリスト試験の問題作成委員による座談会」を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/about/es-column.html",
+    "relatedQualifications": [
+      {
+        "no": 5,
+        "name": "エンベデッドシステムスペシャリスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月25日",
+    "title": "IPA NEWS Vol.69（2024年11月号）を公開しました",
+    "url": "https://www.ipa.go.jp/about/ipanews/index.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月13日",
+    "title": "令和6年度秋期試験の合格発表スケジュールを掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/20241013_schedule.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月13日",
+    "title": "令和6年度秋期試験における試験会場での忘れ物等について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241013.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月11日",
+    "title": "令和6年度秋期試験の実施について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20241011-3.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年10月3日",
+    "title": "令和6年度秋期試験の受験票再発行受付期間は10月3日9時30分から10月8日18時までです",
+    "url": "https://www.ipa.go.jp/shiken/2024/chuui_r06a.html#jukenhyou",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年9月24日",
+    "title": "令和6年度秋期試験のSG・FE（特別措置試験）受験の方は、受験票のダウンロードが可能となりました",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240924.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年9月6日",
+    "title": "令和6年度秋期試験の受験に関する主な注意事項を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/chuui_r06a.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年9月4日",
+    "title": "令和6年度秋期情報処理技術者試験及び情報処理安全確保支援士試験の応募者数について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240904.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年9月2日",
+    "title": "情報セキュリティマネジメント試験の推薦の声を更新しました（アズビル株式会社）",
+    "url": "https://www.ipa.go.jp/shiken/kubun/sg/interview/detail_azbil.html",
+    "relatedQualifications": [
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年8月8日",
+    "title": "令和6年度秋期試験（情報セキュリティマネジメント試験及び基本情報技術者試験の特別措置試験）の申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/r06aki_exam.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年8月8日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240808.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年8月8日",
+    "title": "【外部講演情報更新】8月29日開催 安全性向上セミナー「基礎コース in 2024 第2回 事例で学ぶSTAMP/STPA（入門編）」",
+    "url": "https://www.ipa.go.jp/disc/event.html#20240829",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年8月5日",
+    "title": "ITパスポート試験の企業の声を公開しました（東北電力株式会社）",
+    "url": "https://www3.jitec.ipa.go.jp/JitesCbt/html/about/company17.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月22日",
+    "title": "【外部講演情報更新】7月26日開催 近畿会主催セミナー「2024年版 最新DXのすすめ方とDX認定をIPAスペシャリストから学ぶ！」",
+    "url": "https://www.ipa.go.jp/disc/event.html#20240726",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月19日",
+    "title": "令和6年度春期情報処理安全確保支援士試験 午後 問4の表記誤り（誤記）とその対応について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240719.html",
+    "relatedQualifications": [
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月19日",
+    "title": "令和6年度春期試験の採点講評（午後）を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/2024r06.html#haru",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月16日",
+    "title": "令和6年度秋期試験（応用情報技術者試験、高度試験、情報処理安全確保支援士試験）におけるバウチャーチケットの購入申込受付を終了しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/r06aki_voucher.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月9日",
+    "title": "ITパスポート試験（iパス）が「日本の資格・検定」AWARDS 2024（総合アクセスランキング部門第1位）を受賞しました",
+    "url": "https://jpsk.jp/articles/award2024.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月5日",
+    "title": "情報セキュリティマネジメント試験及び基本情報技術者試験の令和6年度公開問題を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/mondai-kaiotu/sg_fe/koukai/2024r06.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月4日",
+    "title": "令和6年度春期情報処理技術者試験（応用情報技術者試験、高度試験）及び情報処理安全確保支援士試験の合格発表について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240704.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年7月3日",
+    "title": "令和6年度秋期試験の案内書を掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/annai_pd_06a.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年6月12日",
+    "title": "情報セキュリティマネジメント試験の活用事例を更新しました（栃木県）",
+    "url": "https://www.ipa.go.jp/shiken/kubun/sg/example/sg-government.html#tochigi",
+    "relatedQualifications": [
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年6月7日",
+    "title": "令和6年度春期ネットワークスペシャリスト試験 午後Ⅱ 問2 設問5の不備とその対応について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240607.html",
+    "relatedQualifications": [
+      {
+        "no": 3,
+        "name": "ネットワークスペシャリスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年5月31日",
+    "title": "ニューヨークだより（2024年5月）「米国におけるAI政策最新動向調査 -NISTの取組を中心にして-」を公開しました",
+    "url": "https://www.ipa.go.jp/digital/chousa/seido-seisaku/ny-dayori.html",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月30日",
+    "title": "【AISI】AI事業者ガイドラインと米国NIST AIリスクマネジメントフレームワーク（RMF）のクロスウォーク1を実施しました",
+    "url": "https://aisi.go.jp/2024/04/30/ai_rmf_crosswalk1_news/",
+    "relatedQualifications": [
+      {
+        "no": 9,
+        "name": "ITストラテジスト試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月26日",
+    "title": "ITパスポート試験専用サイトのシステムメンテナンス等のお知らせ",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240426.html",
+    "relatedQualifications": [
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月21日",
+    "title": "令和6年度春期試験の合格発表スケジュールを掲載しました",
+    "url": "https://www.ipa.go.jp/shiken/2024/20240421_schedule.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月21日",
+    "title": "令和6年度春期試験における試験会場での忘れ物等について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240421.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月19日",
+    "title": "令和6年度春期試験の実施について",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240419.html",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月11日",
+    "title": "令和6年度春期試験の受験票再発行受付期間は4月11日9時30分から4月16日18時までです",
+    "url": "https://www.ipa.go.jp/shiken/2024/chuui_r06h.html#jukenhyou",
+    "relatedQualifications": []
+  },
+  {
+    "fiscalYear": 2024,
+    "date": "2024年4月2日",
+    "title": "令和6年度春期試験のSG・FE（特別措置試験）受験の方は、受験票のダウンロードが可能となりました",
+    "url": "https://www.ipa.go.jp/news/2024/shiken_20240402.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
       }
     ]
   }
