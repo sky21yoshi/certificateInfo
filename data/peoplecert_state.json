@@ -1,0 +1,41 @@
+[
+  {
+    "provider": "PeopleCert",
+    "title": "ITIL資格情報の更新",
+    "url": "https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1",
+    "date": "",
+    "contentHash": "eb2c2d79",
+    "relatedQualifications": [
+      {
+        "no": 106,
+        "name": "ITIL Foundation"
+      }
+    ]
+  },
+  {
+    "provider": "PeopleCert",
+    "title": "ITIL Build practical capability to manage digital products and services with clarity and confidence.",
+    "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1",
+    "date": "",
+    "contentHash": "18e56ad2",
+    "relatedQualifications": [
+      {
+        "no": 106,
+        "name": "ITIL Foundation"
+      }
+    ]
+  },
+  {
+    "provider": "PeopleCert",
+    "title": "IT Governance & Service Management",
+    "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management",
+    "date": "",
+    "contentHash": "4f73dc70",
+    "relatedQualifications": [
+      {
+        "no": 106,
+        "name": "ITIL Foundation"
+      }
+    ]
+  }
+]
