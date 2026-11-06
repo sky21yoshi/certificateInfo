@@ -1,0 +1,146 @@
+[
+  {
+    "provider": "CompTIA",
+    "title": "CompTIA official blog updates",
+    "url": "https://www.comptia.org/ja-jp/blog/",
+    "date": "",
+    "contentHash": "798a9a6c",
+    "relatedQualifications": [
+      {
+        "no": 71,
+        "name": "IT Fundamentals",
+        "aliases": [
+          "IT Fundamentals",
+          "ITF+"
+        ]
+      },
+      {
+        "no": 72,
+        "name": "A+",
+        "aliases": [
+          "CompTIA A+",
+          "A+"
+        ]
+      },
+      {
+        "no": 73,
+        "name": "Network+",
+        "aliases": [
+          "Network+"
+        ]
+      },
+      {
+        "no": 74,
+        "name": "Security+",
+        "aliases": [
+          "Security+"
+        ]
+      },
+      {
+        "no": 75,
+        "name": "Cloud+",
+        "aliases": [
+          "Cloud+"
+        ]
+      },
+      {
+        "no": 76,
+        "name": "Linux+",
+        "aliases": [
+          "Linux+"
+        ]
+      },
+      {
+        "no": 77,
+        "name": "Server+",
+        "aliases": [
+          "Server+"
+        ]
+      },
+      {
+        "no": 78,
+        "name": "CASP+",
+        "aliases": [
+          "CASP+",
+          "SecurityX"
+        ]
+      },
+      {
+        "no": 79,
+        "name": "F+",
+        "aliases": [
+          "CompTIA F+",
+          "F+"
+        ]
+      },
+      {
+        "no": 80,
+        "name": "PenTest+",
+        "aliases": [
+          "PenTest+"
+        ]
+      },
+      {
+        "no": 81,
+        "name": "Project+",
+        "aliases": [
+          "Project+"
+        ]
+      },
+      {
+        "no": 82,
+        "name": "CTT+",
+        "aliases": [
+          "CTT+"
+        ]
+      },
+      {
+        "no": 83,
+        "name": "Cloud Essentials",
+        "aliases": [
+          "Cloud Essentials"
+        ]
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA",
+    "title": "認定資格",
+    "url": "https://www.comptia.org/ja-jp/certifications/",
+    "date": "",
+    "contentHash": "41d45f5d",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CompTIA",
+    "title": "CompTIA Central",
+    "url": "https://login.comptia.org/",
+    "date": "",
+    "contentHash": "7cc3c131",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CompTIA",
+    "title": "新人・若手育成の再設計が求められる時代へ CompTIAと生成AIリテラシーで考える、これからの人材育成",
+    "url": "https://www.comptia.org/ja-jp/blog/blog-building-ai-ready-talent-workforce-development-with-comptia-and-generative-ai-literacy/",
+    "date": "",
+    "contentHash": "804a9011",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CompTIA",
+    "title": "CompTIA認定資格を活かしたキャリアパスの作り方",
+    "url": "https://www.comptia.org/ja-jp/blog/how_development_careerpathywa/",
+    "date": "",
+    "contentHash": "bba10db3",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CompTIA",
+    "title": "CompTIAについて",
+    "url": "https://www.comptia.org/ja-jp/about-us/",
+    "date": "",
+    "contentHash": "0a79625d",
+    "relatedQualifications": []
+  }
+]

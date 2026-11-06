@@ -55,7 +55,7 @@
     "uid": "certification.identity-and-access-administrator",
     "title": "Microsoft Certified: Identity and Access Administrator Associate",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/identity-and-access-administrator/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -107,7 +107,7 @@
     "uid": "certification.security-operations-analyst",
     "title": "Microsoft Certified: Security Operations Analyst Associate",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -159,7 +159,7 @@
     "uid": "certification.devops-engineer",
     "title": "Microsoft Certified: DevOps Engineer Expert",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/devops-engineer/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -224,7 +224,7 @@
     "uid": "certification.power-platform-developer-associate",
     "title": "Microsoft Certified: Power Platform Developer Associate",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-11-04T00:12:00+00:00",
+    "lastModified": "2026-11-04T23:47:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -263,7 +263,7 @@
     "uid": "certification.azure-solutions-architect",
     "title": "Microsoft Certified: Azure Solutions Architect Expert",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-solutions-architect/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -289,7 +289,7 @@
     "uid": "certification.data-analyst-associate",
     "title": "Microsoft Certified: Power BI Data Analyst Associate",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {
@@ -315,7 +315,7 @@
     "uid": "certification.cybersecurity-architect-expert",
     "title": "Microsoft Certified: Cybersecurity Architect Expert",
     "url": "https://learn.microsoft.com/en-us/credentials/certifications/cybersecurity-architect-expert/?WT.mc_id=api_CatalogApi",
-    "lastModified": "2026-10-30T21:22:00+00:00",
+    "lastModified": "2026-11-05T22:08:00+00:00",
     "type": "role-based",
     "relatedQualifications": [
       {

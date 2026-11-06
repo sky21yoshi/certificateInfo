@@ -1,0 +1,23 @@
+[
+  {
+    "provider": "サーティファイ",
+    "title": "C言語プログラミング能力認定試験の更新",
+    "url": "https://www.sikaku.gr.jp/js/cp/",
+    "date": "",
+    "contentHash": "9359aa36",
+    "relatedQualifications": [
+      {
+        "no": 96,
+        "name": "C言語プログラミング能力認定試験3級"
+      },
+      {
+        "no": 97,
+        "name": "C言語プログラミング能力認定試験2級"
+      },
+      {
+        "no": 98,
+        "name": "C言語プログラミング能力認定試験1級"
+      }
+    ]
+  }
+]

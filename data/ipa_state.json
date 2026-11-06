@@ -1,6 +1,42 @@
 [
   {
     "fiscalYear": 2026,
+    "date": "2026年11月5日",
+    "title": "応用情報技術者試験・高度試験・情報処理安全確保支援士試験における答案の開示請求について",
+    "url": "https://www.ipa.go.jp/news/2026/shiken_20261105.html",
+    "relatedQualifications": [
+      {
+        "no": 2,
+        "name": "応用情報技術者試験(旧:ソフトウェア開発技術者試験)"
+      },
+      {
+        "no": 7,
+        "name": "情報処理安全確保支援士試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
+    "date": "2026年11月5日",
+    "title": "CBT方式で実施するITパスポート試験、情報セキュリティマネジメント試験及び基本情報技術者試験における2027年1月以降の実施予定について",
+    "url": "https://www.ipa.go.jp/shiken/2026/cbt-202701-yotei.html",
+    "relatedQualifications": [
+      {
+        "no": 1,
+        "name": "基本情報技術者試験"
+      },
+      {
+        "no": 12,
+        "name": "ITパスポート試験"
+      },
+      {
+        "no": 13,
+        "name": "情報セキュリティマネジメント試験"
+      }
+    ]
+  },
+  {
+    "fiscalYear": 2026,
     "date": "2026年10月30日",
     "title": "プロフェッショナルデジタルスキル（データ・AI）試験（仮称） 科目Bのサンプル問題を公表しました",
     "url": "https://www.ipa.go.jp/shiken/syllabus/henkou/2026/20260622.html",

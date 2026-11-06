@@ -1,0 +1,27 @@
+[
+  {
+    "provider": "Broadcom",
+    "title": "VMware Certification program updates",
+    "url": "https://www.broadcom.com/support/education/vmware/certification",
+    "date": "",
+    "contentHash": "9cbce0cf",
+    "relatedQualifications": [
+      {
+        "no": 67,
+        "name": "VCP (VMware Certified Professional)"
+      },
+      {
+        "no": 68,
+        "name": "VCAP (VMware Certified Advanced Professional)"
+      },
+      {
+        "no": 69,
+        "name": "VCDX (VMware Certified Design Expert)"
+      },
+      {
+        "no": 70,
+        "name": "VCTA (VMware Certified Technical Associate)"
+      }
+    ]
+  }
+]

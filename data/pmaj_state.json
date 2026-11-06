@@ -1,0 +1,244 @@
+[
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMC資格試験",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmc/top.html",
+    "date": "",
+    "contentHash": "e3dce487",
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "プロジェクトマネジメント・コーディネーター (PMC)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMCe資格",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmce/top.html",
+    "date": "",
+    "contentHash": "1b855d55",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMSプログラム試験",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pms_pg/top.html",
+    "date": "",
+    "contentHash": "9b35817f",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMS資格試験",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pms/top.html",
+    "date": "",
+    "contentHash": "bbd4a2b7",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMR資格試験",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmr/top.html",
+    "date": "",
+    "contentHash": "38c3b860",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMS試験練習問題",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pms/exercise/index.html",
+    "date": "",
+    "contentHash": "6b902691",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMS CPU申請",
+    "url": "https://www.pmaj.or.jp/p2m/shikaku/pms/index.html",
+    "date": "",
+    "contentHash": "14540677",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMR CPU申請",
+    "url": "https://www.pmaj.or.jp/p2m/shikaku/pmr/index.html",
+    "date": "",
+    "contentHash": "e27b0974",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMC講習会",
+    "url": "https://www.pmaj.or.jp/p2m/seminar/pmc/top.html",
+    "date": "",
+    "contentHash": "9fea6fc0",
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "プロジェクトマネジメント・コーディネーター (PMC)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMSプログラム試験対策講座",
+    "url": "https://www.pmaj.or.jp/p2m/seminar/p2mpg_chishiki/top.html",
+    "date": "",
+    "contentHash": "64fac471",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMR養成研修",
+    "url": "https://www.pmaj.or.jp/p2m/seminar/pmr_yosei/top.html",
+    "date": "",
+    "contentHash": "2eedb4f8",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "eラーニング（PMC）",
+    "url": "https://www.pmaj.or.jp/p2m/seminar/pmc/nintei/index.html",
+    "date": "",
+    "contentHash": "7a848884",
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "プロジェクトマネジメント・コーディネーター (PMC)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "Advanced PMR Club(APC)",
+    "url": "https://www.pmaj.or.jp/activity/apc/index.html",
+    "date": "",
+    "contentHash": "529e5ac1",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "過去のPMC資格試験情報はこちら",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmc/pmc_exam_rireki.html",
+    "date": "",
+    "contentHash": "80c32602",
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "プロジェクトマネジメント・コーディネーター (PMC)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "＜他資格からのPMSプログラム試験の受験に関して＞",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pms_pg/info_kakudai.html",
+    "date": "",
+    "contentHash": "4986ae8e",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "過去のPMS資格試験情報はこちら",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pms/pms_exam_rireki.html",
+    "date": "",
+    "contentHash": "49114a52",
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "プロジェクトマネジメント・スペシャリスト (PMS)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "プログラムマネジャー・レジスタード（PMR）資格試験受験申し込み案内",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmr/270116/annai.html",
+    "date": "",
+    "contentHash": "b6e51838",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "PMR養成研修",
+    "url": "https://www.pmaj.or.jp/p2m/seminar/pmr_yosei/index_2026.html",
+    "date": "",
+    "contentHash": "2eedb4f8",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  },
+  {
+    "provider": "日本プロジェクトマネジメント協会 (PMAJ)",
+    "title": "過去のPMR資格試験情報はこちら",
+    "url": "https://www.pmaj.or.jp/p2m/exam/pmr/pmr_exam_rireki.html",
+    "date": "",
+    "contentHash": "cb34c681",
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "プログラムマネジャー・レジスタード (PMR)"
+      }
+    ]
+  }
+]

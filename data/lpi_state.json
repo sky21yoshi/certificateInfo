@@ -1,6 +1,13 @@
 [
   {
     "provider": "LPI (Linux Professional Institute)",
+    "title": "Linux Essentials 2.0: The Linux Community and a Career in Open Source Software",
+    "url": "https://www.lpi.org/blog/2026/11/05/linux-essentials-2-0-the-linux-community-and-a-career-in-open-source-software/",
+    "date": "Thu, 05 Nov 2026 15:00:00 +0000",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "LPI (Linux Professional Institute)",
     "title": "AI: Platform, Not Product",
     "url": "https://www.lpi.org/blog/2026/11/03/ai-platform-not-product/",
     "date": "Tue, 03 Nov 2026 16:46:36 +0000",
@@ -60,13 +67,6 @@
     "title": "Linux Professional Institute Releases Linux Essentials Version 2.0",
     "url": "https://www.lpi.org/articles/linux-professional-institute-releases-linux-essentials-version-2-0/",
     "date": "Thu, 15 Oct 2026 14:00:41 +0000",
-    "relatedQualifications": []
-  },
-  {
-    "provider": "LPI (Linux Professional Institute)",
-    "title": "ASO Business Computer College: Training IT Infrastructure Professionals Through Hands-On Education and Linux Certification",
-    "url": "https://www.lpi.org/blog/2026/10/02/aso-business-computer-college-training-it-infrastructure-professionals-through-hands-on-education-and-linux-certification/",
-    "date": "Fri, 02 Oct 2026 09:17:42 +0000",
     "relatedQualifications": []
   },
   {

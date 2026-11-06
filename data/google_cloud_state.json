@@ -1,0 +1,22 @@
+[
+  {
+    "provider": "Google Cloud",
+    "title": "New ways to keep Google Cloud certifications current and boost your career",
+    "url": "https://cloud.google.com/blog/topics/training-certifications/new-ways-keep-google-cloud-certifications-current",
+    "date": "",
+    "relatedQualifications": [
+      {
+        "no": 40,
+        "name": "GCP Leader系"
+      },
+      {
+        "no": 41,
+        "name": "GCP認定 Associate系"
+      },
+      {
+        "no": 42,
+        "name": "GCP認定 Professional系"
+      }
+    ]
+  }
+]

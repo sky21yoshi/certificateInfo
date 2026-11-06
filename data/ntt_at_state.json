@@ -1,0 +1,19 @@
+[
+  {
+    "provider": "NTTアドバンステクノロジ (NTT-AT)",
+    "title": "WinActor認定情報の更新",
+    "url": "https://winactor.biz/use/winactor_certification.html",
+    "date": "",
+    "contentHash": "efbec7e2",
+    "relatedQualifications": [
+      {
+        "no": 109,
+        "name": "WinActor RPA技術者検定アソシエイト"
+      },
+      {
+        "no": 110,
+        "name": "WinActor RPA技術者検定エキスパート"
+      }
+    ]
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "provider": "CNCF",
+    "title": "CNCF certification updates",
+    "url": "https://www.cncf.io/blog/",
+    "date": "",
+    "contentHash": "11370312",
+    "relatedQualifications": [
+      {
+        "no": 84,
+        "name": "Certified Kubernetes Administrator (CKA)",
+        "aliases": [
+          "CKA",
+          "Kubernetes Administrator"
+        ]
+      },
+      {
+        "no": 85,
+        "name": "Certified Kubernetes Application Developer (CKAD)",
+        "aliases": [
+          "CKAD",
+          "Kubernetes Application Developer"
+        ]
+      },
+      {
+        "no": 86,
+        "name": "Certified Kubernetes Security Specialist (CKS)",
+        "aliases": [
+          "CKS",
+          "Kubernetes Security Specialist"
+        ]
+      },
+      {
+        "no": 87,
+        "name": "Kubernetes and Cloud Native Associate (KCNA)",
+        "aliases": [
+          "KCNA",
+          "Cloud Native Associate"
+        ]
+      }
+    ]
+  },
+  {
+    "provider": "CNCF",
+    "title": "Certifications",
+    "url": "https://www.cncf.io/training/certification/",
+    "date": "",
+    "contentHash": "37d2214a",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Courses Learn the basics of cloud native or train for a certification with training courses built in collaboration with the Linux Foundation",
+    "url": "https://www.cncf.io/training/courses/",
+    "date": "",
+    "contentHash": "a8ff339b",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Kubernetes Training Partners Find a qualified KCNTP to prepare for your next certification",
+    "url": "https://www.cncf.io/training/kubernetes-cloud-native-training-partners/",
+    "date": "",
+    "contentHash": "4bb31449",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Certified Kubernetes",
+    "url": "https://www.cncf.io/training/certification/software-conformance/",
+    "date": "",
+    "contentHash": "595e1926",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Cloud Native Network Function Certification (Beta) CNF Certification ensures applications demonstrate cloud native best practices",
+    "url": "https://www.cncf.io/training/certification/cnf/",
+    "date": "",
+    "contentHash": "b7bd9089",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Kubernetes Certified Service Provider KCSPs have deep experience helping enterprises successfully adopt cloud native technologies",
+    "url": "https://www.cncf.io/training/certification/kcsp/",
+    "date": "",
+    "contentHash": "5e5d9488",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "CNCF",
+    "title": "Extending Kubernetes policy enforcement to runtime security for AI workloads",
+    "url": "https://www.cncf.io/blog/2026/10/15/extending-kubernetes-policy-enforcement-to-runtime-security-for-ai-workloads/",
+    "date": "",
+    "contentHash": "164aaa87",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Linux Foundation",
+    "title": "Linux Foundation certification updates",
+    "url": "https://training.linuxfoundation.org/blog/",
+    "date": "",
+    "contentHash": "0629da3e",
+    "relatedQualifications": [
+      {
+        "no": 84,
+        "name": "Certified Kubernetes Administrator (CKA)",
+        "aliases": [
+          "CKA",
+          "Kubernetes Administrator"
+        ]
+      },
+      {
+        "no": 85,
+        "name": "Certified Kubernetes Application Developer (CKAD)",
+        "aliases": [
+          "CKAD",
+          "Kubernetes Application Developer"
+        ]
+      },
+      {
+        "no": 86,
+        "name": "Certified Kubernetes Security Specialist (CKS)",
+        "aliases": [
+          "CKS",
+          "Kubernetes Security Specialist"
+        ]
+      },
+      {
+        "no": 87,
+        "name": "Kubernetes and Cloud Native Associate (KCNA)",
+        "aliases": [
+          "KCNA",
+          "Cloud Native Associate"
+        ]
+      }
+    ]
+  },
+  {
+    "provider": "Linux Foundation",
+    "title": "Training & Certification",
+    "url": "https://training.linuxfoundation.org/",
+    "date": "",
+    "contentHash": "e489988f",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Linux Foundation",
+    "title": "Certifications",
+    "url": "https://training.linuxfoundation.org/certification-catalog/",
+    "date": "",
+    "contentHash": "37d2214a",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Linux Foundation",
+    "title": "IT Certification Journey",
+    "url": "https://training.linuxfoundation.org/it-certification-journey/",
+    "date": "",
+    "contentHash": "5babf552",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Linux Foundation",
+    "title": "Verify Certification",
+    "url": "https://training.linuxfoundation.org/certification/verify/",
+    "date": "",
+    "contentHash": "9ea26672",
+    "relatedQualifications": []
+  }
+]

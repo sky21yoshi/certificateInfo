@@ -1,0 +1,117 @@
+[
+  {
+    "provider": "UiPath",
+    "title": "UiPath certification program updates",
+    "url": "https://www.uipath.com/ja/learning/certification",
+    "date": "",
+    "contentHash": "2c6c03e2",
+    "relatedQualifications": [
+      {
+        "no": 92,
+        "name": "UiPath Automation Developer Associate",
+        "aliases": [
+          "Automation Developer Associate",
+          "オートメーション デベロッパー アソシエイト"
+        ]
+      },
+      {
+        "no": 93,
+        "name": "UiPath Automation Developer Professional",
+        "aliases": [
+          "Automation Developer Professional",
+          "オートメーション デベロッパー プロフェッショナル"
+        ]
+      },
+      {
+        "no": 94,
+        "name": "UiPath Agentic Automation Associate",
+        "aliases": [
+          "Agentic Automation Associate",
+          "エージェンティック オートメーション アソシエイト"
+        ]
+      },
+      {
+        "no": 95,
+        "name": "UiPath Agentic Automation Professional",
+        "aliases": [
+          "Agentic Automation Professional",
+          "エージェンティック オートメーション プロフェッショナル"
+        ]
+      }
+    ]
+  },
+  {
+    "provider": "UiPath",
+    "title": "認定資格",
+    "url": "https://www.uipath.com/ja/learning/certification",
+    "date": "",
+    "contentHash": "41d45f5d",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "UiPath",
+    "title": "エージェンティックテスティング",
+    "url": "https://www.uipath.com/ja/platform/agentic-testing",
+    "date": "",
+    "contentHash": "f3f5d611",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "UiPath",
+    "title": "認定資格を取得する",
+    "url": "https://www.pearsonvue.com/jp/ja/uipath.html",
+    "date": "",
+    "contentHash": "43958b0e",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "UiPath",
+    "title": "オートメーション デベロッパー アソシエイト",
+    "url": "https://start.uipath.com/rs/995-XLT-886/images/ADAv1_JPN_exam_description1.0_Final.pdf?version=0https://start.uipath.com/rs/995-XLT-",
+    "date": "",
+    "contentHash": "2ecd1572",
+    "relatedQualifications": [
+      {
+        "no": 92,
+        "name": "UiPath Automation Developer Associate"
+      }
+    ]
+  },
+  {
+    "provider": "UiPath",
+    "title": "オートメーション デベロッパー プロフェッショナル",
+    "url": "https://start.uipath.com/rs/995-XLT-886/images/ADP_v1JPN_exam_description1.0_Final.pdf?version=0",
+    "date": "",
+    "contentHash": "94839cc4",
+    "relatedQualifications": [
+      {
+        "no": 93,
+        "name": "UiPath Automation Developer Professional"
+      }
+    ]
+  },
+  {
+    "provider": "UiPath",
+    "title": "認定資格を取る",
+    "url": "https://forum.uipath.com/t/test-cloud/5744162",
+    "date": "",
+    "contentHash": "883c832e",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "UiPath",
+    "title": "認定資格を取る",
+    "url": "https://forum.uipath.com/t/3-31/5730477",
+    "date": "",
+    "contentHash": "883c832e",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "UiPath",
+    "title": "今すぐ認定試験に申し込む",
+    "url": "https://www.pearsonvue.co.jp/uipath",
+    "date": "",
+    "contentHash": "b02c14c3",
+    "relatedQualifications": []
+  }
+]

@@ -1,0 +1,139 @@
+[
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "Python3 エンジニア認定基礎試験の更新",
+    "url": "https://www.pythonic-exam.com/exam/basic",
+    "date": "",
+    "contentHash": "fc3d01ec",
+    "relatedQualifications": [
+      {
+        "no": 99,
+        "name": "Python3 エンジニア認定基礎試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "Python3 エンジニア認定データ分析試験の更新",
+    "url": "https://www.pythonic-exam.com/exam/data-analyst",
+    "date": "",
+    "contentHash": "5aa5901d",
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "Python3 エンジニア認定データ分析試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "皆さまのPython 3エンジニア認定実践試験関連のブログをご紹介「【Tips】初めてのPython実践試験学習　第26回「リスト・タプル・辞書から値を取り出すアンパック」他3本",
+    "url": "https://pythonic-exam.com/archives/11531",
+    "date": "Wed, 04 Nov 2026 07:17:43 +0000",
+    "description": "",
+    "contentHash": "8382e6b8",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "皆さまのPython 3エンジニア認定データ分析試験関連のブログをご紹介「【合格体験記】Python3エンジニア認定データ分析試験に1か月で合格した勉強法」他3本",
+    "url": "https://pythonic-exam.com/archives/11529",
+    "date": "Wed, 04 Nov 2026 07:16:17 +0000",
+    "description": "",
+    "contentHash": "948252c8",
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "Python3 エンジニア認定データ分析試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "皆さまのPython 3エンジニア認定基礎試験関連のブログをご紹介「【合格体験記】３０代Python初心者が、２週間でPython３エンジニア認定基礎試験に合格した話」他３本",
+    "url": "https://pythonic-exam.com/archives/11527",
+    "date": "Wed, 04 Nov 2026 07:14:40 +0000",
+    "description": "",
+    "contentHash": "e6bce51e",
+    "relatedQualifications": [
+      {
+        "no": 99,
+        "name": "Python3 エンジニア認定基礎試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "たまご様のPython 3 エンジニア認定データ分析実践試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11458",
+    "date": "Sun, 25 Oct 2026 03:32:32 +0000",
+    "description": "",
+    "contentHash": "b440ad2b",
+    "relatedQualifications": []
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "第一三共株式会社 つっちー様のPython 3 エンジニア認定基礎試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11456",
+    "date": "Sun, 25 Oct 2026 03:29:46 +0000",
+    "description": "",
+    "contentHash": "c9bbd11d",
+    "relatedQualifications": [
+      {
+        "no": 99,
+        "name": "Python3 エンジニア認定基礎試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "おーむ様のPython 3 エンジニア認定基礎試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11454",
+    "date": "Sun, 25 Oct 2026 03:27:37 +0000",
+    "description": "",
+    "contentHash": "65cc3628",
+    "relatedQualifications": [
+      {
+        "no": 99,
+        "name": "Python3 エンジニア認定基礎試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "おかめ様のPython 3 エンジニア認定データ分析試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11452",
+    "date": "Sun, 25 Oct 2026 03:25:31 +0000",
+    "description": "",
+    "contentHash": "a4601b44",
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "Python3 エンジニア認定データ分析試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "NTT様のPython 3 エンジニア認定データ分析試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11450",
+    "date": "Sun, 25 Oct 2026 03:23:31 +0000",
+    "description": "",
+    "contentHash": "dd674c2c",
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "Python3 エンジニア認定データ分析試験"
+      }
+    ]
+  },
+  {
+    "provider": "Pythonエンジニア育成推進協会",
+    "title": "しろくま様のPython 3 エンジニア認定実践試験合格体験記を公開しました",
+    "url": "https://pythonic-exam.com/archives/11448",
+    "date": "Sun, 25 Oct 2026 03:21:11 +0000",
+    "description": "",
+    "contentHash": "80cc66e5",
+    "relatedQualifications": []
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "provider": "Anthropic",
+    "title": "Claude Academy course and certification catalog",
+    "url": "https://academy.claude.com/courses",
+    "date": "",
+    "contentHash": "ecfc2009",
+    "relatedQualifications": [
+      {
+        "no": 88,
+        "name": "Claude Certified Associate – Foundations (CCAO-F)"
+      },
+      {
+        "no": 89,
+        "name": "Claude Certified Architect – Foundations (CCAR-F)"
+      },
+      {
+        "no": 90,
+        "name": "Claude Certified Developer – Foundations (CCDV-F)"
+      },
+      {
+        "no": 91,
+        "name": "Claude Certified Architect – Professional (CCAR-P)"
+      }
+    ]
+  }
+]

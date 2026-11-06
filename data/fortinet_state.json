@@ -1,0 +1,28 @@
+[
+  {
+    "provider": "Fortinet",
+    "title": "Fortinet認定資格プログラムの更新",
+    "url": "https://www.fortinet.com/jp/training-certification",
+    "date": "",
+    "contentHash": "067a5720",
+    "relatedQualifications": [
+      {
+        "no": 107,
+        "name": "Fortinet Certified Professional (FCP)"
+      }
+    ]
+  },
+  {
+    "provider": "Fortinet",
+    "title": "Fortinet NSE認定プログラム改訂情報",
+    "url": "https://www.fortinet.com/nse-training-update",
+    "date": "",
+    "contentHash": "9b3ae0ed",
+    "relatedQualifications": [
+      {
+        "no": 107,
+        "name": "Fortinet Certified Professional (FCP)"
+      }
+    ]
+  }
+]
