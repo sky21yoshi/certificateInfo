@@ -19,7 +19,12 @@ const { fetchPeopleCertUpdates } = require('./fetcher/peoplecert');
 const { fetchFortinetUpdates } = require('./fetcher/fortinet');
 const { fetchPaloAltoUpdates } = require('./fetcher/palo_alto');
 const { fetchNttAtUpdates } = require('./fetcher/ntt_at');
-const { loadProviderState, saveProviderState, detectDiff } = require('./checker');
+const {
+  loadProviderState,
+  saveProviderState,
+  mergeProviderItems,
+  detectDiff,
+} = require('./checker');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -189,7 +194,7 @@ async function runProviderMonitor(key, provider) {
         console.log(`     ${title}`);
         console.log(`     ${item.url}\n`);
       });
-      return { key, count: currentItems.length, diffCount: 0 };
+      return { key, count: currentItems.length, diffCount: 0, items: currentItems };
     }
 
     // 差分検知
@@ -216,7 +221,7 @@ async function runProviderMonitor(key, provider) {
       console.log('状態ファイルを最新に更新しました。');
     }
 
-    return { key, count: currentItems.length, diffCount: diffs.length };
+    return { key, count: currentItems.length, diffCount: diffs.length, items: currentItems };
 
   } catch (error) {
     console.error(`❌ [${provider.name}] の処理中にエラーが発生しました:`, error.message);
@@ -236,19 +241,38 @@ async function main() {
   // コマンドライン引数で対象プロバイダーを指定可能（例: --provider=aws）
   const targetArg = process.argv.find(arg => arg.startsWith('--provider='));
   const targetProvider = targetArg ? targetArg.split('=')[1].toLowerCase() : null;
+  const runAllProviders = !targetProvider || !PROVIDERS[targetProvider];
 
-  const entries = targetProvider && PROVIDERS[targetProvider]
+  const entries = !runAllProviders
     ? [[targetProvider, PROVIDERS[targetProvider]]]
     : Object.entries(PROVIDERS);
+  const results = [];
+  const failures = [];
 
   for (let i = 0; i < entries.length; i++) {
     const [key, provider] = entries[i];
-    await runProviderMonitor(key, provider);
+    const result = await runProviderMonitor(key, provider);
+    if (result.items) {
+      results.push(result);
+    } else {
+      failures.push(result);
+    }
 
     // プロバイダー間にインターバルを設ける（負荷軽減）
     if (i < entries.length - 1) {
       console.log('...アクセス間隔を空けています (1.5秒)...');
       await sleep(1500);
+    }
+  }
+
+  if (runAllProviders) {
+    if (failures.length > 0) {
+      console.error(`全ベンダー統合ファイルは更新しませんでした。取得失敗: ${failures.map(result => result.key).join(', ')}`);
+      process.exitCode = 1;
+    } else {
+      const allItems = mergeProviderItems(results.map(result => result.items));
+      saveProviderState('all', allItems);
+      console.log(`全ベンダー統合ファイルを保存しました: data/all_state.json (${allItems.length} 件)`);
     }
   }
 

@@ -45,6 +45,53 @@ function saveProviderState(providerName, state) {
 }
 
 /**
+ * 取得元ごとの情報を IPA 状態ファイルと同じ項目構成に正規化する
+ * @param {object} item
+ * @returns {{fiscalYear: number|null, date: string, title: string, url: string, relatedQualifications: Array<object>}}
+ */
+function normalizeStateItem(item) {
+  return {
+    fiscalYear: item.fiscalYear || null,
+    date: item.date || item.lastModified || '',
+    title: item.title || item.name || '',
+    url: item.url || item.officialUrl || '',
+    relatedQualifications: Array.isArray(item.relatedQualifications) ? item.relatedQualifications : [],
+  };
+}
+
+/**
+ * 複数取得元の情報をURLでまとめ、資格情報を統合する
+ * @param {Array<Array<object>>} providerItems
+ * @returns {Array<object>}
+ */
+function mergeProviderItems(providerItems) {
+  const merged = new Map();
+  for (const items of providerItems) {
+    for (const item of items) {
+      const normalized = normalizeStateItem(item);
+      if (!normalized.url) continue;
+
+      const existing = merged.get(normalized.url);
+      if (!existing) {
+        merged.set(normalized.url, normalized);
+        continue;
+      }
+
+      const qualifications = new Map(
+        existing.relatedQualifications.map(qualification => [qualification.no, qualification])
+      );
+      for (const qualification of normalized.relatedQualifications) {
+        qualifications.set(qualification.no, qualification);
+      }
+      existing.relatedQualifications = Array.from(qualifications.values());
+      if (!existing.date && normalized.date) existing.date = normalized.date;
+      if (!existing.fiscalYear && normalized.fiscalYear) existing.fiscalYear = normalized.fiscalYear;
+    }
+  }
+  return Array.from(merged.values());
+}
+
+/**
  * 新着・更新情報の差分を検知する
  * @param {Array<object>} currentItems 
  * @param {Array<object>} previousItems 
@@ -92,6 +139,8 @@ function saveCurrentState(state) {
 module.exports = {
   loadProviderState,
   saveProviderState,
+  normalizeStateItem,
+  mergeProviderItems,
   detectDiff,
   loadPreviousState,
   saveCurrentState,

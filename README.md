@@ -37,3 +37,7 @@
 Anthropicは資格告知専用ページを確認できなかったため、公式Claude Academyのコース一覧を監視対象としています。
 
 NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/expert.html`）は公式サイトで404となるため、現行の公式WinActor認定情報ページを監視します。現行ページのCWA認定レベルと一覧記載のアソシエイト／エキスパートの名称は一致しないため、資格情報の対応関係は公式ページで確認してください。
+
+全プロバイダーを実行すると、取得結果をIPA状態ファイルと同じ項目構成（`fiscalYear`、`date`、`title`、`url`、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。`fiscalYear` がない取得元では `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
+
+GAS版は、更新を検知した資格の行にある「最終更新日時」「タイトル」「説明」列を資格番号で特定して更新します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。テストは `node test/gas_sheet_updates.test.js` で実行します。

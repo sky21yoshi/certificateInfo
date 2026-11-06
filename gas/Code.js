@@ -24,6 +24,8 @@
  * 3. プロジェクト設定（歯車アイコン）>「スクリプト プロパティ」に以下を設定します：
  *    - キー: SLACK_WEBHOOK_URL
  *    - 値: CW-Consulting の Slack Incoming Webhook URL
+ *    - キー: QUALIFICATIONS_SPREADSHEET_URL（任意。未設定時は下記の既定URLを使用）
+ *    - キー: QUALIFICATIONS_SHEET_NAME（任意。未設定時は先頭のシートを使用）
  * 4. 左メニュー「トリガー（時計アイコン）」から、checkAllCertificateUpdates を時間主導型で定期実行（例: 毎日午前9時）設定します。
  */
 
@@ -58,6 +60,8 @@ const ENDPOINTS = {
   PALO_ALTO_CERTIFICATION: 'https://www.paloaltonetworks.com/services/education/certification',
   WINACTOR_CERTIFICATION: 'https://winactor.biz/use/winactor_certification.html'
 };
+
+const DEFAULT_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit';
 
 /**
  * 定期実行メイン関数
@@ -991,6 +995,7 @@ function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey
   const savedList = savedRaw ? JSON.parse(savedRaw) : [];
 
   if (savedList.length === 0) {
+    updateQualificationSheet(items.filter(item => item.date || item.lastModified));
     properties.setProperty(propKey, JSON.stringify(items.slice(0, 50)));
     console.log(`[${key}] 初回ベースライン保存完了 (${items.length}件)`);
     return;
@@ -1014,6 +1019,7 @@ function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey
 
   if (diffs.length > 0) {
     console.log(`[${key}] 差分検知: ${diffs.length} 件`);
+    updateQualificationSheet(diffs);
     for (const diff of diffs) {
       sendSlackNotification(diff, webhookUrl);
     }
@@ -1021,6 +1027,89 @@ function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey
   } else {
     console.log(`[${key}] 変更なし`);
   }
+}
+
+/**
+ * 更新情報を資格番号に対応するスプレッドシート行へ反映する
+ */
+function updateQualificationSheet(items) {
+  const updatesByQualification = new Map();
+  for (const item of items) {
+    const qualifications = item.relatedQualifications || [];
+    for (const qualification of qualifications) {
+      const no = Number(qualification.no);
+      if (!Number.isInteger(no) || no <= 0) continue;
+
+      const candidate = {
+        date: item.date || item.lastModified || '',
+        title: item.title || item.name || '',
+        description: item.description || item.title || item.name || ''
+      };
+      if (!candidate.title) continue;
+
+      const previous = updatesByQualification.get(no);
+      if (!previous || isNewerSheetUpdate(candidate, previous)) {
+        updatesByQualification.set(no, candidate);
+      }
+    }
+  }
+  if (updatesByQualification.size === 0) return;
+
+  const properties = PropertiesService.getScriptProperties();
+  const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
+  const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
+  const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = sheetName
+    ? spreadsheet.getSheetByName(sheetName)
+    : spreadsheet.getSheets()[0];
+  if (!sheet) {
+    throw new Error(sheetName
+      ? `資格一覧シートが見つかりません: ${sheetName}`
+      : 'スプレッドシートにシートがありません');
+  }
+
+  const values = sheet.getDataRange().getValues();
+  if (values.length === 0) throw new Error('資格一覧シートにヘッダー行がありません');
+
+  const headers = values[0].map(value => String(value).trim());
+  const numberColumn = headers.indexOf('No');
+  const dateColumn = headers.indexOf('最終更新日時');
+  const titleColumn = headers.indexOf('タイトル');
+  const descriptionColumn = headers.indexOf('説明');
+  if ([numberColumn, dateColumn, titleColumn, descriptionColumn].some(column => column < 0)) {
+    throw new Error('資格一覧シートに必要な列（No、最終更新日時、タイトル、説明）がありません');
+  }
+
+  const rowsByQualification = new Map();
+  for (let index = 1; index < values.length; index++) {
+    const no = Number(values[index][numberColumn]);
+    if (!Number.isInteger(no) || !updatesByQualification.has(no)) continue;
+    if (rowsByQualification.has(no)) {
+      throw new Error(`資格番号 ${no} の行が重複しています`);
+    }
+    rowsByQualification.set(no, index + 1);
+  }
+
+  for (const [no, update] of updatesByQualification) {
+    const row = rowsByQualification.get(no);
+    if (!row) {
+      console.warn(`資格番号 ${no} の行が資格一覧シートにありません`);
+      continue;
+    }
+    if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
+    sheet.getRange(row, titleColumn + 1).setValue(update.title);
+    sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
+  }
+}
+
+function isNewerSheetUpdate(candidate, previous) {
+  const candidateTime = Date.parse(candidate.date);
+  const previousTime = Date.parse(previous.date);
+  if (Number.isFinite(candidateTime) && Number.isFinite(previousTime)) {
+    return candidateTime > previousTime;
+  }
+  if (Number.isFinite(candidateTime)) return true;
+  return false;
 }
 
 /**
