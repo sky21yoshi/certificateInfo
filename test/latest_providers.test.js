@@ -13,8 +13,27 @@ async function main() {
   assert.strictEqual(pmi.length, 1);
   assert.strictEqual(pmi[0].relatedQualifications[0].no, 104);
 
-  const isaca = await fetchIsacaUpdates('<main>CISA exam and certification updates</main>');
-  assert.strictEqual(isaca[0].relatedQualifications[0].no, 105);
+  const isaca = await fetchIsacaUpdates(`
+    <!--トピックス-->
+    <table><tr><td><p class="topics">2026/10</p></td><td><p class="topics"><a href="/cisa/index.html">CISA exam updates</a></p></td></tr></table>
+    <!--//トピックス-->
+  `);
+  assert.strictEqual(isaca[1].relatedQualifications[0].no, 105);
+
+  const isacaTopics = await fetchIsacaUpdates(`
+    <!--トピックス-->
+    <table>
+      <tr><td><p class="topics">2026/10</p></td><td><p class="topics"><a href="https://www.isaca.gr.jp/cisa/index.html#cisa_course">2026年11月期 CISA試験レビューコースの開催のご案内</a></p></td></tr>
+      <tr><td><p class="topics">2026/08</p></td><td><p class="topics"><a href="/cism/index.html">CISM試験レビューコースのご案内</a></p></td></tr>
+      <tr><td><p class="topics">2026/06</p></td><td><p class="topics"><a href="/membership/fees.html">年会費のお知らせ</a></p></td></tr>
+    </table>
+    <!--//トピックス-->
+  `);
+  assert.strictEqual(isacaTopics[0].url, 'https://www.isaca.gr.jp/index.html');
+  assert.strictEqual(isacaTopics[1].title, '2026年11月期 CISA試験レビューコースの開催のご案内');
+  assert.strictEqual(isacaTopics[1].url, 'https://www.isaca.gr.jp/cisa/index.html#cisa_course');
+  assert.strictEqual(isacaTopics[1].date, '2026-10');
+  assert.strictEqual(isacaTopics.length, 2);
 
   const peoplecert = await fetchPeopleCertUpdates('<main>ITIL Foundation certification updates</main>');
   assert.strictEqual(peoplecert[0].relatedQualifications[0].no, 106);

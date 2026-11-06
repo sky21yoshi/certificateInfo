@@ -26,7 +26,7 @@
 - Pythonエンジニア育成推進協会: [お知らせRSS](https://pythonic-exam.com/feed/)・[基礎試験](https://www.pythonic-exam.com/exam/basic)・[データ分析試験](https://www.pythonic-exam.com/exam/data-analyst)
 - 日本プロジェクトマネジメント協会 (PMAJ): [PMC](https://www.pmaj.or.jp/p2m/exam/pmc/top.html)・[PMS](https://www.pmaj.or.jp/p2m/exam/pms/top.html)・[PMR](https://www.pmaj.or.jp/p2m/exam/pmr/top.html)
 - Project Management Institute (PMI): [PMI日本支部 PMP資格・試験情報](https://www.pmi-japan.org/pmp_license/)
-- ISACA: [CISA資格情報](https://www.isaca.gr.jp/cisa/)
+- ISACA: [東京支部トップページのトピックス](https://www.isaca.gr.jp/index.html)
 - PeopleCert: [ITIL Certifications](https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1)
 - Fortinet: [認定資格プログラム](https://www.fortinet.com/jp/training-certification)・[NSE認定プログラム改訂情報](https://www.fortinet.com/nse-training-update)
 - Palo Alto Networks: [Certification Program](https://www.paloaltonetworks.com/services/education/certification)
@@ -40,4 +40,4 @@ NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/e
 
 全プロバイダーを実行すると、取得結果をIPA状態ファイルと同じ項目構成（`fiscalYear`、`date`、`title`、`url`、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。`fiscalYear` がない取得元では `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
 
-GAS版は、更新を検知した資格の行にある「最終更新日時」「タイトル」「説明」列を資格番号で特定して更新します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` で実行します。
+GAS版は、更新を検知した資格の行を資格番号で特定し、「最終更新日時」「タイトル」「説明」と記事リンクの「更新情報URL」を更新します。「更新情報URL」列がない場合は、既存列を保持したまま末尾に自動追加します。資格ページを示す「資格情報取得元」列は変更しません。複数の更新候補が同じ資格に関連する場合は、日付が最も新しい情報を反映します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` で実行します。

@@ -53,7 +53,7 @@ const ENDPOINTS = {
   PMAJ_PMS: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html',
   PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html',
   PMI_PMP: 'https://www.pmi-japan.org/pmp_license/',
-  ISACA_CISA: 'https://www.isaca.gr.jp/cisa/',
+  ISACA_TOPICS: 'https://www.isaca.gr.jp/index.html',
   PEOPLECERT_ITIL: 'https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1',
   FORTINET_CERTIFICATION: 'https://www.fortinet.com/jp/training-certification',
   FORTINET_UPDATE: 'https://www.fortinet.com/nse-training-update',
@@ -557,12 +557,47 @@ function checkPmi(properties, webhookUrl) {
 }
 
 function checkIsaca(properties, webhookUrl) {
-  const url = ENDPOINTS.ISACA_CISA;
+  const url = ENDPOINTS.ISACA_TOPICS;
   const html = fetchOfficialHtml(url);
-  const items = [createOfficialSnapshot('ISACA', 'CISA資格情報の更新', url, html, [
+  const topics = extractIsacaTopics(html);
+  const items = [createOfficialSnapshot('ISACA', 'ISACAトピックスの更新', url, topics, [
     { no: 105, name: 'CISA (Certified Information Systems Auditor)' }
-  ])];
+  ])].concat(parseIsacaTopicItems(topics));
   handleDiff('ISACA', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function extractIsacaTopics(html) {
+  const match = html.match(/<!--\s*トピックス\s*-->[\s\S]*?<!--\s*\/\/トピックス\s*-->/i);
+  if (!match) throw new Error('ISACAトップページにトピックス欄が見つかりません');
+  return match[0];
+}
+
+function parseIsacaTopicItems(topics) {
+  const items = [];
+  const rowRegex = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+  let rowMatch;
+  while ((rowMatch = rowRegex.exec(topics)) !== null) {
+    const row = rowMatch[1];
+    const dateMatch = row.match(/<p\b[^>]*class=["']topics["'][^>]*>\s*(\d{4})\/(\d{1,2})/i);
+    const anchorMatch = row.match(/<a\b([^>]*)>([\s\S]*?)<\/a>/i);
+    if (!dateMatch || !anchorMatch) continue;
+
+    const title = stripHtmlText(anchorMatch[2]);
+    if (!/CISA|公認情報システム監査人|ISACA認定資格試験/i.test(title)) continue;
+    const hrefMatch = anchorMatch[1].match(/\bhref\s*=\s*["']([^"']+)["']/i);
+    if (!hrefMatch) continue;
+
+    const url = resolveOfficialUrl(hrefMatch[1], ENDPOINTS.ISACA_TOPICS);
+    items.push({
+      provider: 'ISACA',
+      title: title,
+      url: url,
+      date: `${dateMatch[1]}-${('0' + dateMatch[2]).slice(-2)}`,
+      contentHash: hashVisibleText(row),
+      relatedQualifications: [{ no: 105, name: 'CISA (Certified Information Systems Auditor)' }]
+    });
+  }
+  return uniqueItemsByUrl(items);
 }
 
 function checkPeopleCert(properties, webhookUrl) {
@@ -1065,7 +1100,8 @@ function updateQualificationSheet(items) {
       const candidate = {
         date: item.date || item.lastModified || '',
         title: item.title || item.name || '',
-        description: item.description || item.title || item.name || ''
+        url: item.url || item.officialUrl || '',
+        description: item.description || item.summary || item.title || item.name || ''
       };
       if (!candidate.title) continue;
 
@@ -1098,8 +1134,13 @@ function updateQualificationSheet(items) {
   const dateColumn = headers.indexOf('最終更新日時');
   const titleColumn = headers.indexOf('タイトル');
   const descriptionColumn = headers.indexOf('説明');
+  let urlColumn = headers.indexOf('更新情報URL');
   if ([numberColumn, dateColumn, titleColumn, descriptionColumn].some(column => column < 0)) {
     throw new Error('資格一覧シートに必要な列（No、最終更新日時、タイトル、説明）がありません');
+  }
+  if (urlColumn < 0) {
+    urlColumn = headers.length;
+    sheet.getRange(1, urlColumn + 1).setValue('更新情報URL');
   }
 
   const rowsByQualification = new Map();
@@ -1120,18 +1161,33 @@ function updateQualificationSheet(items) {
     }
     if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
     sheet.getRange(row, titleColumn + 1).setValue(update.title);
+    if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
     sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
   }
 }
 
 function isNewerSheetUpdate(candidate, previous) {
-  const candidateTime = Date.parse(candidate.date);
-  const previousTime = Date.parse(previous.date);
+  const candidateTime = getSheetUpdateTimestamp(candidate.date);
+  const previousTime = getSheetUpdateTimestamp(previous.date);
   if (Number.isFinite(candidateTime) && Number.isFinite(previousTime)) {
     return candidateTime > previousTime;
   }
   if (Number.isFinite(candidateTime)) return true;
   return false;
+}
+
+function getSheetUpdateTimestamp(value) {
+  if (!value) return NaN;
+  const normalized = String(value).trim()
+    .replace(/年/g, '-')
+    .replace(/月/g, '-')
+    .replace(/日/g, '')
+    .replace(/\//g, '-');
+  const partialDate = normalized.match(/^(\d{4})-(\d{1,2})$/);
+  const date = partialDate
+    ? `${partialDate[1]}-${('0' + partialDate[2]).slice(-2)}-01`
+    : normalized;
+  return Date.parse(date);
 }
 
 /**
