@@ -8,6 +8,9 @@
  * 2. Amazon Web Services (AWS)
  * 3. Microsoft（Learn Catalog API）
  * 4. LPI & LPI-Japan (Linux / OSS)
+ * 5. Cisco Systems (Learn with Cisco)
+ * 6. Google Cloud (Training and Certifications)
+ * 7. Oracle Certification
  * 
  * 【設定手順】
  * 1. スプレッドシートのメニュー「拡張機能」>「Apps Script」を開きます。
@@ -24,7 +27,10 @@ const ENDPOINTS = {
   AWS_EN: 'https://aws.amazon.com/blogs/training-and-certification/feed/',
   MICROSOFT: 'https://learn.microsoft.com/api/catalog/',
   LPI: 'https://www.lpi.org/feed/',
-  LINUC: 'https://linuc.org/news/'
+  LINUC: 'https://linuc.org/news/',
+  CISCO: 'https://blogs.cisco.com/learning/feed',
+  GOOGLE_CLOUD: 'https://cloud.google.com/blog/products/training-certifications',
+  ORACLE: 'https://www.oracle.com/education/certification/'
 };
 
 /**
@@ -69,7 +75,225 @@ function checkAllCertificateUpdates() {
     console.error('LPI チェック失敗:', e.message);
   }
 
+  Utilities.sleep(1500);
+
+  try {
+    checkCisco(properties, webhookUrl);
+  } catch (e) {
+    console.error('Cisco チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+
+  try {
+    checkGoogleCloud(properties, webhookUrl);
+  } catch (e) {
+    console.error('Google Cloud チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+
+  try {
+    checkOracle(properties, webhookUrl);
+  } catch (e) {
+    console.error('Oracle チェック失敗:', e.message);
+  }
+
   console.log('=== 全プロバイダーのチェック完了 ===');
+}
+
+/**
+ * Cisco Learn with Cisco RSS チェック処理
+ */
+function checkCisco(properties, webhookUrl) {
+  const res = UrlFetchApp.fetch(ENDPOINTS.CISCO, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 certificateInfo-GAS-bot/1.0',
+      'Accept': 'application/rss+xml,application/xml,text/xml'
+    },
+    muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) throw new Error(`HTTP ${res.getResponseCode()}`);
+
+  const xml = res.getContentText('UTF-8');
+  const items = [];
+  const itemRegex = /<item\b[^>]*>([\s\S]*?)<\/item>/gi;
+  let match;
+  while ((match = itemRegex.exec(xml)) !== null) {
+    const titleMatch = match[1].match(/<title>([\s\S]*?)<\/title>/i);
+    const linkMatch = match[1].match(/<link>([\s\S]*?)<\/link>/i);
+    const dateMatch = match[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+    const descriptionMatch = match[1].match(/<description>([\s\S]*?)<\/description>/i);
+    if (!titleMatch || !linkMatch) continue;
+
+    const title = decodeFeedText(titleMatch[1]);
+    const description = decodeFeedText(descriptionMatch ? descriptionMatch[1] : '').replace(/<[^>]+>/g, '');
+    if (!/\b(certification|certified|credential|exam)\b/i.test(`${title} ${description}`)) continue;
+    items.push({
+      provider: 'Cisco Systems',
+      title: title,
+      url: decodeFeedText(linkMatch[1]),
+      date: dateMatch ? decodeFeedText(dateMatch[1]) : '',
+      description: description,
+      relatedQualifications: matchCiscoQualifications(`${title} ${description}`)
+    });
+  }
+
+  handleDiff('CISCO', items, properties, webhookUrl, 'url');
+}
+
+/**
+ * Google Cloud公式資格情報記事一覧のチェック処理
+ */
+function checkGoogleCloud(properties, webhookUrl) {
+  const res = UrlFetchApp.fetch(ENDPOINTS.GOOGLE_CLOUD, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 certificateInfo-GAS-bot/1.0',
+      'Accept': 'text/html,application/xhtml+xml'
+    },
+    muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) throw new Error(`HTTP ${res.getResponseCode()}`);
+
+  const html = res.getContentText('UTF-8');
+  const items = [];
+  const anchorRegex = /<a\b[^>]*href=["']([^"']*\/blog\/topics\/training-certifications\/[^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  let match;
+  while ((match = anchorRegex.exec(html)) !== null) {
+    const headingMatch = match[2].match(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/i);
+    const title = stripHtmlText(headingMatch ? headingMatch[1] : match[2]);
+    if (!title || !/\b(certifications?|certified|exams?|credentials?|renewal)\b/i.test(title)) continue;
+    items.push({
+      provider: 'Google Cloud',
+      title: title,
+      url: resolveOfficialUrl(match[1], ENDPOINTS.GOOGLE_CLOUD),
+      date: '',
+      relatedQualifications: matchGoogleCloudQualifications(title)
+    });
+  }
+
+  handleDiff('GOOGLE_CLOUD', uniqueItemsByUrl(items), properties, webhookUrl, 'url');
+}
+
+/**
+ * Oracle Certificationページの告知チェック処理
+ */
+function checkOracle(properties, webhookUrl) {
+  const res = UrlFetchApp.fetch(ENDPOINTS.ORACLE, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8'
+    },
+    muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) throw new Error(`HTTP ${res.getResponseCode()}`);
+
+  const html = res.getContentText('UTF-8');
+  const announcementIndex = html.search(/>\s*Announcements\s*</i);
+  if (announcementIndex < 0) throw new Error('Announcementsセクションが見つかりません');
+  const remaining = html.slice(announcementIndex);
+  const nextSectionIndex = remaining.search(/<h2\b/i);
+  const section = nextSectionIndex > 0 ? remaining.slice(0, nextSectionIndex) : remaining;
+  const items = [];
+  const headingRegex = /<h[3-5]\b[^>]*>([\s\S]*?)<\/h[3-5]>/gi;
+  let headingMatch;
+  while ((headingMatch = headingRegex.exec(section)) !== null) {
+    const title = stripHtmlText(headingMatch[1]);
+    const nextHeading = section.slice(headingRegex.lastIndex).search(/<h[3-5]\b/i);
+    const card = section.slice(headingRegex.lastIndex, nextHeading < 0
+      ? section.length
+      : headingRegex.lastIndex + nextHeading);
+    const linkMatch = card.match(/<a\b[^>]*href=["']([^"']+)["']/i);
+    if (!title || !linkMatch) continue;
+    items.push({
+      provider: 'Oracle',
+      title: title,
+      url: resolveOfficialUrl(linkMatch[1], ENDPOINTS.ORACLE),
+      date: '',
+      relatedQualifications: matchOracleQualifications(title)
+    });
+  }
+
+  handleDiff('ORACLE', uniqueItemsByUrl(items), properties, webhookUrl, 'url');
+}
+
+function decodeFeedText(value) {
+  return value
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'");
+}
+
+function stripHtmlText(value) {
+  return decodeFeedText(value.replace(/<[^>]*>/g, ''))
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function resolveOfficialUrl(url, baseUrl) {
+  if (/^https?:\/\//i.test(url)) return url;
+  const originMatch = baseUrl.match(/^(https?:\/\/[^/]+)/i);
+  if (url.startsWith('/') && originMatch) return originMatch[1] + url;
+  return baseUrl.replace(/\/[^/]*$/, '/') + url;
+}
+
+function uniqueItemsByUrl(items) {
+  const seen = new Set();
+  return items.filter(item => {
+    if (seen.has(item.url)) return false;
+    seen.add(item.url);
+    return true;
+  });
+}
+
+function matchCiscoQualifications(text) {
+  const qualifications = [
+    { no: 43, name: 'CCNA', aliases: ['CCNA', '200-301'] },
+    { no: 44, name: 'ENCOR', aliases: ['ENCOR', '350-401'] },
+    { no: 45, name: 'ENARSI', aliases: ['ENARSI', '300-410'] },
+    { no: 46, name: 'ENSDWI', aliases: ['ENSDWI', '300-415'] },
+    { no: 47, name: 'ENSLD', aliases: ['ENSLD', '300-420'] },
+    { no: 48, name: 'ENWLSI', aliases: ['ENWLSI', '300-425'] },
+    { no: 49, name: 'ENAUTO', aliases: ['ENAUTO', '300-435'] },
+    { no: 50, name: 'ENWLSD', aliases: ['ENWLSD', '300-430'] },
+    { no: 51, name: 'CCNP Enterprise', aliases: ['CCNP Enterprise'] },
+    { no: 52, name: 'CCIE Enterprise Infrastructure', aliases: ['CCIE Enterprise Infrastructure'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias =>
+    new RegExp(`(^|[^A-Z0-9])${alias}($|[^A-Z0-9])`, 'i').test(text)))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function matchGoogleCloudQualifications(text) {
+  const qualifications = [
+    { no: 40, name: 'GCP Leader系', aliases: ['Cloud Digital Leader', 'Digital Leader'] },
+    { no: 41, name: 'GCP認定 Associate系', aliases: ['Associate Cloud Engineer', 'Associate certification'] },
+    { no: 42, name: 'GCP認定 Professional系', aliases: ['Professional Cloud', 'Professional certification'] }
+  ];
+  const matched = qualifications.filter(q => q.aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase())));
+  if (/\b(google cloud )?certification(s)?\b|\bexam\b|\bcredential(s)?\b/i.test(text) && matched.length === 0) {
+    return qualifications.map(q => ({ no: q.no, name: q.name }));
+  }
+  return matched.map(q => ({ no: q.no, name: q.name }));
+}
+
+function matchOracleQualifications(text) {
+  const qualifications = [
+    { no: 60, name: 'Oracle Certified Java Programmer, Bronze SE', aliases: ['Java Programmer, Bronze', 'Java SE Bronze'] },
+    { no: 61, name: 'ORACLE MASTER Bronze DBA', aliases: ['ORACLE MASTER Bronze', 'Bronze DBA'] },
+    { no: 62, name: 'ORACLE MASTER Silver Oracle Database', aliases: ['ORACLE MASTER Silver', 'Silver Oracle Database'] },
+    { no: 63, name: 'Oracle Certified Java Programmer, Silver SE 11', aliases: ['Java Programmer, Silver', 'Java SE 11'] },
+    { no: 64, name: 'ORACLE MASTER Gold Oracle Database', aliases: ['ORACLE MASTER Gold', 'Gold Oracle Database'] },
+    { no: 65, name: 'Oracle Certified Java Programmer, Gold SE', aliases: ['Java Programmer, Gold', 'Java SE Gold'] },
+    { no: 66, name: 'ORACLE MASTER Platinum', aliases: ['ORACLE MASTER Platinum', 'Platinum Oracle Database'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase())))
+    .map(q => ({ no: q.no, name: q.name }));
 }
 
 /**

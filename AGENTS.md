@@ -8,7 +8,7 @@
 
 - **リポジトリ名**: `certificateInfo`
 - **目的**:
-  - `README.md` に記載されたGoogleスプレッドシート（[【公開版】対象資格一覧](https://docs.google.com/spreadsheets/d/1tZbstgdxA83mrdE6w41AwAfezmEVsAELs0PGDdrQQGg/edit?usp=drive_link)）を対象資格一覧のマスターデータとして参照する。
+  - `README.md` に記載されたGoogleスプレッドシート（[tmp資格情報一覧](https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit?usp=sharing)）を対象資格一覧のマスターデータとして参照する。
   - リストされた資格について、IPA（独立行政法人 情報処理推進機構）の公式サイト等から資格情報（試験日程、申込期間、シラバス、新着情報等）を定期的に取得・監視する。
   - 資格情報に変更や更新が検知された場合、CW-Consulting の Slack 公開チャンネルに変更内容を自動投稿・通知する。
 
@@ -61,6 +61,9 @@
     "resultDate": "202X-12-XX",
     "officialUrl": "https://www.ipa.go.jp/shiken/kubun/ap.html"
   }
+- **データ更新**:
+  - スクレイピング結果を[tmp資格情報一覧](https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit?usp=sharing)の該当資格の最終更新日時と比較し、より新しいお知らせがある場合、最終更新日時、タイトル、URL、説明を更新する。
+  - また更新を検知したら、Slackの公開チャンネル（チャンネル名未定）に更新内容を自動的にPostする。
   ```
 
 ---

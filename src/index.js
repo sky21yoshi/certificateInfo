@@ -2,6 +2,9 @@ const { fetchIpaNews } = require('./fetcher/ipa');
 const { fetchAwsNews } = require('./fetcher/aws');
 const { fetchMicrosoftCertifications } = require('./fetcher/microsoft');
 const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
+const { fetchCiscoNews } = require('./fetcher/cisco');
+const { fetchGoogleCloudNews } = require('./fetcher/google_cloud');
+const { fetchOracleNews } = require('./fetcher/oracle');
 const { loadProviderState, saveProviderState, detectDiff } = require('./checker');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -36,6 +39,24 @@ const PROVIDERS = {
       const linucItems = await fetchLinucNews();
       return [...lpiItems, ...linucItems];
     },
+    idKey: 'url',
+    updateKey: null,
+  },
+  cisco: {
+    name: 'Cisco Systems',
+    fetch: fetchCiscoNews,
+    idKey: 'url',
+    updateKey: null,
+  },
+  google_cloud: {
+    name: 'Google Cloud',
+    fetch: fetchGoogleCloudNews,
+    idKey: 'url',
+    updateKey: null,
+  },
+  oracle: {
+    name: 'Oracle',
+    fetch: fetchOracleNews,
     idKey: 'url',
     updateKey: null,
   },
