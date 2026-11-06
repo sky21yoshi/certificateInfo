@@ -25,7 +25,15 @@
 - サーティファイ: [C言語プログラミング能力認定試験](https://www.sikaku.gr.jp/js/cp/)
 - Pythonエンジニア育成推進協会: [お知らせRSS](https://pythonic-exam.com/feed/)・[基礎試験](https://www.pythonic-exam.com/exam/basic)・[データ分析試験](https://www.pythonic-exam.com/exam/data-analyst)
 - 日本プロジェクトマネジメント協会 (PMAJ): [PMC](https://www.pmaj.or.jp/p2m/exam/pmc/top.html)・[PMS](https://www.pmaj.or.jp/p2m/exam/pms/top.html)・[PMR](https://www.pmaj.or.jp/p2m/exam/pmr/top.html)
+- Project Management Institute (PMI): [PMI日本支部 PMP資格・試験情報](https://www.pmi-japan.org/pmp_license/)
+- ISACA: [CISA資格情報](https://www.isaca.gr.jp/cisa/)
+- PeopleCert: [ITIL Certifications](https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1)
+- Fortinet: [認定資格プログラム](https://www.fortinet.com/jp/training-certification)・[NSE認定プログラム改訂情報](https://www.fortinet.com/nse-training-update)
+- Palo Alto Networks: [Certification Program](https://www.paloaltonetworks.com/services/education/certification)
+- NTTアドバンステクノロジ (NTT-AT): [WinActor認定研修・認定資格](https://winactor.biz/use/winactor_certification.html)
 
-記事URLを一意キーとして監視し、記事一覧がない資格ページはページ内容の指紋を前回状態と比較して更新を検知します。Node.js版では `node src/index.js --provider=broadcom`、`--provider=comptia`、`--provider=cncf`、`--provider=anthropic`、`--provider=uipath`、`--provider=certify`、`--provider=python_association`、`--provider=pmaj` で個別実行できます。テストは `node test/additional_fetchers.test.js` と `node test/new_providers.test.js` で実行します。
+記事URLを一意キーとして監視し、記事一覧がない資格ページはページ内容の指紋を前回状態と比較して更新を検知します。Node.js版では各社の `--provider=<キー>`（例: `node src/index.js --provider=pmi`）で個別実行できます。テストは `node test/additional_fetchers.test.js`、`node test/new_providers.test.js`、`node test/latest_providers.test.js` で実行します。
 
 Anthropicは資格告知専用ページを確認できなかったため、公式Claude Academyのコース一覧を監視対象としています。
+
+NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/expert.html`）は公式サイトで404となるため、現行の公式WinActor認定情報ページを監視します。現行ページのCWA認定レベルと一覧記載のアソシエイト／エキスパートの名称は一致しないため、資格情報の対応関係は公式ページで確認してください。

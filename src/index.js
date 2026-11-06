@@ -13,6 +13,12 @@ const { fetchUiPathUpdates } = require('./fetcher/uipath');
 const { fetchCertifyUpdates } = require('./fetcher/certify');
 const { fetchPythonAssociationUpdates } = require('./fetcher/python_association');
 const { fetchPmajUpdates } = require('./fetcher/pmaj');
+const { fetchPmiUpdates } = require('./fetcher/pmi');
+const { fetchIsacaUpdates } = require('./fetcher/isaca');
+const { fetchPeopleCertUpdates } = require('./fetcher/peoplecert');
+const { fetchFortinetUpdates } = require('./fetcher/fortinet');
+const { fetchPaloAltoUpdates } = require('./fetcher/palo_alto');
+const { fetchNttAtUpdates } = require('./fetcher/ntt_at');
 const { loadProviderState, saveProviderState, detectDiff } = require('./checker');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -113,6 +119,42 @@ const PROVIDERS = {
   pmaj: {
     name: '日本プロジェクトマネジメント協会 (PMAJ)',
     fetch: fetchPmajUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  pmi: {
+    name: 'Project Management Institute (PMI)',
+    fetch: fetchPmiUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  isaca: {
+    name: 'ISACA',
+    fetch: fetchIsacaUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  peoplecert: {
+    name: 'PeopleCert',
+    fetch: fetchPeopleCertUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  fortinet: {
+    name: 'Fortinet',
+    fetch: fetchFortinetUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  palo_alto: {
+    name: 'Palo Alto Networks',
+    fetch: fetchPaloAltoUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  ntt_at: {
+    name: 'NTTアドバンステクノロジ (NTT-AT)',
+    fetch: fetchNttAtUpdates,
     idKey: 'url',
     updateKey: 'contentHash',
   },

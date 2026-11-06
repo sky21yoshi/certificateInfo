@@ -11,6 +11,12 @@
  * 5. Cisco Systems (Learn with Cisco)
  * 6. Google Cloud (Training and Certifications)
  * 7. Oracle Certification
+ * 8. Project Management Institute (PMI)
+ * 9. ISACA
+ * 10. PeopleCert
+ * 11. Fortinet
+ * 12. Palo Alto Networks
+ * 13. NTTアドバンステクノロジ (NTT-AT)
  * 
  * 【設定手順】
  * 1. スプレッドシートのメニュー「拡張機能」>「Apps Script」を開きます。
@@ -43,7 +49,14 @@ const ENDPOINTS = {
   PYTHON_FEED: 'https://pythonic-exam.com/feed/',
   PMAJ_PMC: 'https://www.pmaj.or.jp/p2m/exam/pmc/top.html',
   PMAJ_PMS: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html',
-  PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html'
+  PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html',
+  PMI_PMP: 'https://www.pmi-japan.org/pmp_license/',
+  ISACA_CISA: 'https://www.isaca.gr.jp/cisa/',
+  PEOPLECERT_ITIL: 'https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1',
+  FORTINET_CERTIFICATION: 'https://www.fortinet.com/jp/training-certification',
+  FORTINET_UPDATE: 'https://www.fortinet.com/nse-training-update',
+  PALO_ALTO_CERTIFICATION: 'https://www.paloaltonetworks.com/services/education/certification',
+  WINACTOR_CERTIFICATION: 'https://winactor.biz/use/winactor_certification.html'
 };
 
 /**
@@ -166,6 +179,48 @@ function checkAllCertificateUpdates() {
     checkPmaj(properties, webhookUrl);
   } catch (e) {
     console.error('PMAJ チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkPmi(properties, webhookUrl);
+  } catch (e) {
+    console.error('PMI チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkIsaca(properties, webhookUrl);
+  } catch (e) {
+    console.error('ISACA チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkPeopleCert(properties, webhookUrl);
+  } catch (e) {
+    console.error('PeopleCert チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkFortinet(properties, webhookUrl);
+  } catch (e) {
+    console.error('Fortinet チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkPaloAlto(properties, webhookUrl);
+  } catch (e) {
+    console.error('Palo Alto Networks チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkNttAt(properties, webhookUrl);
+  } catch (e) {
+    console.error('NTT-AT チェック失敗:', e.message);
   }
 
   console.log('=== 全プロバイダーのチェック完了 ===');
@@ -466,6 +521,69 @@ function checkPmaj(properties, webhookUrl) {
       matchPmajQualifications, /PMC|PMS|PMR|プロジェクトマネジメント|プロジェクトマネジャー/i));
   });
   handleDiff('PMAJ', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkPmi(properties, webhookUrl) {
+  const url = ENDPOINTS.PMI_PMP;
+  const html = fetchOfficialHtml(url);
+  const items = [createOfficialSnapshot('Project Management Institute (PMI)',
+    'PMP試験・資格情報の更新', url, html, [{ no: 104, name: 'Project Management Professional (PMP)' }])];
+  handleDiff('PMI', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkIsaca(properties, webhookUrl) {
+  const url = ENDPOINTS.ISACA_CISA;
+  const html = fetchOfficialHtml(url);
+  const items = [createOfficialSnapshot('ISACA', 'CISA資格情報の更新', url, html, [
+    { no: 105, name: 'CISA (Certified Information Systems Auditor)' }
+  ])];
+  handleDiff('ISACA', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkPeopleCert(properties, webhookUrl) {
+  const url = ENDPOINTS.PEOPLECERT_ITIL;
+  const html = fetchOfficialHtml(url);
+  const items = [createOfficialSnapshot('PeopleCert', 'ITIL資格情報の更新', url, html, [
+    { no: 106, name: 'ITIL Foundation' }
+  ])];
+  handleDiff('PEOPLECERT', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkFortinet(properties, webhookUrl) {
+  const sources = [
+    { url: ENDPOINTS.FORTINET_CERTIFICATION, title: 'Fortinet認定資格プログラムの更新' },
+    { url: ENDPOINTS.FORTINET_UPDATE, title: 'Fortinet NSE認定プログラム改訂情報' }
+  ];
+  const items = [];
+  sources.forEach((source, index) => {
+    if (index > 0) Utilities.sleep(1500);
+    const html = fetchOfficialHtml(source.url);
+    items.push(createOfficialSnapshot('Fortinet', source.title, source.url, html, [
+      { no: 107, name: 'Fortinet Certified Professional (FCP)' }
+    ]));
+  });
+  handleDiff('FORTINET', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkPaloAlto(properties, webhookUrl) {
+  const url = ENDPOINTS.PALO_ALTO_CERTIFICATION;
+  const html = fetchOfficialHtml(url);
+  const items = [createOfficialSnapshot('Palo Alto Networks',
+    'Network Security Professional認定プログラムの更新', url, html, [
+      { no: 108, name: 'Palo Alto Networks Network Security Professional' }
+    ])];
+  handleDiff('PALO_ALTO', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkNttAt(properties, webhookUrl) {
+  const url = ENDPOINTS.WINACTOR_CERTIFICATION;
+  const html = fetchOfficialHtml(url);
+  const items = [createOfficialSnapshot('NTTアドバンステクノロジ (NTT-AT)',
+    'WinActor認定情報の更新', url, html, [
+      { no: 109, name: 'WinActor RPA技術者検定アソシエイト' },
+      { no: 110, name: 'WinActor RPA技術者検定エキスパート' }
+    ])];
+  handleDiff('NTT_AT', items, properties, webhookUrl, 'url', 'contentHash');
 }
 
 /**
