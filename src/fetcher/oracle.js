@@ -1,8 +1,8 @@
 /**
- * Oracle Certification 公式ページの告知から資格情報を取得する
+ * Oracle University 日本語ニュースから資格情報を取得する
  */
 
-const ORACLE_CERTIFICATION_URL = 'https://www.oracle.com/education/certification/';
+const ORACLE_NEWS_URL = 'https://www.oracle.com/jp/education/news/';
 
 const ORACLE_QUALIFICATIONS = [
   { no: 60, name: 'Oracle Certified Java Programmer, Bronze SE', aliases: ['Java Programmer, Bronze', 'Java SE Bronze'] },
@@ -40,34 +40,27 @@ function matchOracleQualifications(text) {
 }
 
 function parseOracleAnnouncements(html) {
-  const announcementIndex = html.search(/>\s*Announcements\s*</i);
-  if (announcementIndex < 0) {
-    throw new Error('Oracle CertificationページにAnnouncementsセクションが見つかりません');
-  }
-
-  const remaining = html.slice(announcementIndex);
-  const nextSectionIndex = remaining.search(/<h2\b/i);
-  const section = nextSectionIndex > 0 ? remaining.slice(0, nextSectionIndex) : remaining;
   const items = [];
-  const headingRegex = /<h[3-5]\b[^>]*>([\s\S]*?)<\/h[3-5]>/gi;
+  const headingRegex = /<h3\b([^>]*)>([\s\S]*?)<\/h3>/gi;
   let headingMatch;
 
-  while ((headingMatch = headingRegex.exec(section)) !== null) {
-    const title = textFromHtml(headingMatch[1]);
-    const nextHeading = section.slice(headingRegex.lastIndex).search(/<h[3-5]\b/i);
-    const card = section.slice(headingRegex.lastIndex, nextHeading < 0
-      ? section.length
-      : headingRegex.lastIndex + nextHeading);
-    const linkMatch = card.match(/<a\b[^>]*href=["']([^"']+)["']/i);
-    if (!title || !linkMatch) continue;
+  while ((headingMatch = headingRegex.exec(html)) !== null) {
+    const title = textFromHtml(headingMatch[2]);
+    const idMatch = headingMatch[1].match(/\bid=["']([^"']+)["']/i);
+    const dateMatch = title.match(/\((\d{4})\/(\d{1,2})\/(\d{1,2})\)\s*$/);
+    if (!idMatch || !dateMatch || !/(認定|資格|試験|certification|certified|exam)/i.test(title)) continue;
 
-    const url = new URL(decodeHtml(linkMatch[1]), ORACLE_CERTIFICATION_URL).toString();
+    const nextHeading = html.slice(headingRegex.lastIndex).search(/<h3\b/i);
+    const card = html.slice(headingRegex.lastIndex, nextHeading < 0
+      ? html.length
+      : headingRegex.lastIndex + nextHeading);
+    const details = `${title} ${textFromHtml(card)}`;
     items.push({
       provider: 'Oracle',
       title,
-      url,
-      date: '',
-      relatedQualifications: matchOracleQualifications(title),
+      url: `${ORACLE_NEWS_URL}#${idMatch[1]}`,
+      date: `${dateMatch[1]}-${dateMatch[2].padStart(2, '0')}-${dateMatch[3].padStart(2, '0')}`,
+      relatedQualifications: matchOracleQualifications(details),
     });
   }
 
@@ -77,7 +70,7 @@ function parseOracleAnnouncements(html) {
 async function fetchOracleNews(customHtml = null) {
   let html = customHtml;
   if (html === null) {
-    const response = await fetch(ORACLE_CERTIFICATION_URL, {
+    const response = await fetch(ORACLE_NEWS_URL, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -85,7 +78,7 @@ async function fetchOracleNews(customHtml = null) {
       },
     });
     if (!response.ok) {
-      throw new Error(`Oracle Certificationページの取得に失敗しました: HTTP ${response.status}`);
+      throw new Error(`Oracle Universityニュースの取得に失敗しました: HTTP ${response.status}`);
     }
     html = await response.text();
   }
@@ -94,6 +87,7 @@ async function fetchOracleNews(customHtml = null) {
 }
 
 module.exports = {
+  ORACLE_NEWS_URL,
   ORACLE_QUALIFICATIONS,
   matchOracleQualifications,
   parseOracleAnnouncements,

@@ -12,6 +12,8 @@ const rows = [
   [16, 'AWS', 'AWS認定 Professional系', 'https://example.com/cert', '', '', ''],
 ];
 let openedUrl;
+const installedTriggers = [];
+const triggerCalls = [];
 const sheet = {
   getDataRange: () => ({ getValues: () => rows }),
   getRange: (row, column) => ({
@@ -37,6 +39,42 @@ const context = {
     openByUrl: url => {
       openedUrl = url;
       return spreadsheet;
+    },
+  },
+  ScriptApp: {
+    getProjectTriggers: () => installedTriggers.slice(),
+    deleteTrigger: trigger => {
+      const index = installedTriggers.indexOf(trigger);
+      if (index >= 0) installedTriggers.splice(index, 1);
+    },
+    newTrigger: handler => {
+      triggerCalls.push({ handler });
+      return {
+        timeBased: () => ({
+          everyDays: days => {
+            triggerCalls[triggerCalls.length - 1].days = days;
+            return {
+              atHour: hour => {
+                triggerCalls[triggerCalls.length - 1].hour = hour;
+                return {
+                  inTimezone: timezone => {
+                    triggerCalls[triggerCalls.length - 1].timezone = timezone;
+                    return {
+                      create: () => {
+                        const trigger = {
+                          getHandlerFunction: () => handler,
+                        };
+                        installedTriggers.push(trigger);
+                        return trigger;
+                      },
+                    };
+                  },
+                };
+              },
+            };
+          },
+        }),
+      };
     },
   },
   UrlFetchApp: { fetch: () => ({}) },
@@ -78,5 +116,25 @@ assert.deepStrictEqual(rows[2].slice(4), [
   '申込期間の更新',
 ]);
 assert.strictEqual(rows[1][3], 'https://example.com/cert');
+
+installedTriggers.push({ getHandlerFunction: () => 'anotherHandler' });
+context.setupDailyTrigger();
+context.setupDailyTrigger();
+assert.deepStrictEqual(triggerCalls, [
+  { handler: 'checkAllCertificateUpdates', days: 1, hour: 10, timezone: 'Asia/Tokyo' },
+  { handler: 'checkAllCertificateUpdates', days: 1, hour: 10, timezone: 'Asia/Tokyo' },
+]);
+assert.strictEqual(installedTriggers.length, 2);
+assert.strictEqual(installedTriggers[0].getHandlerFunction(), 'anotherHandler');
+assert.strictEqual(installedTriggers[1].getHandlerFunction(), 'checkAllCertificateUpdates');
+
+const oracleItems = context.parseOracleAnnouncements(`
+  <h3 id="y20261102-1">2026年版 Oracle Cloud Applications 認定試験のお知らせ (2026/11/2)</h3>
+  <table><tr><td>ORACLE MASTER Silver Oracle Database</td></tr></table>
+`);
+assert.strictEqual(oracleItems.length, 1);
+assert.strictEqual(oracleItems[0].url, 'https://www.oracle.com/jp/education/news/#y20261102-1');
+assert.strictEqual(oracleItems[0].date, '2026-11-02');
+assert.strictEqual(oracleItems[0].relatedQualifications[0].no, 62);
 
 console.log('✓ 資格番号に応じたシート更新とURL設定を確認');

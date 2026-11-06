@@ -26,7 +26,7 @@
  *    - 値: CW-Consulting の Slack Incoming Webhook URL
  *    - キー: QUALIFICATIONS_SPREADSHEET_URL（任意。未設定時は下記の既定URLを使用）
  *    - キー: QUALIFICATIONS_SHEET_NAME（任意。未設定時は先頭のシートを使用）
- * 4. 左メニュー「トリガー（時計アイコン）」から、checkAllCertificateUpdates を時間主導型で定期実行（例: 毎日午前9時）設定します。
+ * 4. setupDailyTrigger を一度実行し、毎日10時（日本時間）のトリガーを設定します。
  */
 
 const ENDPOINTS = {
@@ -38,7 +38,7 @@ const ENDPOINTS = {
   LINUC: 'https://linuc.org/news/',
   CISCO: 'https://blogs.cisco.com/learning/feed',
   GOOGLE_CLOUD: 'https://cloud.google.com/blog/products/training-certifications',
-  ORACLE: 'https://www.oracle.com/education/certification/',
+  ORACLE: 'https://www.oracle.com/jp/education/news/',
   BROADCOM: 'https://www.broadcom.com/support/education/vmware/certification',
   COMPTIA: 'https://www.comptia.org/ja-jp/blog/',
   CNCF: 'https://www.cncf.io/blog/',
@@ -228,6 +228,27 @@ function checkAllCertificateUpdates() {
   }
 
   console.log('=== 全プロバイダーのチェック完了 ===');
+}
+
+/**
+ * 資格情報の定期チェックを毎日10時（日本時間）に実行するトリガーを設定
+ */
+function setupDailyTrigger() {
+  const handler = 'checkAllCertificateUpdates';
+  const triggers = ScriptApp.getProjectTriggers();
+
+  triggers.forEach(function (trigger) {
+    if (trigger.getHandlerFunction() === handler) {
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+
+  ScriptApp.newTrigger(handler)
+    .timeBased()
+    .everyDays(1)
+    .atHour(10)
+    .inTimezone('Asia/Tokyo')
+    .create();
 }
 
 function fetchOfficialHtml(url) {
@@ -664,7 +685,7 @@ function checkGoogleCloud(properties, webhookUrl) {
 }
 
 /**
- * Oracle Certificationページの告知チェック処理
+ * Oracle University日本語ニュースのチェック処理
  */
 function checkOracle(properties, webhookUrl) {
   const res = UrlFetchApp.fetch(ENDPOINTS.ORACLE, {
@@ -678,32 +699,33 @@ function checkOracle(properties, webhookUrl) {
   if (res.getResponseCode() !== 200) throw new Error(`HTTP ${res.getResponseCode()}`);
 
   const html = res.getContentText('UTF-8');
-  const announcementIndex = html.search(/>\s*Announcements\s*</i);
-  if (announcementIndex < 0) throw new Error('Announcementsセクションが見つかりません');
-  const remaining = html.slice(announcementIndex);
-  const nextSectionIndex = remaining.search(/<h2\b/i);
-  const section = nextSectionIndex > 0 ? remaining.slice(0, nextSectionIndex) : remaining;
+  handleDiff('ORACLE', uniqueItemsByUrl(parseOracleAnnouncements(html)), properties, webhookUrl, 'url');
+}
+
+function parseOracleAnnouncements(html) {
   const items = [];
-  const headingRegex = /<h[3-5]\b[^>]*>([\s\S]*?)<\/h[3-5]>/gi;
+  const headingRegex = /<h3\b([^>]*)>([\s\S]*?)<\/h3>/gi;
   let headingMatch;
-  while ((headingMatch = headingRegex.exec(section)) !== null) {
-    const title = stripHtmlText(headingMatch[1]);
-    const nextHeading = section.slice(headingRegex.lastIndex).search(/<h[3-5]\b/i);
-    const card = section.slice(headingRegex.lastIndex, nextHeading < 0
-      ? section.length
+  while ((headingMatch = headingRegex.exec(html)) !== null) {
+    const title = stripHtmlText(headingMatch[2]);
+    const idMatch = headingMatch[1].match(/\bid=["']([^"']+)["']/i);
+    const dateMatch = title.match(/\((\d{4})\/(\d{1,2})\/(\d{1,2})\)\s*$/);
+    if (!idMatch || !dateMatch || !/(認定|資格|試験|certification|certified|exam)/i.test(title)) continue;
+
+    const nextHeading = html.slice(headingRegex.lastIndex).search(/<h3\b/i);
+    const card = html.slice(headingRegex.lastIndex, nextHeading < 0
+      ? html.length
       : headingRegex.lastIndex + nextHeading);
-    const linkMatch = card.match(/<a\b[^>]*href=["']([^"']+)["']/i);
-    if (!title || !linkMatch) continue;
     items.push({
       provider: 'Oracle',
       title: title,
-      url: resolveOfficialUrl(linkMatch[1], ENDPOINTS.ORACLE),
-      date: '',
-      relatedQualifications: matchOracleQualifications(title)
+      url: `${ENDPOINTS.ORACLE}#${idMatch[1]}`,
+      date: `${dateMatch[1]}-${('0' + dateMatch[2]).slice(-2)}-${('0' + dateMatch[3]).slice(-2)}`,
+      relatedQualifications: matchOracleQualifications(`${title} ${stripHtmlText(card)}`)
     });
   }
 
-  handleDiff('ORACLE', uniqueItemsByUrl(items), properties, webhookUrl, 'url');
+  return items;
 }
 
 function decodeFeedText(value) {

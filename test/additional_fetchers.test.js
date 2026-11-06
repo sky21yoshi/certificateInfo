@@ -45,20 +45,22 @@ const { PROVIDERS } = require('../src/index');
 
 {
   const html = `
-    <h2>Announcements</h2>
-    <div>
-      <h3>New Oracle Java certification</h3>
-      <a href="https://mylearn.oracle.com/ou/story/java-cert">Learn more</a>
-      <h3>ORACLE MASTER Silver update</h3>
-      <a href="/education/certification/database">Details</a>
-    </div>
-    <h2>Explore certifications</h2>
-    <div><h3>Not an announcement</h3><a href="/education/other">More</a></div>
+    <h3 id="topics-label">ニュース一覧</h3>
+    <h3 id="y20261102-1">2026年版 Oracle Cloud Applications 認定試験 (日本語試験)の提供開始のお知らせ (2026/11/2)</h3>
+    <p>新しい試験の提供を開始しました。</p>
+    <table><tr><td>ORACLE MASTER Silver Oracle Database</td></tr></table>
+    <h3 id="y20261015">ORACLE MASTER Platinum資格のお知らせ (2026/10/15)</h3>
+    <p>Platinum Oracle Database update</p>
+    <h3 id="other">Oracle Universityのイベント情報</h3>
+    <p>イベントのお知らせ</p>
   `;
   const items = parseOracleAnnouncements(html);
   assert.strictEqual(items.length, 2);
-  assert.strictEqual(items[1].url, 'https://www.oracle.com/education/certification/database');
-  assert.strictEqual(items[1].relatedQualifications[0].name, 'ORACLE MASTER Silver Oracle Database');
+  assert.strictEqual(items[0].title, '2026年版 Oracle Cloud Applications 認定試験 (日本語試験)の提供開始のお知らせ (2026/11/2)');
+  assert.strictEqual(items[0].url, 'https://www.oracle.com/jp/education/news/#y20261102-1');
+  assert.strictEqual(items[0].date, '2026-11-02');
+  assert.strictEqual(items[0].relatedQualifications[0].name, 'ORACLE MASTER Silver Oracle Database');
+  assert.strictEqual(items[1].relatedQualifications[0].name, 'ORACLE MASTER Platinum');
   assert.strictEqual(matchOracleQualifications('ORACLE MASTER Platinum').length, 1);
 }
 

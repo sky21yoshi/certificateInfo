@@ -16,7 +16,7 @@
 - LINUC: [お知らせ](https://linuc.org/news/)
 - Cisco: [Learn with Cisco 公式RSS](https://blogs.cisco.com/learning/feed)
 - Google Cloud: [Training and Certifications 公式記事一覧](https://cloud.google.com/blog/products/training-certifications)
-- Oracle: [Oracle Certification 公式告知](https://www.oracle.com/education/certification/)
+- Oracle: [Oracle University 新着ニュース](https://www.oracle.com/jp/education/news/)
 - Broadcom / VMware: [VMware Certification](https://www.broadcom.com/support/education/vmware/certification)
 - CompTIA: [CompTIA Japan Blog](https://www.comptia.org/ja-jp/blog/)
 - CNCF / Linux Foundation: [CNCF Blog](https://www.cncf.io/blog/)・[Linux Foundation Education Blog](https://training.linuxfoundation.org/blog/)
@@ -40,4 +40,4 @@ NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/e
 
 全プロバイダーを実行すると、取得結果をIPA状態ファイルと同じ項目構成（`fiscalYear`、`date`、`title`、`url`、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。`fiscalYear` がない取得元では `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
 
-GAS版は、更新を検知した資格の行にある「最終更新日時」「タイトル」「説明」列を資格番号で特定して更新します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。テストは `node test/gas_sheet_updates.test.js` で実行します。
+GAS版は、更新を検知した資格の行にある「最終更新日時」「タイトル」「説明」列を資格番号で特定して更新します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` で実行します。
