@@ -30,7 +30,20 @@ const ENDPOINTS = {
   LINUC: 'https://linuc.org/news/',
   CISCO: 'https://blogs.cisco.com/learning/feed',
   GOOGLE_CLOUD: 'https://cloud.google.com/blog/products/training-certifications',
-  ORACLE: 'https://www.oracle.com/education/certification/'
+  ORACLE: 'https://www.oracle.com/education/certification/',
+  BROADCOM: 'https://www.broadcom.com/support/education/vmware/certification',
+  COMPTIA: 'https://www.comptia.org/ja-jp/blog/',
+  CNCF: 'https://www.cncf.io/blog/',
+  LINUX_FOUNDATION: 'https://training.linuxfoundation.org/blog/',
+  ANTHROPIC: 'https://academy.claude.com/courses',
+  UIPATH: 'https://www.uipath.com/ja/learning/certification',
+  CERTIFY: 'https://www.sikaku.gr.jp/js/cp/',
+  PYTHON_BASIC: 'https://www.pythonic-exam.com/exam/basic',
+  PYTHON_DATA_ANALYST: 'https://www.pythonic-exam.com/exam/data-analyst',
+  PYTHON_FEED: 'https://pythonic-exam.com/feed/',
+  PMAJ_PMC: 'https://www.pmaj.or.jp/p2m/exam/pmc/top.html',
+  PMAJ_PMS: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html',
+  PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html'
 };
 
 /**
@@ -99,7 +112,360 @@ function checkAllCertificateUpdates() {
     console.error('Oracle チェック失敗:', e.message);
   }
 
+  Utilities.sleep(1500);
+  try {
+    checkBroadcom(properties, webhookUrl);
+  } catch (e) {
+    console.error('Broadcom チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkCompTIA(properties, webhookUrl);
+  } catch (e) {
+    console.error('CompTIA チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkCNCF(properties, webhookUrl);
+  } catch (e) {
+    console.error('CNCF / Linux Foundation チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkAnthropic(properties, webhookUrl);
+  } catch (e) {
+    console.error('Anthropic チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkUiPath(properties, webhookUrl);
+  } catch (e) {
+    console.error('UiPath チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkCertify(properties, webhookUrl);
+  } catch (e) {
+    console.error('サーティファイ チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkPythonAssociation(properties, webhookUrl);
+  } catch (e) {
+    console.error('Pythonエンジニア育成推進協会 チェック失敗:', e.message);
+  }
+
+  Utilities.sleep(1500);
+  try {
+    checkPmaj(properties, webhookUrl);
+  } catch (e) {
+    console.error('PMAJ チェック失敗:', e.message);
+  }
+
   console.log('=== 全プロバイダーのチェック完了 ===');
+}
+
+function fetchOfficialHtml(url) {
+  const res = UrlFetchApp.fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) certificateInfo-GAS-bot/1.0',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8'
+    },
+    muteHttpExceptions: true
+  });
+  if (res.getResponseCode() !== 200) {
+    throw new Error(`公式ページの取得に失敗しました (${url}): HTTP ${res.getResponseCode()}`);
+  }
+  return res.getContentText('UTF-8');
+}
+
+function hashVisibleText(value) {
+  const text = stripHtmlText(value
+    .replace(/<(script|style|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, ' '));
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) {
+    hash = Math.imul(hash ^ text.charCodeAt(i), 0x01000193);
+  }
+  return (hash >>> 0).toString(16);
+}
+
+function createOfficialSnapshot(provider, title, url, html, relatedQualifications) {
+  return {
+    provider: provider,
+    title: title,
+    url: url,
+    date: '',
+    contentHash: hashVisibleText(html),
+    relatedQualifications: relatedQualifications
+  };
+}
+
+function extractOfficialLinks(html, baseUrl, provider, matchQualifications, titlePattern) {
+  const items = [];
+  const anchorRegex = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
+  let match;
+  while ((match = anchorRegex.exec(html)) !== null) {
+    const hrefMatch = match[1].match(/\bhref\s*=\s*["']([^"']+)["']/i);
+    if (!hrefMatch) continue;
+    const title = stripHtmlText(match[2]) ||
+      stripHtmlText((match[1].match(/\btitle\s*=\s*["']([^"']+)["']/i) || [])[1] || '');
+    if (!title || !titlePattern.test(title)) continue;
+    const url = resolveOfficialUrl(hrefMatch[1], baseUrl);
+    const relatedQualifications = matchQualifications(title);
+    items.push({
+      provider: provider,
+      title: title,
+      url: url,
+      date: '',
+      contentHash: hashVisibleText(title),
+      relatedQualifications: relatedQualifications
+    });
+  }
+  return uniqueItemsByUrl(items);
+}
+
+function checkBroadcom(properties, webhookUrl) {
+  const html = fetchOfficialHtml(ENDPOINTS.BROADCOM);
+  const qualifications = [
+    { no: 67, name: 'VCP (VMware Certified Professional)' },
+    { no: 68, name: 'VCAP (VMware Certified Advanced Professional)' },
+    { no: 69, name: 'VCDX (VMware Certified Design Expert)' },
+    { no: 70, name: 'VCTA (VMware Certified Technical Associate)' }
+  ];
+  const items = [createOfficialSnapshot('Broadcom', 'VMware Certification program updates', ENDPOINTS.BROADCOM, html, qualifications)];
+  handleDiff('BROADCOM', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function matchCompTIAQualifications(text) {
+  const qualifications = [
+    { no: 71, name: 'IT Fundamentals', aliases: ['IT Fundamentals', 'ITF+'] },
+    { no: 72, name: 'A+', aliases: ['CompTIA A+', 'A+'] },
+    { no: 73, name: 'Network+', aliases: ['Network+'] },
+    { no: 74, name: 'Security+', aliases: ['Security+'] },
+    { no: 75, name: 'Cloud+', aliases: ['Cloud+'] },
+    { no: 76, name: 'Linux+', aliases: ['Linux+'] },
+    { no: 77, name: 'Server+', aliases: ['Server+'] },
+    { no: 78, name: 'CASP+', aliases: ['CASP+', 'SecurityX'] },
+    { no: 79, name: 'F+', aliases: ['CompTIA F+', 'F+'] },
+    { no: 80, name: 'PenTest+', aliases: ['PenTest+'] },
+    { no: 81, name: 'Project+', aliases: ['Project+'] },
+    { no: 82, name: 'CTT+', aliases: ['CTT+'] },
+    { no: 83, name: 'Cloud Essentials', aliases: ['Cloud Essentials'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias =>
+    new RegExp(`(^|[^A-Z0-9])${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^A-Z0-9])`, 'i').test(text)))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function checkCompTIA(properties, webhookUrl) {
+  const html = fetchOfficialHtml(ENDPOINTS.COMPTIA);
+  const items = [
+    createOfficialSnapshot('CompTIA', 'CompTIA official blog updates', ENDPOINTS.COMPTIA, html, [
+      { no: 71, name: 'IT Fundamentals' }, { no: 72, name: 'A+' },
+      { no: 73, name: 'Network+' }, { no: 74, name: 'Security+' },
+      { no: 75, name: 'Cloud+' }, { no: 76, name: 'Linux+' },
+      { no: 77, name: 'Server+' }, { no: 78, name: 'CASP+' },
+      { no: 79, name: 'F+' }, { no: 80, name: 'PenTest+' },
+      { no: 81, name: 'Project+' }, { no: 82, name: 'CTT+' },
+      { no: 83, name: 'Cloud Essentials' }
+    ]),
+    ...extractOfficialLinks(html, ENDPOINTS.COMPTIA, 'CompTIA', matchCompTIAQualifications,
+      /comptia|資格|試験|certification|security\+|network\+|cloud\+|linux\+|project\+/i)
+  ];
+  handleDiff('COMPTIA', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function matchCNCFQualifications(text) {
+  const qualifications = [
+    { no: 84, name: 'Certified Kubernetes Administrator (CKA)', aliases: ['CKA', 'Kubernetes Administrator'] },
+    { no: 85, name: 'Certified Kubernetes Application Developer (CKAD)', aliases: ['CKAD', 'Kubernetes Application Developer'] },
+    { no: 86, name: 'Certified Kubernetes Security Specialist (CKS)', aliases: ['CKS', 'Kubernetes Security Specialist'] },
+    { no: 87, name: 'Kubernetes and Cloud Native Associate (KCNA)', aliases: ['KCNA', 'Cloud Native Associate'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias =>
+    /^[A-Z]+$/.test(alias)
+      ? new RegExp(`(^|[^A-Z0-9])${alias}($|[^A-Z0-9])`, 'i').test(text)
+      : text.toLowerCase().includes(alias.toLowerCase())))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function checkCNCF(properties, webhookUrl) {
+  const sources = [
+    { name: 'CNCF', url: ENDPOINTS.CNCF },
+    { name: 'Linux Foundation', url: ENDPOINTS.LINUX_FOUNDATION }
+  ];
+  const qualifications = [
+    { no: 84, name: 'Certified Kubernetes Administrator (CKA)' },
+    { no: 85, name: 'Certified Kubernetes Application Developer (CKAD)' },
+    { no: 86, name: 'Certified Kubernetes Security Specialist (CKS)' },
+    { no: 87, name: 'Kubernetes and Cloud Native Associate (KCNA)' }
+  ];
+  const items = [];
+  sources.forEach((source, index) => {
+    if (index > 0) Utilities.sleep(1500);
+    const html = fetchOfficialHtml(source.url);
+    items.push(createOfficialSnapshot(source.name, `${source.name} certification updates`, source.url, html, qualifications));
+    items.push(...extractOfficialLinks(html, source.url, source.name, matchCNCFQualifications,
+      /cka|ckad|cks|kcna|certification|certified|credential|exam|kubernetes.{0,40}(administrator|developer|security|associate)/i));
+  });
+  handleDiff('CNCF', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+}
+
+function matchAnthropicQualifications(text) {
+  const qualifications = [
+    { no: 88, name: 'Claude Certified Associate – Foundations (CCAO-F)', aliases: ['CCAO-F', 'Claude Certified Associate'] },
+    { no: 89, name: 'Claude Certified Architect – Foundations (CCAR-F)', aliases: ['CCAR-F', 'Claude Certified Architect'] },
+    { no: 90, name: 'Claude Certified Developer – Foundations (CCDV-F)', aliases: ['CCDV-F', 'Claude Certified Developer'] },
+    { no: 91, name: 'Claude Certified Architect – Professional (CCAR-P)', aliases: ['CCAR-P', 'Claude Certified Architect'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase())))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function checkAnthropic(properties, webhookUrl) {
+  const html = fetchOfficialHtml(ENDPOINTS.ANTHROPIC);
+  const qualifications = [
+    { no: 88, name: 'Claude Certified Associate – Foundations (CCAO-F)' },
+    { no: 89, name: 'Claude Certified Architect – Foundations (CCAR-F)' },
+    { no: 90, name: 'Claude Certified Developer – Foundations (CCDV-F)' },
+    { no: 91, name: 'Claude Certified Architect – Professional (CCAR-P)' }
+  ];
+  const items = [
+    createOfficialSnapshot('Anthropic', 'Claude Academy course and certification catalog', ENDPOINTS.ANTHROPIC, html, qualifications),
+    ...extractOfficialLinks(html, ENDPOINTS.ANTHROPIC, 'Anthropic', matchAnthropicQualifications,
+      /claude certified|certification|credential/i)
+  ];
+  handleDiff('ANTHROPIC', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+}
+
+function matchUiPathQualifications(text) {
+  const qualifications = [
+    { no: 92, name: 'UiPath Automation Developer Associate', aliases: ['Automation Developer Associate', 'オートメーション デベロッパー アソシエイト'] },
+    { no: 93, name: 'UiPath Automation Developer Professional', aliases: ['Automation Developer Professional', 'オートメーション デベロッパー プロフェッショナル'] },
+    { no: 94, name: 'UiPath Agentic Automation Associate', aliases: ['Agentic Automation Associate', 'エージェンティック オートメーション アソシエイト'] },
+    { no: 95, name: 'UiPath Agentic Automation Professional', aliases: ['Agentic Automation Professional', 'エージェンティック オートメーション プロフェッショナル'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase())))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function checkUiPath(properties, webhookUrl) {
+  const html = fetchOfficialHtml(ENDPOINTS.UIPATH);
+  const qualifications = [
+    { no: 92, name: 'UiPath Automation Developer Associate' },
+    { no: 93, name: 'UiPath Automation Developer Professional' },
+    { no: 94, name: 'UiPath Agentic Automation Associate' },
+    { no: 95, name: 'UiPath Agentic Automation Professional' }
+  ];
+  const items = [
+    createOfficialSnapshot('UiPath', 'UiPath certification program updates', ENDPOINTS.UIPATH, html, qualifications),
+    ...extractOfficialLinks(html, ENDPOINTS.UIPATH, 'UiPath', matchUiPathQualifications,
+      /certification|認定|資格|automation developer|agentic automation|エージェンティック|オートメーション/i)
+  ];
+  handleDiff('UIPATH', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkCertify(properties, webhookUrl) {
+  const html = fetchOfficialHtml(ENDPOINTS.CERTIFY);
+  const qualifications = [
+    { no: 96, name: 'C言語プログラミング能力認定試験3級' },
+    { no: 97, name: 'C言語プログラミング能力認定試験2級' },
+    { no: 98, name: 'C言語プログラミング能力認定試験1級' }
+  ];
+  const items = [
+    createOfficialSnapshot('サーティファイ', 'C言語プログラミング能力認定試験の更新', ENDPOINTS.CERTIFY, html, qualifications),
+  ];
+  handleDiff('CERTIFY', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+}
+
+function checkPythonAssociation(properties, webhookUrl) {
+  const exams = [
+    { url: ENDPOINTS.PYTHON_BASIC, no: 99, name: 'Python3 エンジニア認定基礎試験' },
+    { url: ENDPOINTS.PYTHON_DATA_ANALYST, no: 100, name: 'Python3 エンジニア認定データ分析試験' }
+  ];
+  const items = [];
+  exams.forEach((exam, index) => {
+    if (index > 0) Utilities.sleep(1500);
+    const html = fetchOfficialHtml(exam.url);
+    items.push(createOfficialSnapshot('Pythonエンジニア育成推進協会', `${exam.name}の更新`,
+      exam.url, html, [{ no: exam.no, name: exam.name }]));
+  });
+  Utilities.sleep(1500);
+  const feedResponse = UrlFetchApp.fetch(ENDPOINTS.PYTHON_FEED, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) certificateInfo-GAS-bot/1.0',
+      'Accept': 'application/rss+xml,application/xml,text/xml'
+    },
+    muteHttpExceptions: true
+  });
+  if (feedResponse.getResponseCode() !== 200) {
+    throw new Error(`Python協会RSSの取得に失敗しました: HTTP ${feedResponse.getResponseCode()}`);
+  }
+  const feed = feedResponse.getContentText('UTF-8');
+  const itemRegex = /<item\b[^>]*>([\s\S]*?)<\/item>/gi;
+  let match;
+  while ((match = itemRegex.exec(feed)) !== null) {
+    const titleMatch = match[1].match(/<title>([\s\S]*?)<\/title>/i);
+    const linkMatch = match[1].match(/<link>([\s\S]*?)<\/link>/i);
+    const dateMatch = match[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+    const descriptionMatch = match[1].match(/<description>([\s\S]*?)<\/description>/i);
+    const title = titleMatch ? decodeFeedText(titleMatch[1]).trim() : '';
+    const url = linkMatch ? decodeFeedText(linkMatch[1]).trim() : '';
+    const description = descriptionMatch ? stripHtmlText(decodeFeedText(descriptionMatch[1])) : '';
+    const text = `${title} ${description}`;
+    if (!title || !url || !/(python.{0,30}(認定|試験)|(?:認定|試験).{0,30}python)/i.test(text)) continue;
+    const relatedQualifications = [];
+    if (/基礎試験/.test(text)) relatedQualifications.push({ no: 99, name: 'Python3 エンジニア認定基礎試験' });
+    if (/データ分析試験/.test(text)) relatedQualifications.push({ no: 100, name: 'Python3 エンジニア認定データ分析試験' });
+    items.push({
+      provider: 'Pythonエンジニア育成推進協会',
+      title: title,
+      url: url,
+      date: dateMatch ? decodeFeedText(dateMatch[1]).trim() : '',
+      description: description,
+      contentHash: hashVisibleText(`${title} ${description}`),
+      relatedQualifications: relatedQualifications
+    });
+  }
+  handleDiff('PYTHON_ASSOCIATION', items, properties, webhookUrl, 'url', 'contentHash');
+}
+
+function matchPmajQualifications(text) {
+  const qualifications = [
+    { no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)', aliases: ['PMC', 'コーディネーター'] },
+    { no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)', aliases: ['PMS', 'スペシャリスト'] },
+    { no: 103, name: 'プログラムマネジャー・レジスタード (PMR)', aliases: ['PMR', 'プログラムマネジャー'] }
+  ];
+  return qualifications.filter(q => q.aliases.some(alias =>
+    /^[A-Z]+$/.test(alias)
+      ? new RegExp(`(^|[^A-Z0-9])${alias}($|[^A-Z0-9])`, 'i').test(text)
+      : text.includes(alias)))
+    .map(q => ({ no: q.no, name: q.name }));
+}
+
+function checkPmaj(properties, webhookUrl) {
+  const sources = [
+    { url: ENDPOINTS.PMAJ_PMC, no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)' },
+    { url: ENDPOINTS.PMAJ_PMS, no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)' },
+    { url: ENDPOINTS.PMAJ_PMR, no: 103, name: 'プログラムマネジャー・レジスタード (PMR)' }
+  ];
+  const items = [];
+  sources.forEach((source, index) => {
+    if (index > 0) Utilities.sleep(1500);
+    const html = fetchOfficialHtml(source.url);
+    items.push(createOfficialSnapshot('日本プロジェクトマネジメント協会 (PMAJ)',
+      `${source.name}の更新`, source.url, html, [{ no: source.no, name: source.name }]));
+    items.push(...extractOfficialLinks(html, source.url, '日本プロジェクトマネジメント協会 (PMAJ)',
+      matchPmajQualifications, /PMC|PMS|PMR|プロジェクトマネジメント|プロジェクトマネジャー/i));
+  });
+  handleDiff('PMAJ', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
 }
 
 /**
@@ -225,7 +591,16 @@ function decodeFeedText(value) {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'");
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&rsquo;|&lsquo;/g, "'")
+    .replace(/&rdquo;|&ldquo;/g, '"')
+    .replace(/&ndash;/g, '–')
+    .replace(/&mdash;/g, '—')
+    .replace(/&copy;/g, '©')
+    .replace(/&reg;/g, '®')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (entity, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (entity, code) => String.fromCodePoint(parseInt(code, 16)));
 }
 
 function stripHtmlText(value) {

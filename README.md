@@ -17,5 +17,15 @@
 - Cisco: [Learn with Cisco 公式RSS](https://blogs.cisco.com/learning/feed)
 - Google Cloud: [Training and Certifications 公式記事一覧](https://cloud.google.com/blog/products/training-certifications)
 - Oracle: [Oracle Certification 公式告知](https://www.oracle.com/education/certification/)
+- Broadcom / VMware: [VMware Certification](https://www.broadcom.com/support/education/vmware/certification)
+- CompTIA: [CompTIA Japan Blog](https://www.comptia.org/ja-jp/blog/)
+- CNCF / Linux Foundation: [CNCF Blog](https://www.cncf.io/blog/)・[Linux Foundation Education Blog](https://training.linuxfoundation.org/blog/)
+- Anthropic: [Claude Academy Courses](https://academy.claude.com/courses)
+- UiPath: [UiPath Certification](https://www.uipath.com/ja/learning/certification)
+- サーティファイ: [C言語プログラミング能力認定試験](https://www.sikaku.gr.jp/js/cp/)
+- Pythonエンジニア育成推進協会: [お知らせRSS](https://pythonic-exam.com/feed/)・[基礎試験](https://www.pythonic-exam.com/exam/basic)・[データ分析試験](https://www.pythonic-exam.com/exam/data-analyst)
+- 日本プロジェクトマネジメント協会 (PMAJ): [PMC](https://www.pmaj.or.jp/p2m/exam/pmc/top.html)・[PMS](https://www.pmaj.or.jp/p2m/exam/pms/top.html)・[PMR](https://www.pmaj.or.jp/p2m/exam/pmr/top.html)
 
-各取得元の記事URLを一意キーとして既存の差分検知・状態保存に追加します。Node.js版では `node src/index.js --provider=cisco`、`--provider=google_cloud`、`--provider=oracle` で個別実行できます。テストは `node test/additional_fetchers.test.js` で実行します。
+記事URLを一意キーとして監視し、記事一覧がない資格ページはページ内容の指紋を前回状態と比較して更新を検知します。Node.js版では `node src/index.js --provider=broadcom`、`--provider=comptia`、`--provider=cncf`、`--provider=anthropic`、`--provider=uipath`、`--provider=certify`、`--provider=python_association`、`--provider=pmaj` で個別実行できます。テストは `node test/additional_fetchers.test.js` と `node test/new_providers.test.js` で実行します。
+
+Anthropicは資格告知専用ページを確認できなかったため、公式Claude Academyのコース一覧を監視対象としています。

@@ -5,6 +5,14 @@ const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
 const { fetchCiscoNews } = require('./fetcher/cisco');
 const { fetchGoogleCloudNews } = require('./fetcher/google_cloud');
 const { fetchOracleNews } = require('./fetcher/oracle');
+const { fetchBroadcomUpdates } = require('./fetcher/broadcom');
+const { fetchCompTIANews } = require('./fetcher/comptia');
+const { fetchCNCFNews } = require('./fetcher/cncf');
+const { fetchAnthropicUpdates } = require('./fetcher/anthropic');
+const { fetchUiPathUpdates } = require('./fetcher/uipath');
+const { fetchCertifyUpdates } = require('./fetcher/certify');
+const { fetchPythonAssociationUpdates } = require('./fetcher/python_association');
+const { fetchPmajUpdates } = require('./fetcher/pmaj');
 const { loadProviderState, saveProviderState, detectDiff } = require('./checker');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -59,6 +67,54 @@ const PROVIDERS = {
     fetch: fetchOracleNews,
     idKey: 'url',
     updateKey: null,
+  },
+  broadcom: {
+    name: 'Broadcom (VMware)',
+    fetch: fetchBroadcomUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  comptia: {
+    name: 'CompTIA',
+    fetch: fetchCompTIANews,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  cncf: {
+    name: 'CNCF & Linux Foundation',
+    fetch: fetchCNCFNews,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  anthropic: {
+    name: 'Anthropic',
+    fetch: fetchAnthropicUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  uipath: {
+    name: 'UiPath',
+    fetch: fetchUiPathUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  certify: {
+    name: 'サーティファイ',
+    fetch: fetchCertifyUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  python_association: {
+    name: 'Pythonエンジニア育成推進協会',
+    fetch: fetchPythonAssociationUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
+  },
+  pmaj: {
+    name: '日本プロジェクトマネジメント協会 (PMAJ)',
+    fetch: fetchPmajUpdates,
+    idKey: 'url',
+    updateKey: 'contentHash',
   },
 };
 
