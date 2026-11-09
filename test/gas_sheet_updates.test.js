@@ -5,20 +5,26 @@ const vm = require('vm');
 const scriptProperties = new Map([
   ['QUALIFICATIONS_SPREADSHEET_URL', 'https://docs.google.com/spreadsheets/d/test-sheet-id/edit'],
   ['QUALIFICATIONS_SHEET_NAME', '資格一覧'],
+  ['SLACK_WEBHOOK_URL', 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK'],
 ]);
-const rows = [
+
+// 7列の旧形式行（URL列未作成）
+const rows7Cols = [
   ['No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', '説明'],
   [15, 'AWS', 'AWS認定 Associate系', 'https://example.com/cert', '', '', ''],
   [16, 'AWS', 'AWS認定 Professional系', 'https://example.com/cert', '', '', ''],
 ];
+
 let openedUrl;
 const installedTriggers = [];
 const triggerCalls = [];
+const slackCalls = [];
+
 const sheet = {
-  getDataRange: () => ({ getValues: () => rows }),
+  getDataRange: () => ({ getValues: () => rows7Cols }),
   getRange: (row, column) => ({
     setValue: value => {
-      rows[row - 1][column - 1] = value;
+      rows7Cols[row - 1][column - 1] = value;
     },
   }),
 };
@@ -29,6 +35,9 @@ const spreadsheet = {
 
 const context = {
   console: { log() {}, warn() {}, error() {} },
+  Utilities: {
+    sleep: () => {},
+  },
   PropertiesService: {
     getScriptProperties: () => ({
       getProperty: key => scriptProperties.get(key) || null,
@@ -42,45 +51,75 @@ const context = {
     },
   },
   ScriptApp: {
+    WeekDay: {
+      SUNDAY: 1,
+      MONDAY: 2,
+      TUESDAY: 3,
+      WEDNESDAY: 4,
+      THURSDAY: 5,
+      FRIDAY: 6,
+      SATURDAY: 7,
+    },
     getProjectTriggers: () => installedTriggers.slice(),
     deleteTrigger: trigger => {
       const index = installedTriggers.indexOf(trigger);
       if (index >= 0) installedTriggers.splice(index, 1);
     },
-    newTrigger: handler => {
-      triggerCalls.push({ handler });
-      return {
-        timeBased: () => ({
-          everyDays: days => {
-            triggerCalls[triggerCalls.length - 1].days = days;
-            return {
-              atHour: hour => {
-                triggerCalls[triggerCalls.length - 1].hour = hour;
-                return {
-                  inTimezone: timezone => {
-                    triggerCalls[triggerCalls.length - 1].timezone = timezone;
-                    return {
-                      create: () => {
-                        const trigger = {
-                          getHandlerFunction: () => handler,
-                        };
-                        installedTriggers.push(trigger);
-                        return trigger;
-                      },
-                    };
-                  },
+    newTrigger: handler => ({
+      timeBased: () => ({
+        onWeekDay: weekday => ({
+          atHour: hour => ({
+            inTimezone: timezone => ({
+              create: () => {
+                const trigger = {
+                  getHandlerFunction: () => handler,
+                  weekday,
+                  hour,
+                  timezone,
                 };
+                triggerCalls.push({ handler, weekday, hour, timezone });
+                installedTriggers.push(trigger);
+                return trigger;
               },
-            };
-          },
+            }),
+          }),
         }),
+        everyDays: days => ({
+          atHour: hour => ({
+            inTimezone: timezone => ({
+              create: () => {
+                const trigger = {
+                  getHandlerFunction: () => handler,
+                  days,
+                  hour,
+                  timezone,
+                };
+                triggerCalls.push({ handler, days, hour, timezone });
+                installedTriggers.push(trigger);
+                return trigger;
+              },
+            }),
+          }),
+        }),
+      }),
+    }),
+  },
+  UrlFetchApp: {
+    fetch: (url, options) => {
+      if (options && options.payload) {
+        slackCalls.push({ url, payload: JSON.parse(options.payload) });
+      }
+      return {
+        getResponseCode: () => 200,
+        getContentText: () => '{}',
       };
     },
   },
-  UrlFetchApp: { fetch: () => ({}) },
 };
 
 vm.runInNewContext(fs.readFileSync(require.resolve('../gas/Code.js'), 'utf8'), context);
+
+// 1. 差分検知とスプレッドシート更新（初回ベースライン）
 context.handleDiff('AWS', [
   {
     url: 'https://example.com/news/1',
@@ -89,8 +128,10 @@ context.handleDiff('AWS', [
     description: '試験内容の更新',
     relatedQualifications: [{ no: 15, name: 'AWS認定 Associate系' }],
   },
-], context.PropertiesService.getScriptProperties(), null);
+], context.PropertiesService.getScriptProperties(), 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
 
+// 2. 差分検知（更新検知＆Slack通知）
+slackCalls.length = 0;
 context.handleDiff('AWS', [
   {
     url: 'https://example.com/news/2',
@@ -102,56 +143,115 @@ context.handleDiff('AWS', [
       { no: 16, name: 'AWS認定 Professional系' },
     ],
   },
-], context.PropertiesService.getScriptProperties(), null);
+], context.PropertiesService.getScriptProperties(), 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
 
 assert.strictEqual(openedUrl, 'https://docs.google.com/spreadsheets/d/test-sheet-id/edit');
-assert.deepStrictEqual(rows[1].slice(4, 7), [
+assert.deepStrictEqual(rows7Cols[1].slice(4, 7), [
   '2026-11-07',
   'AWS資格の新着情報',
   '申込期間の更新',
 ]);
-assert.deepStrictEqual(rows[2].slice(4, 7), [
+assert.deepStrictEqual(rows7Cols[2].slice(4, 7), [
   '2026-11-07',
   'AWS資格の新着情報',
   '申込期間の更新',
 ]);
-assert.strictEqual(rows[1][3], 'https://example.com/cert');
-assert.strictEqual(rows[0][7], '更新情報URL');
-assert.strictEqual(rows[1][7], 'https://example.com/news/2');
-assert.strictEqual(rows[2][7], 'https://example.com/news/2');
+assert.strictEqual(rows7Cols[1][3], 'https://example.com/cert');
+// 列名「URL」が新設されて末尾に追加されること
+assert.strictEqual(rows7Cols[0][7], 'URL');
+assert.strictEqual(rows7Cols[1][7], 'https://example.com/news/2');
+assert.strictEqual(rows7Cols[2][7], 'https://example.com/news/2');
 
-context.updateQualificationSheet([
-  {
-    url: 'https://example.com/news/older',
-    date: '2026年10月',
-    title: '古いAWS資格情報',
-    description: '古い説明',
-    relatedQualifications: [{ no: 15 }],
-  },
+// 3. Slack投稿の検証: 複数資格の更新がある場合、それぞれ別々に投稿され、5項目が含まれていること
+assert.strictEqual(slackCalls.length, 2);
+for (const call of slackCalls) {
+  assert.strictEqual(call.url, 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
+  const payloadStr = JSON.stringify(call.payload);
+  assert(payloadStr.includes('2026-11-07'), '更新日時が含まれていること');
+  assert(payloadStr.includes('AWS認定'), '資格名が含まれていること');
+  assert(payloadStr.includes('AWS資格の新着情報'), 'タイトルが含まれていること');
+  assert(payloadStr.includes('https://example.com/news/2'), 'URLが含まれていること');
+  assert(payloadStr.includes('申込期間の更新'), '説明が含まれていること');
+}
+
+// 4. docs/interface.md 完全準拠の8列シートでの更新検証
+const rows8Cols = [
+  ['No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', 'URL', '説明'],
+  [15, 'AWS', 'AWS認定 Associate系', 'https://example.com/cert', '2026-10-01', '古いタイトル', 'https://example.com/old', '古い説明'],
+];
+const sheet8Cols = {
+  getDataRange: () => ({ getValues: () => rows8Cols }),
+  getRange: (row, column) => ({
+    setValue: value => {
+      rows8Cols[row - 1][column - 1] = value;
+    },
+  }),
+};
+spreadsheet.getSheetByName = () => sheet8Cols;
+spreadsheet.getSheets = () => [sheet8Cols];
+
+const updated = context.updateQualificationSheet([
   {
     url: 'https://example.com/news/newer',
-    date: '2026年11月',
-    title: '新しいAWS資格情報',
-    summary: '新しい説明',
-    relatedQualifications: [{ no: 15 }],
+    date: '2026-11-08',
+    title: '最新のAWS認定Associate情報',
+    description: '新シラバス公開',
+    relatedQualifications: [{ no: 15, name: 'AWS認定 Associate系' }],
   },
 ]);
-assert.strictEqual(rows[1][4], '2026年11月');
-assert.strictEqual(rows[1][5], '新しいAWS資格情報');
-assert.strictEqual(rows[1][6], '新しい説明');
-assert.strictEqual(rows[1][7], 'https://example.com/news/newer');
+assert.strictEqual(updated.length, 1);
+assert.strictEqual(rows8Cols[1][4], '2026-11-08');
+assert.strictEqual(rows8Cols[1][5], '最新のAWS認定Associate情報');
+assert.strictEqual(rows8Cols[1][6], 'https://example.com/news/newer');
+assert.strictEqual(rows8Cols[1][7], '新シラバス公開');
 
-installedTriggers.push({ getHandlerFunction: () => 'anotherHandler' });
-context.setupDailyTrigger();
-context.setupDailyTrigger();
-assert.deepStrictEqual(triggerCalls, [
-  { handler: 'checkAllCertificateUpdates', days: 1, hour: 10, timezone: 'Asia/Tokyo' },
-  { handler: 'checkAllCertificateUpdates', days: 1, hour: 10, timezone: 'Asia/Tokyo' },
+// 古い情報では更新されない（前回実行時より新しくない）検証
+const updatedOlder = context.updateQualificationSheet([
+  {
+    url: 'https://example.com/news/older',
+    date: '2026-10-01',
+    title: '過去のAWS情報',
+    description: '過去説明',
+    relatedQualifications: [{ no: 15, name: 'AWS認定 Associate系' }],
+  },
 ]);
-assert.strictEqual(installedTriggers.length, 2);
-assert.strictEqual(installedTriggers[0].getHandlerFunction(), 'anotherHandler');
-assert.strictEqual(installedTriggers[1].getHandlerFunction(), 'checkAllCertificateUpdates');
+assert.strictEqual(updatedOlder.length, 0);
+assert.strictEqual(rows8Cols[1][4], '2026-11-08'); // 更新されない
 
+// 5. 毎平日トリガー（setupDailyTrigger）の検証
+installedTriggers.length = 0;
+triggerCalls.length = 0;
+installedTriggers.push({ getHandlerFunction: () => 'anotherHandler' });
+
+context.setupDailyTrigger();
+// 月曜〜金曜の5日分が登録されていること
+assert.strictEqual(triggerCalls.length, 5);
+const expectedWeekdays = [
+  context.ScriptApp.WeekDay.MONDAY,
+  context.ScriptApp.WeekDay.TUESDAY,
+  context.ScriptApp.WeekDay.WEDNESDAY,
+  context.ScriptApp.WeekDay.THURSDAY,
+  context.ScriptApp.WeekDay.FRIDAY,
+];
+assert.deepStrictEqual(triggerCalls.map(c => c.weekday), expectedWeekdays);
+triggerCalls.forEach(c => {
+  assert.strictEqual(c.handler, 'checkAllCertificateUpdates');
+  assert.strictEqual(c.hour, 10);
+  assert.strictEqual(c.timezone, 'Asia/Tokyo');
+});
+assert.strictEqual(installedTriggers.length, 6); // anotherHandler(1) + 5 weekday triggers
+
+// 6. 平日判定（isWeekdayJST）の検証
+// 2026-11-09 (月曜日) -> true
+assert.strictEqual(context.isWeekdayJST(new Date('2026-11-09T10:00:00+09:00')), true);
+// 2026-11-13 (金曜日) -> true
+assert.strictEqual(context.isWeekdayJST(new Date('2026-11-13T23:59:00+09:00')), true);
+// 2026-11-14 (土曜日) -> false
+assert.strictEqual(context.isWeekdayJST(new Date('2026-11-14T10:00:00+09:00')), false);
+// 2026-11-15 (日曜日) -> false
+assert.strictEqual(context.isWeekdayJST(new Date('2026-11-15T10:00:00+09:00')), false);
+
+// 7. Oracle & ISACA パース処理の検証
 const oracleItems = context.parseOracleAnnouncements(`
   <h3 id="y20261102-1">2026年版 Oracle Cloud Applications 認定試験のお知らせ (2026/11/2)</h3>
   <table><tr><td>ORACLE MASTER Silver Oracle Database</td></tr></table>
@@ -174,4 +274,4 @@ assert.strictEqual(isacaTopicItems[0].url, 'https://www.isaca.gr.jp/cisa/index.h
 assert.strictEqual(isacaTopicItems[0].date, '2026-10');
 assert.strictEqual(isacaTopicItems[0].relatedQualifications[0].no, 105);
 
-console.log('✓ 資格番号に応じたシート更新とURL設定を確認');
+console.log('✓ requirements.md & interface.md に沿ったGAS機能のテストがすべて成功しました！');

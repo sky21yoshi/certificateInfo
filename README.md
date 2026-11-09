@@ -40,4 +40,10 @@ NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/e
 
 全プロバイダーを実行すると、取得結果をIPA状態ファイルと同じ項目構成（`fiscalYear`、`date`、`title`、`url`、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。`fiscalYear` がない取得元では `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
 
-GAS版は、更新を検知した資格の行を資格番号で特定し、「最終更新日時」「タイトル」「説明」と記事リンクの「更新情報URL」を更新します。「更新情報URL」列がない場合は、既存列を保持したまま末尾に自動追加します。資格ページを示す「資格情報取得元」列は変更しません。複数の更新候補が同じ資格に関連する場合は、日付が最も新しい情報を反映します。スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` で実行します。
+GAS版およびNode.js版は、`docs/requirements.md` および `docs/interface.md` に準拠しています：
+- **収集頻度**: 一日一回、毎平日（月〜金）に定期実行します（GASでは `setupDailyTrigger` で月〜金の10時JSTトリガーを登録し、実行時にも土日スキップガードを実装）。
+- **更新検知**: 各資格ごとに収集した更新情報が前回実行時（シート記載値または前回状態）より新しい情報があるかを確認します。複数の更新候補が同じ資格に関連する場合は、日付が最も新しい情報を反映します。
+- **スプレッドシート更新**: `docs/interface.md` の定義（No, 認定機関, 資格名, 資格情報取得元, 最終更新日時, タイトル, URL, 説明）に従い、更新を検知した資格行の「最終更新日時」「タイトル」「URL」「説明」を更新します（ヘッダー「URL」を優先認識し、旧形式の「更新情報URL」にも互換対応）。資格情報取得元などの入力列は保持します。
+- **Slack通知**: Slack Webhook（スクリプトプロパティ `SLACK_WEBHOOK_URL` または環境変数 `SLACK_WEBHOOK_URL`）へ、「更新日時」「資格名」「タイトル」「URL」「説明」を整形して投稿します。複数の更新がある場合はそれぞれ別々に投稿します。
+
+スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎平日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` および `node test/checker_requirements.test.js` で実行します。また、ローカルTSVは `node scripts/update_tsv.js` で `docs/interface.md` 仕様の8列構成に同期できます。

@@ -19,18 +19,18 @@ if (raw.length === 0) {
 // 既存ヘッダーを解析し、必要なら新しい列を追加
 let header = raw[0].trim();
 const existingCols = header.split('\t');
-const neededCols = ['最終更新日時', 'タイトル', '説明'];
-let newHeader = header;
-let added = false;
+const neededCols = ['最終更新日時', 'タイトル', 'URL', '説明'];
+let newHeaderCols = [...existingCols];
 for (const col of neededCols) {
-  if (!existingCols.includes(col)) {
-    newHeader += '\t' + col;
-    added = true;
+  if (!newHeaderCols.includes(col)) {
+    newHeaderCols.push(col);
   }
 }
-if (added) {
-  raw[0] = newHeader;
-}
+// docs/interface.md の標準順序: No, 認定機関, 資格名, 資格情報取得元, 最終更新日時, タイトル, URL, 説明
+const standardOrder = ['No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', 'URL', '説明'];
+const isStandardCompatible = standardOrder.every(col => newHeaderCols.includes(col));
+const targetHeaderCols = isStandardCompatible ? standardOrder : newHeaderCols;
+raw[0] = targetHeaderCols.join('\t');
 
 // 全プロバイダー統合状態をロードする
 function loadState(name) {
@@ -73,25 +73,34 @@ function findLatest(no) {
 
 // データ行を更新
 const updatedLines = [];
+const headerCols = targetHeaderCols;
+const dateIdx = headerCols.indexOf('最終更新日時');
+const titleIdx = headerCols.indexOf('タイトル');
+const urlIdx = headerCols.indexOf('URL');
+const descIdx = headerCols.indexOf('説明');
+
 for (let i = 1; i < raw.length; i++) {
   const line = raw[i];
   if (!line) continue; // 空行はスキップ
-  const cols = line.split('\t');
-  const no = cols[0];
+  const oldCols = line.split('\t');
+  const no = oldCols[0];
   const latest = findLatest(no);
-  // 既存列数に合わせて不足分は空文字で埋める
-  while (cols.length < existingCols.length) cols.push('');
-  // 必要な列を追加または上書き
-  const headerCols = (added ? newHeader : header).split('\t');
-  const dateIdx = headerCols.indexOf('最終更新日時');
-  const titleIdx = headerCols.indexOf('タイトル');
-  const descIdx = headerCols.indexOf('説明');
-  if (latest) {
-    cols[dateIdx] = latest.date;
-    cols[titleIdx] = latest.title;
-    cols[descIdx] = latest.description;
+
+  // 新しいヘッダー列に合わせてマッピング
+  const rowMap = new Map();
+  for (let c = 0; c < existingCols.length; c++) {
+    rowMap.set(existingCols[c], oldCols[c] || '');
   }
-  updatedLines.push(cols.join('\t'));
+
+  if (latest) {
+    if (dateIdx >= 0) rowMap.set('最終更新日時', latest.date);
+    if (titleIdx >= 0) rowMap.set('タイトル', latest.title);
+    if (urlIdx >= 0) rowMap.set('URL', latest.url);
+    if (descIdx >= 0) rowMap.set('説明', latest.description);
+  }
+
+  const newCols = headerCols.map(col => rowMap.get(col) || '');
+  updatedLines.push(newCols.join('\t'));
 }
 
 // 書き戻し

@@ -64,9 +64,28 @@ const ENDPOINTS = {
 const DEFAULT_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit';
 
 /**
- * 定期実行メイン関数
+ * 日本時間（JST）で現在が平日（月〜金）かどうかを判定する
+ * @param {Date} [date]
+ * @returns {boolean}
  */
-function checkAllCertificateUpdates() {
+function isWeekdayJST(date) {
+  const targetDate = date || new Date();
+  const jstString = targetDate.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' });
+  const jstDate = new Date(jstString);
+  const day = jstDate.getDay(); // 0: 日曜, 6: 土曜
+  return day >= 1 && day <= 5;
+}
+
+/**
+ * 定期実行メイン関数（平日のみ一日一回実行）
+ * @param {object} [options]
+ */
+function checkAllCertificateUpdates(options) {
+  const forceRun = options && options.forceRun;
+  if (!forceRun && !isWeekdayJST()) {
+    console.log('本日は土日（休日）のため、平日定期収集をスキップします。');
+    return;
+  }
   console.log('=== 資格情報更新チェック開始 ===');
   const properties = PropertiesService.getScriptProperties();
   const webhookUrl = properties.getProperty('SLACK_WEBHOOK_URL');
@@ -231,7 +250,7 @@ function checkAllCertificateUpdates() {
 }
 
 /**
- * 資格情報の定期チェックを毎日10時（日本時間）に実行するトリガーを設定
+ * 資格情報の定期チェックを毎平日（月〜金）の10時（日本時間）に実行するトリガーを設定
  */
 function setupDailyTrigger() {
   const handler = 'checkAllCertificateUpdates';
@@ -243,12 +262,22 @@ function setupDailyTrigger() {
     }
   });
 
-  ScriptApp.newTrigger(handler)
-    .timeBased()
-    .everyDays(1)
-    .atHour(10)
-    .inTimezone('Asia/Tokyo')
-    .create();
+  const weekdays = [
+    ScriptApp.WeekDay.MONDAY,
+    ScriptApp.WeekDay.TUESDAY,
+    ScriptApp.WeekDay.WEDNESDAY,
+    ScriptApp.WeekDay.THURSDAY,
+    ScriptApp.WeekDay.FRIDAY,
+  ];
+
+  weekdays.forEach(function (weekday) {
+    ScriptApp.newTrigger(handler)
+      .timeBased()
+      .onWeekDay(weekday)
+      .atHour(10)
+      .inTimezone('Asia/Tokyo')
+      .create();
+  });
 }
 
 function fetchOfficialHtml(url) {
@@ -850,6 +879,100 @@ function matchOracleQualifications(text) {
     .map(q => ({ no: q.no, name: q.name }));
 }
 
+const IPA_QUALIFICATIONS = [
+  { no: 1, name: '基本情報技術者試験', aliases: ['基本情報', 'FE'] },
+  { no: 2, name: '応用情報技術者試験(旧:ソフトウェア開発技術者試験)', aliases: ['応用情報', 'AP'] },
+  { no: 3, name: 'ネットワークスペシャリスト試験', aliases: ['ネットワークスペシャリスト', 'NW'] },
+  { no: 4, name: 'データベーススペシャリスト試験', aliases: ['データベーススペシャリスト', 'DB'] },
+  { no: 5, name: 'エンベデッドシステムスペシャリスト試験', aliases: ['エンベデッドシステムスペシャリスト', 'エンべデッド', 'ES'] },
+  { no: 6, name: 'ITサービスマネージャ試験', aliases: ['ITサービスマネージャ', 'SM'] },
+  { no: 7, name: '情報処理安全確保支援士試験', aliases: ['情報処理安全確保支援士', '登録情報セキュリティスペシャリスト', '登録セキスペ', '支援士', 'RISS'] },
+  { no: 8, name: 'システムアーキテクト試験', aliases: ['システムアーキテクト', 'SA'] },
+  { no: 9, name: 'ITストラテジスト試験', aliases: ['ITストラテジスト', 'ST'] },
+  { no: 10, name: 'プロジェクトマネージャ試験', aliases: ['プロジェクトマネージャ', 'PM'] },
+  { no: 11, name: 'システム監査技術者試験', aliases: ['システム監査技術者', 'AU'] },
+  { no: 12, name: 'ITパスポート試験', aliases: ['ITパスポート', 'iパス', 'IP'] },
+  { no: 13, name: '情報セキュリティマネジメント試験', aliases: ['情報セキュリティマネジメント', 'セキュマネ', 'SG'] },
+];
+
+function matchIpaQualifications(text) {
+  const matched = [];
+  for (const q of IPA_QUALIFICATIONS) {
+    if (text.includes(q.name) || q.aliases.some(alias => text.includes(alias))) {
+      matched.push({ no: q.no, name: q.name });
+    }
+  }
+  return matched;
+}
+
+const AWS_QUALIFICATIONS = [
+  { no: 14, name: 'AWS認定 Practitioner系', aliases: ['Cloud Practitioner', 'クラウドプラクティショナー', 'CLF'] },
+  { no: 15, name: 'AWS認定 Associate系', aliases: ['Solutions Architect - Associate', 'Developer - Associate', 'SysOps Administrator - Associate', 'Data Engineer - Associate', 'SAA', 'DVA', 'SOA', 'DEA'] },
+  { no: 16, name: 'AWS認定 Professional系', aliases: ['Solutions Architect - Professional', 'DevOps Engineer - Professional', 'SAP', 'DOP'] },
+  { no: 17, name: 'AWS認定 Specialty系', aliases: ['Specialty', 'Advanced Networking', 'Security', 'Machine Learning', 'ANS', 'SCS', 'MLS'] },
+  { no: 18, name: 'AWS Certified AI Business Strategist', aliases: ['AI Business Strategist', 'AI Practitioner', 'AIF'] },
+];
+
+function matchAwsQualifications(text) {
+  const matched = [];
+  for (const q of AWS_QUALIFICATIONS) {
+    if (text.includes(q.name) || q.aliases.some(alias => new RegExp(`\\b${alias}\\b`, 'i').test(text))) {
+      matched.push({ no: q.no, name: q.name });
+    }
+  }
+  return matched;
+}
+
+const MS_TARGET_PATTERNS = [
+  { no: 19, name: 'Azure認定 fundamentals系', match: c => (c.uid || '').includes('azure-fundamentals') || (c.title || '').includes('Azure Fundamentals') },
+  { no: 20, name: 'Azure認定 Associate系', match: c => (c.uid || '').includes('azure-administrator') || (c.uid || '').includes('azure-developer') },
+  { no: 21, name: 'Azure認定 Expert系', match: c => (c.uid || '').includes('azure-solutions-architect') || (c.uid || '').includes('devops-engineer') },
+  { no: 22, name: 'Azure認定 Specialty系', match: c => c.certification_type === 'specialty' || (c.uid || '').includes('specialty') },
+  { no: 27, name: 'Security Operations Analyst Associate', match: c => (c.uid || '').includes('security-operations-analyst') || (c.title || '').includes('Security Operations Analyst') },
+  { no: 28, name: 'Collaboration Communications Systems Engineer Associate', match: c => (c.uid || '').includes('collaboration-communications') || (c.title || '').includes('Collaboration Communications') },
+  { no: 29, name: 'Endpoint Administrator Associate', match: c => (c.uid || '').includes('endpoint-administrator') || (c.title || '').includes('Endpoint Administrator') },
+  { no: 30, name: 'Teams Administrator Associate', match: c => (c.uid || '').includes('teams-administrator') || (c.title || '').includes('Teams Administrator') },
+  { no: 31, name: 'Identity and Access Administrator Associate', match: c => (c.uid || '').includes('identity-and-access-administrator') || (c.title || '').includes('Identity and Access Administrator') },
+  { no: 32, name: 'Power Platform Solution Architect Expert', match: c => (c.uid || '').includes('power-platform-solution-architect') || (c.title || '').includes('Power Platform Solution Architect') },
+  { no: 33, name: 'Information Protection and Compliance Administrator Associate', match: c => (c.uid || '').includes('information-protection') || (c.title || '').includes('Information Protection') },
+  { no: 34, name: 'Cybersecurity Architect Expert', match: c => (c.uid || '').includes('cybersecurity-architect') || (c.title || '').includes('Cybersecurity Architect') },
+  { no: 35, name: 'Windows Server Hybrid Administrator Associate', match: c => (c.uid || '').includes('windows-server-hybrid') || (c.title || '').includes('Windows Server Hybrid') },
+  { no: 36, name: 'Power Platform Fundamentals', match: c => (c.uid || '').includes('power-platform-fundamentals') || (c.title || '').includes('Power Platform Fundamentals') },
+  { no: 37, name: 'Power Automate RPA Developer Associate', match: c => (c.uid || '').includes('power-automate-rpa-developer') || (c.title || '').includes('Power Automate RPA Developer') },
+  { no: 38, name: 'Power BI Data Analyst Associate', match: c => (c.uid || '').includes('power-bi-data-analyst') || (c.title || '').includes('Power BI Data Analyst') },
+  { no: 39, name: 'Power Platform Developer Associate', match: c => (c.uid || '').includes('power-platform-developer') || (c.title || '').includes('Power Platform Developer') },
+];
+
+function matchMicrosoftQualifications(cert) {
+  const matched = [];
+  for (const pattern of MS_TARGET_PATTERNS) {
+    if (pattern.match(cert)) {
+      matched.push({ no: pattern.no, name: pattern.name });
+    }
+  }
+  return matched;
+}
+
+const LPI_QUALIFICATIONS = [
+  { no: 53, name: 'LPIC-1', aliases: ['LPIC-1', 'Linux Administrator'] },
+  { no: 54, name: 'LPIC-2', aliases: ['LPIC-2', 'Linux Engineer'] },
+  { no: 55, name: 'LPIC-3', aliases: ['LPIC-3', 'Enterprise Professional'] },
+  { no: 56, name: 'LinuC-1', aliases: ['LinuC-1', 'LinuC レベル1'] },
+  { no: 57, name: 'LinuC-2', aliases: ['LinuC-2', 'LinuC レベル2'] },
+  { no: 58, name: 'LinuC-3', aliases: ['LinuC-3', 'LinuC レベル3'] },
+  { no: 59, name: 'HTML5プロフェッショナル認定試験', aliases: ['HTML5プロフェッショナル', 'HTML5'] },
+];
+
+function matchLpiQualifications(text) {
+  const matched = [];
+  for (const q of LPI_QUALIFICATIONS) {
+    if (text.includes(q.name) || q.aliases.some(alias => text.includes(alias))) {
+      matched.push({ no: q.no, name: q.name });
+    }
+  }
+  return matched;
+}
+
 /**
  * 日本の年度（4月始まり）を取得
  */
@@ -908,7 +1031,9 @@ function checkIpa(properties, webhookUrl) {
                 provider: 'IPA（情報処理推進機構）',
                 date: dMatch ? dMatch[1].replace(/<[^>]+>/g, '').trim() : '',
                 title: title,
-                url: linkUrl
+                url: linkUrl,
+                description: title,
+                relatedQualifications: matchIpaQualifications(title)
               });
             }
           }
@@ -944,12 +1069,19 @@ function checkAws(properties, webhookUrl) {
     const tMatch = m[1].match(/<title>([\s\S]*?)<\/title>/i);
     const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
     const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+    const descMatch = m[1].match(/<description>([\s\S]*?)<\/description>/i);
     if (tMatch && lMatch) {
+      const title = tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+      const link = lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+      const date = dMatch ? dMatch[1].trim() : '';
+      const desc = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').trim() : title;
       items.push({
         provider: 'Amazon Web Services (AWS)',
-        title: tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
-        url: lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
-        date: dMatch ? dMatch[1].trim() : ''
+        title: title,
+        url: link,
+        date: date,
+        description: desc,
+        relatedQualifications: matchAwsQualifications(`${title} ${desc}`)
       });
     }
   }
@@ -971,7 +1103,9 @@ function checkMicrosoft(properties, webhookUrl) {
     uid: c.uid,
     title: c.title,
     url: c.url,
-    date: c.last_modified
+    date: c.last_modified,
+    description: c.summary || c.title || '',
+    relatedQualifications: matchMicrosoftQualifications(c)
   }));
 
   handleDiff('MICROSOFT', items, properties, webhookUrl, 'uid', 'date');
@@ -995,11 +1129,16 @@ function checkLpi(properties, webhookUrl) {
         const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
         const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
         if (tMatch && lMatch) {
+          const title = tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+          const link = lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+          const date = dMatch ? dMatch[1].trim() : '';
           items.push({
             provider: 'LPI (Linux Professional Institute)',
-            title: tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
-            url: lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim(),
-            date: dMatch ? dMatch[1].trim() : ''
+            title: title,
+            url: link,
+            date: date,
+            description: title,
+            relatedQualifications: matchLpiQualifications(title)
           });
         }
       }
@@ -1027,11 +1166,14 @@ function checkLpi(properties, webhookUrl) {
         if (lMatch) {
           let url = lMatch[1].trim();
           if (!url.startsWith('http')) url = 'https://linuc.org' + (url.startsWith('/') ? '' : '/') + url;
+          const title = lMatch[2].replace(/<[^>]+>/g, '').trim();
           items.push({
             provider: 'LPI-Japan (LinuC)',
-            title: lMatch[2].replace(/<[^>]+>/g, '').trim(),
+            title: title,
             url: url,
-            date: dMatch ? dMatch[1].trim() : ''
+            date: dMatch ? dMatch[1].trim() : '',
+            description: title,
+            relatedQualifications: matchLpiQualifications(title)
           });
         }
       }
@@ -1076,9 +1218,17 @@ function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey
 
   if (diffs.length > 0) {
     console.log(`[${key}] 差分検知: ${diffs.length} 件`);
-    updateQualificationSheet(diffs);
-    for (const diff of diffs) {
-      sendSlackNotification(diff, webhookUrl);
+    // 資格単位でスプレッドシートを更新し、更新された資格一覧を取得
+    const appliedUpdates = updateQualificationSheet(diffs);
+    if (appliedUpdates && appliedUpdates.length > 0) {
+      for (const update of appliedUpdates) {
+        sendSlackNotification(update, webhookUrl);
+      }
+    } else {
+      // 資格紐付けのない全体更新通知のフォールバック
+      for (const diff of diffs) {
+        sendSlackNotification(diff, webhookUrl);
+      }
     }
     properties.setProperty(propKey, JSON.stringify(items.slice(0, 50)));
   } else {
@@ -1088,6 +1238,9 @@ function handleDiff(key, items, properties, webhookUrl, idKey = 'url', updateKey
 
 /**
  * 更新情報を資格番号に対応するスプレッドシート行へ反映する
+ * 前回実行時より新しい情報がある資格のみ更新し、更新された資格リストを返す
+ * @param {Array<object>} items
+ * @returns {Array<object>} 更新された資格情報のリスト
  */
 function updateQualificationSheet(items) {
   const updatesByQualification = new Map();
@@ -1098,6 +1251,9 @@ function updateQualificationSheet(items) {
       if (!Number.isInteger(no) || no <= 0) continue;
 
       const candidate = {
+        no: no,
+        qualificationName: qualification.name || '',
+        provider: item.provider || '',
         date: item.date || item.lastModified || '',
         title: item.title || item.name || '',
         url: item.url || item.officialUrl || '',
@@ -1111,7 +1267,7 @@ function updateQualificationSheet(items) {
       }
     }
   }
-  if (updatesByQualification.size === 0) return;
+  if (updatesByQualification.size === 0) return [];
 
   const properties = PropertiesService.getScriptProperties();
   const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
@@ -1131,16 +1287,20 @@ function updateQualificationSheet(items) {
 
   const headers = values[0].map(value => String(value).trim());
   const numberColumn = headers.indexOf('No');
+  const nameColumn = headers.indexOf('資格名');
   const dateColumn = headers.indexOf('最終更新日時');
   const titleColumn = headers.indexOf('タイトル');
   const descriptionColumn = headers.indexOf('説明');
-  let urlColumn = headers.indexOf('更新情報URL');
+  let urlColumn = headers.indexOf('URL');
+  if (urlColumn < 0) {
+    urlColumn = headers.indexOf('更新情報URL');
+  }
   if ([numberColumn, dateColumn, titleColumn, descriptionColumn].some(column => column < 0)) {
     throw new Error('資格一覧シートに必要な列（No、最終更新日時、タイトル、説明）がありません');
   }
   if (urlColumn < 0) {
     urlColumn = headers.length;
-    sheet.getRange(1, urlColumn + 1).setValue('更新情報URL');
+    sheet.getRange(1, urlColumn + 1).setValue('URL');
   }
 
   const rowsByQualification = new Map();
@@ -1153,17 +1313,56 @@ function updateQualificationSheet(items) {
     rowsByQualification.set(no, index + 1);
   }
 
+  const appliedUpdates = [];
   for (const [no, update] of updatesByQualification) {
     const row = rowsByQualification.get(no);
     if (!row) {
       console.warn(`資格番号 ${no} の行が資格一覧シートにありません`);
       continue;
     }
-    if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
-    sheet.getRange(row, titleColumn + 1).setValue(update.title);
-    if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
-    sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
+
+    const rowValues = values[row - 1];
+    const existingDate = dateColumn >= 0 ? String(rowValues[dateColumn] || '').trim() : '';
+    const existingTitle = titleColumn >= 0 ? String(rowValues[titleColumn] || '').trim() : '';
+    const existingUrl = urlColumn >= 0 ? String(rowValues[urlColumn] || '').trim() : '';
+    const existingQualificationName = nameColumn >= 0 ? String(rowValues[nameColumn] || '').trim() : '';
+    const qualificationName = existingQualificationName || update.qualificationName || `資格No.${no}`;
+
+    // 各資格ごとに収集した更新情報が前回実行時（シート上の情報）より新しい情報があるか確認する
+    const hasExistingDate = Boolean(existingDate && !Number.isNaN(getSheetUpdateTimestamp(existingDate)));
+    const hasCandidateDate = Boolean(update.date && !Number.isNaN(getSheetUpdateTimestamp(update.date)));
+
+    let isChanged = false;
+    if (hasCandidateDate && hasExistingDate) {
+      // 両方に日付がある場合、候補の日付が厳密に新しい場合のみ更新
+      isChanged = isNewerSheetUpdate(update, { date: existingDate });
+    } else if (hasCandidateDate && !hasExistingDate) {
+      // シートに日付がなく、候補に日付がある場合は更新
+      isChanged = true;
+    } else {
+      // 日付がない取得元の場合はタイトルまたはURLの変更で判定
+      isChanged = !existingTitle || (update.title && update.title !== existingTitle) || (update.url && update.url !== existingUrl);
+    }
+
+    if (isChanged) {
+      if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
+      sheet.getRange(row, titleColumn + 1).setValue(update.title);
+      if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
+      sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
+
+      appliedUpdates.push({
+        no: no,
+        qualificationName: qualificationName,
+        date: update.date,
+        title: update.title,
+        url: update.url,
+        description: update.description,
+        provider: update.provider
+      });
+    }
   }
+
+  return appliedUpdates;
 }
 
 function isNewerSheetUpdate(candidate, previous) {
@@ -1191,33 +1390,47 @@ function getSheetUpdateTimestamp(value) {
 }
 
 /**
- * Slack通知送信
+ * Slack通知送信（更新日時、資格名、タイトル、URL、説明を整形して投稿）
  */
 function sendSlackNotification(item, webhookUrl) {
   if (!webhookUrl) return;
 
+  const date = item.date || '未記載';
+  const qualificationName = item.qualificationName || (item.relatedQualifications && item.relatedQualifications[0] && item.relatedQualifications[0].name) || item.provider || '資格情報';
+  const title = item.title || item.name || '（タイトルなし）';
+  const url = item.url || '';
+  const description = item.description || item.summary || item.title || '（詳細説明なし）';
+
   const payload = {
+    text: `【資格情報更新】${qualificationName} の最新情報が検知されました`,
     blocks: [
       {
         type: 'header',
         text: {
           type: 'plain_text',
-          text: `📢 【${item.provider}】資格情報 ${item.type || '新着'}通知`,
+          text: '📢 資格情報 更新通知',
           emoji: true
         }
       },
       {
         type: 'section',
         fields: [
-          { type: 'mrkdwn', text: `*公開・更新日:*\n${item.date || '未記載'}` },
-          { type: 'mrkdwn', text: `*認定機関:*\n${item.provider}` }
+          { type: 'mrkdwn', text: `*更新日時:*\n${date}` },
+          { type: 'mrkdwn', text: `*資格名:*\n${qualificationName}` }
+        ]
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*タイトル:*\n${title}` },
+          { type: 'mrkdwn', text: `*URL:*\n${url ? `<${url}|${url}>` : '未記載'}` }
         ]
       },
       {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `*タイトル:*\n<${item.url}|${item.title}>`
+          text: `*説明:*\n${description}`
         }
       },
       { type: 'divider' }

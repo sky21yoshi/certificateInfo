@@ -24,6 +24,9 @@ const {
   saveProviderState,
   mergeProviderItems,
   detectDiff,
+  isWeekdayJST,
+  sendSlackNotification,
+  notifySlackUpdates,
 } = require('./checker');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -219,6 +222,42 @@ async function runProviderMonitor(key, provider) {
       // 状態ファイルを更新
       saveProviderState(key, currentItems);
       console.log('状態ファイルを最新に更新しました。');
+
+      // Slack通知（環境変数 SLACK_WEBHOOK_URL が設定されている場合）
+      const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+      if (webhookUrl) {
+        const qualificationUpdates = [];
+        diffs.forEach(item => {
+          const qualifications = item.relatedQualifications || [];
+          if (qualifications.length > 0) {
+            qualifications.forEach(q => {
+              qualificationUpdates.push({
+                qualificationName: q.name,
+                no: q.no,
+                date: item.date || item.lastModified || '',
+                title: item.title || item.name || '',
+                url: item.url || '',
+                description: item.description || item.summary || item.title || '',
+                provider: provider.name,
+              });
+            });
+          } else {
+            qualificationUpdates.push({
+              qualificationName: provider.name,
+              date: item.date || item.lastModified || '',
+              title: item.title || item.name || '',
+              url: item.url || '',
+              description: item.description || item.summary || item.title || '',
+              provider: provider.name,
+            });
+          }
+        });
+        if (qualificationUpdates.length > 0) {
+          console.log(`Slackへ ${qualificationUpdates.length} 件の更新情報を個別に投稿中...`);
+          await notifySlackUpdates(qualificationUpdates, webhookUrl, 1000);
+          console.log('Slackへの投稿が完了しました。');
+        }
+      }
     }
 
     return { key, count: currentItems.length, diffCount: diffs.length, items: currentItems };
@@ -237,6 +276,12 @@ async function main() {
   console.log('# 資格情報 更新監視バッチ 実行開始');
   console.log(`# 実行日時: ${new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}`);
   console.log('########################################');
+
+  const isWeekdayOnly = process.argv.includes('--weekday-only');
+  if (isWeekdayOnly && !isWeekdayJST()) {
+    console.log('本日は土日（休日）のため、平日定期収集をスキップします。');
+    return;
+  }
 
   // コマンドライン引数で対象プロバイダーを指定可能（例: --provider=aws）
   const targetArg = process.argv.find(arg => arg.startsWith('--provider='));

@@ -128,6 +128,121 @@ function detectDiff(currentItems, previousItems, idKey = 'url', updateKey = null
   return diffs;
 }
 
+/**
+ * 日本時間（JST）で現在が平日（月〜金）かどうかを判定する
+ * @param {Date} [date]
+ * @returns {boolean}
+ */
+function isWeekdayJST(date = new Date()) {
+  const jstString = date.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' });
+  const jstDate = new Date(jstString);
+  const day = jstDate.getDay(); // 0: 日曜, 6: 土曜
+  return day >= 1 && day <= 5;
+}
+
+/**
+ * 日付文字列からタイムスタンプを取得
+ * @param {string} value
+ * @returns {number}
+ */
+function getUpdateTimestamp(value) {
+  if (!value) return NaN;
+  const normalized = String(value).trim()
+    .replace(/年/g, '-')
+    .replace(/月/g, '-')
+    .replace(/日/g, '')
+    .replace(/\//g, '-');
+  const partialDate = normalized.match(/^(\d{4})-(\d{1,2})$/);
+  const date = partialDate
+    ? `${partialDate[1]}-${('0' + partialDate[2]).slice(-2)}-01`
+    : normalized;
+  return Date.parse(date);
+}
+
+/**
+ * Slack通知送信（要件定義準拠: 更新日時、資格名、タイトル、URL、説明を整形して投稿）
+ * @param {object} item
+ * @param {string} webhookUrl
+ * @returns {Promise<boolean>}
+ */
+async function sendSlackNotification(item, webhookUrl) {
+  if (!webhookUrl) return false;
+
+  const date = item.date || item.lastModified || '未記載';
+  const qualificationName = item.qualificationName || (item.relatedQualifications && item.relatedQualifications[0] && item.relatedQualifications[0].name) || item.provider || '資格情報';
+  const title = item.title || item.name || '（タイトルなし）';
+  const url = item.url || '';
+  const description = item.description || item.summary || item.title || '（詳細説明なし）';
+
+  const payload = {
+    text: `【資格情報更新】${qualificationName} の最新情報が検知されました`,
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '📢 資格情報 更新通知',
+          emoji: true,
+        },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*更新日時:*\n${date}` },
+          { type: 'mrkdwn', text: `*資格名:*\n${qualificationName}` },
+        ],
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*タイトル:*\n${title}` },
+          { type: 'mrkdwn', text: `*URL:*\n${url ? `<${url}|${url}>` : '未記載'}` },
+        ],
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*説明:*\n${description}`,
+        },
+      },
+      { type: 'divider' },
+    ],
+  };
+
+  try {
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch (error) {
+    console.error('Slack通知の送信に失敗しました:', error.message);
+    return false;
+  }
+}
+
+/**
+ * 複数更新をそれぞれ個別にSlack投稿する
+ * @param {Array<object>} updates
+ * @param {string} webhookUrl
+ * @param {number} [intervalMs=500]
+ */
+async function notifySlackUpdates(updates, webhookUrl, intervalMs = 500) {
+  if (!webhookUrl || !Array.isArray(updates) || updates.length === 0) return 0;
+  let successCount = 0;
+  for (let i = 0; i < updates.length; i++) {
+    const update = updates[i];
+    const ok = await sendSlackNotification(update, webhookUrl);
+    if (ok) successCount++;
+    if (i < updates.length - 1 && intervalMs > 0) {
+      await new Promise(resolve => setTimeout(resolve, intervalMs));
+    }
+  }
+  return successCount;
+}
+
 // 既存後方互換用
 function loadPreviousState() {
   return loadProviderState('ipa');
@@ -144,4 +259,8 @@ module.exports = {
   detectDiff,
   loadPreviousState,
   saveCurrentState,
+  isWeekdayJST,
+  getUpdateTimestamp,
+  sendSlackNotification,
+  notifySlackUpdates,
 };
