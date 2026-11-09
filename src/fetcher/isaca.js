@@ -6,7 +6,7 @@ const {
   hashContent,
 } = require('./official_web');
 
-const ISACA_TOPICS_URL = 'https://www.isaca.gr.jp/index.html';
+const ISACA_TOPICS_URL = 'https://engage.isaca.org/tokyochapter';
 const ISACA_QUALIFICATIONS = [
   { no: 105, name: 'CISA (Certified Information Systems Auditor)' },
 ];
@@ -26,10 +26,10 @@ async function fetchIsacaUpdates(customHtml = null) {
 
 function extractIsacaTopics(html) {
   const match = html.match(/<!--\s*トピックス\s*-->[\s\S]*?<!--\s*\/\/トピックス\s*-->/i);
-  if (!match) {
-    throw new Error('ISACAトップページにトピックス欄が見つかりません');
+  if (match) {
+    return match[0];
   }
-  return match[0];
+  return html;
 }
 
 function parseIsacaTopicItems(topics) {

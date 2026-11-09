@@ -270,7 +270,7 @@ const isacaTopicItems = context.parseIsacaTopicItems(context.extractIsacaTopics(
   <!--//トピックス-->
 `));
 assert.strictEqual(isacaTopicItems.length, 1);
-assert.strictEqual(isacaTopicItems[0].url, 'https://www.isaca.gr.jp/cisa/index.html#cisa_course');
+assert.strictEqual(isacaTopicItems[0].url, 'https://engage.isaca.org/cisa/index.html#cisa_course');
 assert.strictEqual(isacaTopicItems[0].date, '2026-10');
 assert.strictEqual(isacaTopicItems[0].relatedQualifications[0].no, 105);
 

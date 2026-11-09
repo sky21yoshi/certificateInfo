@@ -26,7 +26,7 @@
 - Pythonエンジニア育成推進協会: [お知らせRSS](https://pythonic-exam.com/feed/)・[基礎試験](https://www.pythonic-exam.com/exam/basic)・[データ分析試験](https://www.pythonic-exam.com/exam/data-analyst)
 - 日本プロジェクトマネジメント協会 (PMAJ): [PMC](https://www.pmaj.or.jp/p2m/exam/pmc/top.html)・[PMS](https://www.pmaj.or.jp/p2m/exam/pms/top.html)・[PMR](https://www.pmaj.or.jp/p2m/exam/pmr/top.html)
 - Project Management Institute (PMI): [PMI日本支部 PMP資格・試験情報](https://www.pmi-japan.org/pmp_license/)
-- ISACA: [東京支部トップページのトピックス](https://www.isaca.gr.jp/index.html)
+- ISACA: [東京支部 (ISACA Engage)](https://engage.isaca.org/tokyochapter)
 - PeopleCert: [ITIL Certifications](https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1)
 - Fortinet: [認定資格プログラム](https://www.fortinet.com/jp/training-certification)・[NSE認定プログラム改訂情報](https://www.fortinet.com/nse-training-update)
 - Palo Alto Networks: [Certification Program](https://www.paloaltonetworks.com/services/education/certification)

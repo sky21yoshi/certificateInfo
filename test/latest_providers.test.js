@@ -29,7 +29,7 @@ async function main() {
     </table>
     <!--//トピックス-->
   `);
-  assert.strictEqual(isacaTopics[0].url, 'https://www.isaca.gr.jp/index.html');
+  assert.strictEqual(isacaTopics[0].url, 'https://engage.isaca.org/tokyochapter');
   assert.strictEqual(isacaTopics[1].title, '2026年11月期 CISA試験レビューコースの開催のご案内');
   assert.strictEqual(isacaTopics[1].url, 'https://www.isaca.gr.jp/cisa/index.html#cisa_course');
   assert.strictEqual(isacaTopics[1].date, '2026-10');

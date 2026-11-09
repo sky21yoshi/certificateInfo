@@ -53,7 +53,7 @@ const ENDPOINTS = {
   PMAJ_PMS: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html',
   PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html',
   PMI_PMP: 'https://www.pmi-japan.org/pmp_license/',
-  ISACA_TOPICS: 'https://www.isaca.gr.jp/index.html',
+  ISACA_TOPICS: 'https://engage.isaca.org/tokyochapter',
   PEOPLECERT_ITIL: 'https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1',
   FORTINET_CERTIFICATION: 'https://www.fortinet.com/jp/training-certification',
   FORTINET_UPDATE: 'https://www.fortinet.com/nse-training-update',
@@ -597,8 +597,7 @@ function checkIsaca(properties, webhookUrl) {
 
 function extractIsacaTopics(html) {
   const match = html.match(/<!--\s*トピックス\s*-->[\s\S]*?<!--\s*\/\/トピックス\s*-->/i);
-  if (!match) throw new Error('ISACAトップページにトピックス欄が見つかりません');
-  return match[0];
+  return match ? match[0] : html;
 }
 
 function parseIsacaTopicItems(topics) {
