@@ -261,6 +261,25 @@ assert.strictEqual(oracleItems[0].url, 'https://www.oracle.com/jp/education/news
 assert.strictEqual(oracleItems[0].date, '2026-11-02');
 assert.strictEqual(oracleItems[0].relatedQualifications[0].no, 62);
 
+// Oracle RSS パースの検証
+const oracleRssItems = context.parseOracleRss(`
+  <rss version="2.0">
+    <channel>
+      <title>Oracle University Blog</title>
+      <item>
+        <title>New Certification Exam for Java SE and ORACLE MASTER Silver</title>
+        <link>https://blogs.oracle.com/oracleuniversity/post/new-exam-2026</link>
+        <pubDate>Mon, 09 Nov 2026 08:00:00 GMT</pubDate>
+        <description>Details about Oracle Certified Java Programmer, Silver SE 11</description>
+      </item>
+    </channel>
+  </rss>
+`);
+assert.strictEqual(oracleRssItems.length, 1);
+assert.strictEqual(oracleRssItems[0].url, 'https://blogs.oracle.com/oracleuniversity/post/new-exam-2026');
+assert.strictEqual(oracleRssItems[0].date, 'Mon, 09 Nov 2026 08:00:00 GMT');
+assert(oracleRssItems[0].relatedQualifications.some(q => q.no === 62 || q.no === 63));
+
 const isacaTopicItems = context.parseIsacaTopicItems(context.extractIsacaTopics(`
   <!--トピックス-->
   <table>

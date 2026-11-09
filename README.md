@@ -16,7 +16,7 @@
 - LINUC: [お知らせ](https://linuc.org/news/)
 - Cisco: [Learn with Cisco 公式RSS](https://blogs.cisco.com/learning/feed)
 - Google Cloud: [Training and Certifications 公式記事一覧](https://cloud.google.com/blog/products/training-certifications)
-- Oracle: [Oracle University 新着ニュース](https://www.oracle.com/jp/education/news/)
+- Oracle: [Oracle University Blog Feed](https://blogs.oracle.com/oracleuniversity/feed)・[新着ニュース](https://www.oracle.com/jp/education/news/)
 - Broadcom / VMware: [VMware Certification](https://www.broadcom.com/support/education/vmware/certification)
 - CompTIA: [CompTIA Japan Blog](https://www.comptia.org/ja-jp/blog/)
 - CNCF / Linux Foundation: [CNCF Blog](https://www.cncf.io/blog/)・[Linux Foundation Education Blog](https://training.linuxfoundation.org/blog/)

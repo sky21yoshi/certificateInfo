@@ -38,7 +38,7 @@ const ENDPOINTS = {
   LINUC: 'https://linuc.org/news/',
   CISCO: 'https://blogs.cisco.com/learning/feed',
   GOOGLE_CLOUD: 'https://cloud.google.com/blog/products/training-certifications',
-  ORACLE: 'https://www.oracle.com/jp/education/news/',
+  ORACLE: 'https://blogs.oracle.com/oracleuniversity/feed',
   BROADCOM: 'https://www.broadcom.com/support/education/vmware/certification',
   COMPTIA: 'https://www.comptia.org/ja-jp/blog/',
   CNCF: 'https://www.cncf.io/blog/',
@@ -74,6 +74,31 @@ function isWeekdayJST(date) {
   const jstDate = new Date(jstString);
   const day = jstDate.getDay(); // 0: 日曜, 6: 土曜
   return day >= 1 && day <= 5;
+}
+
+/**
+ * 手動実行用関数（平日判定に関わらず即座に更新チェックを実行）
+ */
+function runManualCheck() {
+  console.log('▶ 手動実行を開始します（平日ガード無視）');
+  checkAllCertificateUpdates({ forceRun: true });
+}
+
+/**
+ * 過去の保存状態（キャッシュ）をクリアする関数
+ * 前回の状態をリセットして最初から差分判定や全件取り込みを行いたい場合に実行します
+ */
+function clearSavedState() {
+  const properties = PropertiesService.getScriptProperties();
+  const keys = properties.getKeys();
+  let count = 0;
+  keys.forEach(function (key) {
+    if (key.indexOf('SAVED_STATE_') === 0) {
+      properties.deleteProperty(key);
+      count++;
+    }
+  });
+  console.log(`保存状態 ${count} 件をクリアしました。次回の実行は初回ベースラインとして処理されます。`);
 }
 
 /**
@@ -748,21 +773,64 @@ function checkGoogleCloud(properties, webhookUrl) {
 }
 
 /**
- * Oracle University日本語ニュースのチェック処理
+ * Oracle University ブログフィードのチェック処理 (RSS)
  */
 function checkOracle(properties, webhookUrl) {
   const res = UrlFetchApp.fetch(ENDPOINTS.ORACLE, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8'
+      'Accept': 'application/rss+xml,application/xml,text/xml;q=0.9,*/*;q=0.8'
     },
     muteHttpExceptions: true
   });
-  if (res.getResponseCode() !== 200) throw new Error(`HTTP ${res.getResponseCode()}`);
+  if (res.getResponseCode() !== 200) {
+    console.warn(`Oracle フィードの取得に失敗しました (HTTP ${res.getResponseCode()})。スキップします。`);
+    return;
+  }
 
-  const html = res.getContentText('UTF-8');
-  handleDiff('ORACLE', uniqueItemsByUrl(parseOracleAnnouncements(html)), properties, webhookUrl, 'url');
+  const content = res.getContentText('UTF-8');
+  let items = [];
+  if (content.indexOf('<rss') >= 0 || content.indexOf('<channel') >= 0 || content.indexOf('<item') >= 0) {
+    items = parseOracleRss(content);
+  } else {
+    items = parseOracleAnnouncements(content);
+  }
+
+  handleDiff('ORACLE', uniqueItemsByUrl(items), properties, webhookUrl, 'url');
+}
+
+function parseOracleRss(xml) {
+  const items = [];
+  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+  let match;
+
+  while ((match = itemRegex.exec(xml)) !== null) {
+    const block = match[1];
+    const titleMatch = block.match(/<title>([\s\S]*?)<\/title>/i);
+    const linkMatch = block.match(/<link>([\s\S]*?)<\/link>/i);
+    const pubDateMatch = block.match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+    const descMatch = block.match(/<description>([\s\S]*?)<\/description>/i);
+
+    const title = titleMatch ? decodeFeedText(titleMatch[1]).trim() : '';
+    const link = linkMatch ? decodeFeedText(linkMatch[1]).trim() : '';
+    const pubDate = pubDateMatch ? pubDateMatch[1].trim() : '';
+    const desc = descMatch ? stripHtmlText(decodeFeedText(descMatch[1])).trim() : title;
+
+    if (title && link) {
+      const fullText = `${title} ${desc}`;
+      const relatedQualifications = matchOracleQualifications(fullText);
+      items.push({
+        provider: 'Oracle',
+        title: title,
+        url: link,
+        date: pubDate,
+        description: desc,
+        relatedQualifications: relatedQualifications
+      });
+    }
+  }
+
+  return items;
 }
 
 function parseOracleAnnouncements(html) {
@@ -782,7 +850,7 @@ function parseOracleAnnouncements(html) {
     items.push({
       provider: 'Oracle',
       title: title,
-      url: `${ENDPOINTS.ORACLE}#${idMatch[1]}`,
+      url: `https://www.oracle.com/jp/education/news/#${idMatch[1]}`,
       date: `${dateMatch[1]}-${('0' + dateMatch[2]).slice(-2)}-${('0' + dateMatch[3]).slice(-2)}`,
       relatedQualifications: matchOracleQualifications(`${title} ${stripHtmlText(card)}`)
     });
