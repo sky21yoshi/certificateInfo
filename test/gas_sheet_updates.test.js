@@ -279,6 +279,38 @@ assert.strictEqual(rows16Cols[1][15], '改訂版のContent outline'); // 試験�
 assert(rows16Cols[1][4], '最終更新日時が設定されていること');
 assert.notStrictEqual(rows16Cols[1][4], '2026-10-01', '最終更新日時が新しい日時に更新されていること');
 
+// 4-3. Google Cloud 資格 (No 40) の詳細項目更新検証
+rows16Cols.push([
+  40, 'Google Cloud', 'GCP Leader系', 'https://cloud.google.com/learn/certification/cloud-digital-leader?hl=ja',
+  '2026-10-01', '初期タイトル', 'https://example.com/gcp', '初期説明',
+  'Leader (Foundational)', '90 分', '50～60 問', '$99（税別）', '遠隔監視オンライン試験、テストセンター',
+  '古いGCP Introduction', '古いGCP Exam content', '古いGCP Content outline'
+]);
+
+const updatedGcDetails = context.updateQualificationSheet([
+  {
+    url: 'https://services.google.com/fh/files/misc/cloud_digital_leader_exam_guide_japanese.pdf?hl=ja',
+    title: 'GCP Leader系 試験情報・ガイド更新',
+    description: '試験内容の概要（AIトランスフォーメーション）の改訂',
+    category: 'Leader (Foundational)',
+    examDuration: '90 分',
+    examFormat: '50～60 問',
+    cost: '$105（税別）', // 費用変更！
+    testingOptions: '遠隔監視オンライン試験、テストセンター',
+    introduction: '最新のCloud Digital Leader概要', // はじめに更新！
+    examContent: '標準試験ガイドをご覧ください',
+    contentOutline: 'Google Cloud によるAIトランスフォーメーションの探求', // 概要更新！
+    relatedQualifications: [{ no: 40, name: 'GCP Leader系' }],
+  },
+]);
+
+assert.strictEqual(updatedGcDetails.length, 1);
+assert.strictEqual(rows16Cols[2][5], 'GCP Leader系 試験情報・ガイド更新');
+assert.strictEqual(rows16Cols[2][11], '$105（税別）');
+assert.strictEqual(rows16Cols[2][13], '最新のCloud Digital Leader概要');
+assert.strictEqual(rows16Cols[2][15], 'Google Cloud によるAIトランスフォーメーションの探求');
+assert.notStrictEqual(rows16Cols[2][4], '2026-10-01', 'Google Cloud資格の最終更新日時が更新されていること');
+
 // 5. 毎平日トリガー（setupDailyTrigger）の検証
 installedTriggers.length = 0;
 triggerCalls.length = 0;

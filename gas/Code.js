@@ -797,6 +797,252 @@ function checkGoogleCloud(properties, webhookUrl) {
   }
 
   handleDiff('GOOGLE_CLOUD', uniqueItemsByUrl(items), properties, webhookUrl, 'url');
+
+  Utilities.sleep(1500);
+
+  // Google Cloud 資格情報取得元・Exam Guideの詳細情報チェック
+  try {
+    checkGoogleCloudDetails(properties, webhookUrl);
+  } catch (e) {
+    console.error('[Google Cloud] 詳細情報チェック失敗:', e.message);
+  }
+}
+
+/**
+ * Google Cloud 認定試験ページのパース処理
+ */
+function parseGoogleCloudExamPage(html, baseUrl) {
+  const base = baseUrl || 'https://cloud.google.com';
+  const result = {
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: '',
+    examGuideUrl: ''
+  };
+  if (!html) return result;
+
+  // 1. カテゴリ
+  if (/cloud-digital-leader/i.test(base) || /Cloud Digital Leader/i.test(html)) {
+    result.category = 'Leader (Foundational)';
+  } else if (/cloud-engineer|associate/i.test(base) || /Associate/i.test(html)) {
+    result.category = 'Associate';
+  } else if (/professional|architect|data-engineer|devops/i.test(base) || /Professional/i.test(html)) {
+    result.category = 'Professional';
+  }
+
+  // 2. 試験期間
+  const durationMatch = html.match(/<(p|li|div)\b[^>]*>\s*<(b|strong)\b[^>]*>(?:試験時間|時間|所要時間)[:：]?<\/\2>[:：]?\s*([^<]+)<\/\1>/i);
+  if (durationMatch) {
+    result.examDuration = stripHtmlText(durationMatch[3]);
+  }
+
+  // 3. 費用
+  const costMatch = html.match(/<(p|li|div)\b[^>]*>\s*<(b|strong)\b[^>]*>(?:登録料|受験料|費用)[:：]?<\/\2>[:：]?\s*([^<]+)<\/\1>/i);
+  if (costMatch) {
+    result.cost = stripHtmlText(costMatch[3]);
+  }
+
+  // 4. 試験の形態
+  const formatMatch = html.match(/<(p|li|div)\b[^>]*>\s*<(b|strong)\b[^>]*>(?:試験の形式|形式)[:：]?<\/\2>[:：]?\s*([^<]+)<\/\1>/i);
+  if (formatMatch) {
+    result.examFormat = stripHtmlText(formatMatch[3]);
+  }
+
+  // 5. 受験オプション
+  const optionsMatch = html.match(/<(p|li|div)\b[^>]*>\s*<(b|strong)\b[^>]*>(?:試験の実施方法|受験方法|実施方法)[:：]?<\/\2>[\s\S]*?(?=<(h[1-6]|div class="cws-grid)\b|$)/i);
+  if (optionsMatch) {
+    const opts = [];
+    const linkMatches = optionsMatch[0].match(/<a\b[^>]*>([\s\S]*?)<\/a>/gi) || [];
+    for (let i = 0; i < linkMatches.length; i++) {
+      const linkText = stripHtmlText(linkMatches[i]);
+      if (linkText && !/http/i.test(linkText)) {
+        opts.push(linkText);
+      }
+    }
+    if (opts.length > 0) {
+      result.testingOptions = opts.join('、');
+    } else {
+      result.testingOptions = stripHtmlText(optionsMatch[0]);
+    }
+  } else if (/遠隔監視オンライン試験/i.test(html) && /テストセンター/i.test(html)) {
+    result.testingOptions = '遠隔監視オンライン試験、テストセンターでオンサイト監視試験を受験する';
+  }
+
+  // 6. はじめに
+  const introMatch = html.match(/<h1\b[^>]*>[\s\S]*?<\/h1>[\s\S]*?<div\b[^>]*class=["'][^"']*cws-content-block__text[^"']*["'][^>]*>([\s\S]*?)<\/div>/i)
+    || html.match(/<div\b[^>]*class=["'][^"']*hero-module__description[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+  if (introMatch) {
+    result.introduction = stripHtmlText(introMatch[1]);
+  } else {
+    const metaMatch = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
+    if (metaMatch) {
+      result.introduction = stripHtmlText(metaMatch[1]);
+    }
+  }
+
+  // 7. Exam Guide リンク
+  const anchorRegex = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
+  let am;
+  while ((am = anchorRegex.exec(html)) !== null) {
+    const attrs = am[1];
+    const text = stripHtmlText(am[2]);
+    if (/試験ガイド|Exam Guide/i.test(text)) {
+      const hrefMatch = attrs.match(/href=["']([^"']+)["']/i);
+      if (hrefMatch && !hrefMatch[1].startsWith('#')) {
+        let guideUrl = hrefMatch[1].trim();
+        if (guideUrl.startsWith('//')) {
+          guideUrl = 'https:' + guideUrl;
+        } else if (guideUrl.startsWith('/')) {
+          guideUrl = base.replace(/\/+$/, '') + guideUrl;
+        }
+        result.examGuideUrl = guideUrl;
+        break;
+      }
+    }
+  }
+
+  // 8. 試験内容
+  const contentMatch = html.match(/<(p|div)\b[^>]*>\s*<(b|strong)\b[^>]*>内容[:：]?<\/\2>[\s\S]*?<\/p>/i);
+  const caseStudyMatch = html.match(/<(p|div)\b[^>]*>\s*<(b|strong)\b[^>]*>ケーススタディ[:：]?<\/\2>[\s\S]*?<\/p>/i);
+  const contentParts = [];
+  if (contentMatch) contentParts.push(stripHtmlText(contentMatch[0]));
+  if (caseStudyMatch) contentParts.push(stripHtmlText(caseStudyMatch[0]));
+  if (contentParts.length > 0) {
+    result.examContent = contentParts.join(' ');
+  }
+
+  // 9. 試験内容の概要
+  const outlineListMatch = html.match(/<ul\b[^>]*class=["'][^"']*cws-bulleted-list[^"']*["'][^>]*>([\s\S]*?)<\/ul>/i);
+  if (outlineListMatch) {
+    const items = [];
+    const liMatches = outlineListMatch[1].match(/<li\b[^>]*>([\s\S]*?)<\/li>/gi) || [];
+    for (let i = 0; i < liMatches.length; i++) {
+      const text = stripHtmlText(liMatches[i]);
+      if (text) items.push(text);
+    }
+    if (items.length > 0) {
+      result.contentOutline = items.join('\n');
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Google Cloud 資格詳細情報を取得する
+ */
+function fetchGoogleCloudExamDetails(url) {
+  const html = fetchOfficialHtml(url);
+  return parseGoogleCloudExamPage(html, url);
+}
+
+/**
+ * Google Cloud 資格詳細情報（カテゴリ〜試験内容の概要）のチェック処理
+ */
+function checkGoogleCloudDetails(properties, webhookUrl) {
+  const targets = [
+    { no: 40, name: 'GCP Leader系', url: 'https://cloud.google.com/learn/certification/cloud-digital-leader?hl=ja' },
+    { no: 41, name: 'GCP認定 Associate系', url: 'https://cloud.google.com/learn/certification/cloud-engineer?hl=ja' },
+    { no: 42, name: 'GCP認定 Professional系', url: 'https://cloud.google.com/learn/certification/directory?hl=ja' }
+  ];
+
+  const propKey = 'SAVED_STATE_GOOGLE_CLOUD_DETAILS';
+  const savedRaw = properties.getProperty(propKey);
+  const savedMap = savedRaw ? JSON.parse(savedRaw) : {};
+  const isInitial = !savedRaw || Object.keys(savedMap).length === 0;
+
+  const currentMap = {};
+  const updateItems = [];
+
+  for (let i = 0; i < targets.length; i++) {
+    const target = targets[i];
+    if (i > 0) Utilities.sleep(1500);
+
+    let details = null;
+    try {
+      details = fetchGoogleCloudExamDetails(target.url);
+    } catch (e) {
+      console.warn(`[Google Cloud] 詳細取得失敗 (${target.name}):`, e.message);
+      continue;
+    }
+
+    currentMap[target.no] = details;
+    const prev = savedMap[target.no];
+
+    const detailKeys = [
+      'category', 'examDuration', 'examFormat', 'cost', 'testingOptions',
+      'introduction', 'examContent', 'contentOutline'
+    ];
+
+    let hasDiff = false;
+    const changedFields = [];
+    if (prev) {
+      for (let k = 0; k < detailKeys.length; k++) {
+        const key = detailKeys[k];
+        const cVal = String(details[key] || '').trim();
+        const pVal = String(prev[key] || '').trim();
+        if (cVal !== pVal) {
+          hasDiff = true;
+          changedFields.push(key);
+        }
+      }
+    }
+
+    const todayStr = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+
+    if (isInitial) {
+      updateItems.push({
+        provider: 'Google Cloud',
+        title: `${target.name} 資格情報`,
+        url: details.examGuideUrl || target.url,
+        date: '',
+        description: `${target.name} の資格詳細情報`,
+        category: details.category,
+        examDuration: details.examDuration,
+        examFormat: details.examFormat,
+        cost: details.cost,
+        testingOptions: details.testingOptions,
+        introduction: details.introduction,
+        examContent: details.examContent,
+        contentOutline: details.contentOutline,
+        relatedQualifications: [{ no: target.no, name: target.name }]
+      });
+    } else if (hasDiff) {
+      console.log(`[Google Cloud] ${target.name} の変更を検知: ${changedFields.join(', ')}`);
+      updateItems.push({
+        provider: 'Google Cloud',
+        title: `${target.name} 試験情報・ガイド更新`,
+        url: details.examGuideUrl || target.url,
+        date: todayStr,
+        description: `${target.name} の資格情報（${changedFields.join(', ')}）が更新されました`,
+        category: details.category,
+        examDuration: details.examDuration,
+        examFormat: details.examFormat,
+        cost: details.cost,
+        testingOptions: details.testingOptions,
+        introduction: details.introduction,
+        examContent: details.examContent,
+        contentOutline: details.contentOutline,
+        relatedQualifications: [{ no: target.no, name: target.name }]
+      });
+    }
+  }
+
+  if (updateItems.length > 0) {
+    const applied = updateQualificationSheet(updateItems);
+    if (!isInitial && applied && applied.length > 0) {
+      for (let j = 0; j < applied.length; j++) {
+        sendSlackNotification(applied[j], webhookUrl);
+      }
+    }
+  }
+
+  properties.setProperty(propKey, JSON.stringify(currentMap));
 }
 
 /**

@@ -59,11 +59,12 @@ function loadState(name) {
 }
 const allItems = loadState('all');
 const awsItems = loadState('aws');
+const googleCloudItems = loadState('google_cloud');
 
 // 各資格番号 (row[0]) に対応する最新情報を取得するヘルパー
 function findLatest(no) {
   const num = parseInt(no, 10);
-  const itemsPool = [...allItems, ...awsItems];
+  const itemsPool = [...allItems, ...awsItems, ...googleCloudItems];
   const matches = itemsPool.filter(item =>
     Array.isArray(item.relatedQualifications) &&
     item.relatedQualifications.some(qualification => Number(qualification.no) === num)

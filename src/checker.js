@@ -189,6 +189,9 @@ function detectAwsDetailsDiff(currentDetailsList, prevDetailsList) {
   return diffs;
 }
 
+const detectQualificationDetailsDiff = detectAwsDetailsDiff;
+const detectGoogleCloudDetailsDiff = detectAwsDetailsDiff;
+
 /**
  * 日本時間（JST）で現在が平日（月〜金）かどうかを判定する
  * @param {Date} [date]
@@ -319,6 +322,8 @@ module.exports = {
   mergeProviderItems,
   detectDiff,
   detectAwsDetailsDiff,
+  detectGoogleCloudDetailsDiff,
+  detectQualificationDetailsDiff,
   loadPreviousState,
   saveCurrentState,
   isWeekdayJST,
