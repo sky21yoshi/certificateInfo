@@ -224,6 +224,61 @@ const updatedOlder = context.updateQualificationSheet([
 assert.strictEqual(updatedOlder.length, 0);
 assert.strictEqual(rows8Cols[1][4], '2026-11-08'); // 更新されない
 
+// 4-2. docs/interface.md 完全準拠の16列シートでのAWS詳細更新検証
+const rows16Cols = [
+  [
+    'No', '認定機関', '資格名', '資格情報取得元',
+    '最終更新日時', 'タイトル', 'URL', '説明',
+    'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
+    'はじめに', '試験内容', '試験内容の概要'
+  ],
+  [
+    14, 'AWS', 'AWS認定 Practitioner系', 'https://aws.amazon.com/jp/certification/certified-cloud-practitioner/',
+    '2026-10-01', '初期タイトル', 'https://example.com/init', '初期説明',
+    'Foundational', '90 分', '65 個の問題', '100 USD', 'ピアソンVUE',
+    '古いIntroduction', '古いExam content', '古いContent outline'
+  ],
+];
+const sheet16Cols = {
+  getDataRange: () => ({ getValues: () => rows16Cols }),
+  getRange: (row, column) => ({
+    setValue: value => {
+      rows16Cols[row - 1][column - 1] = value;
+    },
+  }),
+};
+spreadsheet.getSheetByName = () => sheet16Cols;
+spreadsheet.getSheets = () => [sheet16Cols];
+
+// 費用やはじめにが変更された場合、最終更新日時が更新されることの検証
+const updatedDetails = context.updateQualificationSheet([
+  {
+    url: 'https://docs.aws.amazon.com/guide/clf',
+    title: 'AWS認定 Practitioner系 試験ガイド更新',
+    description: 'シラバス改訂に伴う試験内容の更新',
+    category: 'Foundational',
+    examDuration: '90 分',
+    examFormat: '65 個の問題',
+    cost: '110 USD', // 変更！
+    testingOptions: 'ピアソンVUE',
+    introduction: '改訂版のIntroduction', // 変更！
+    examContent: '改訂版のExam content', // 変更！
+    contentOutline: '改訂版のContent outline', // 変更！
+    relatedQualifications: [{ no: 14, name: 'AWS認定 Practitioner系' }],
+  },
+]);
+
+assert.strictEqual(updatedDetails.length, 1);
+assert.strictEqual(rows16Cols[1][5], 'AWS認定 Practitioner系 試験ガイド更新');
+assert.strictEqual(rows16Cols[1][6], 'https://docs.aws.amazon.com/guide/clf');
+assert.strictEqual(rows16Cols[1][7], 'シラバス改訂に伴う試験内容の更新');
+assert.strictEqual(rows16Cols[1][11], '110 USD'); // 費用
+assert.strictEqual(rows16Cols[1][13], '改訂版のIntroduction'); // はじめに
+assert.strictEqual(rows16Cols[1][14], '改訂版のExam content'); // 試験内容
+assert.strictEqual(rows16Cols[1][15], '改訂版のContent outline'); // 試験内容の概要
+assert(rows16Cols[1][4], '最終更新日時が設定されていること');
+assert.notStrictEqual(rows16Cols[1][4], '2026-10-01', '最終更新日時が新しい日時に更新されていること');
+
 // 5. 毎平日トリガー（setupDailyTrigger）の検証
 installedTriggers.length = 0;
 triggerCalls.length = 0;

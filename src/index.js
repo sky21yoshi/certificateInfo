@@ -1,5 +1,5 @@
 const { fetchIpaNews } = require('./fetcher/ipa');
-const { fetchAwsNews } = require('./fetcher/aws');
+const { fetchAwsNews, fetchAwsAllUpdates } = require('./fetcher/aws');
 const { fetchMicrosoftCertifications } = require('./fetcher/microsoft');
 const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
 const { fetchCiscoNews } = require('./fetcher/cisco');
@@ -43,9 +43,9 @@ const PROVIDERS = {
   },
   aws: {
     name: 'Amazon Web Services (AWS)',
-    fetch: fetchAwsNews,
+    fetch: fetchAwsAllUpdates,
     idKey: 'url',
-    updateKey: null,
+    updateKey: 'contentHash',
   },
   microsoft: {
     name: 'Microsoft（マイクロソフト）',

@@ -1146,6 +1146,283 @@ function checkIpa(properties, webhookUrl) {
 }
 
 /**
+ * AWS（資格情報取得元ページ）のパース処理
+ */
+function parseAwsExamPage(html, baseUrl) {
+  const base = baseUrl || 'https://aws.amazon.com';
+  const result = {
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    examGuideUrl: ''
+  };
+  if (!html) return result;
+
+  const jsonMatches = html.match(/<script\b[^>]*type=["']application\/json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
+  for (let i = 0; i < jsonMatches.length; i++) {
+    const script = jsonMatches[i];
+    if (script.indexOf('itemHeading') >= 0) {
+      const jsonText = script.replace(/<[^>]+>/g, '').trim();
+      try {
+        const obj = JSON.parse(jsonText);
+        const items = (obj && obj.data && Array.isArray(obj.data.items)) ? obj.data.items : [];
+        for (let j = 0; j < items.length; j++) {
+          const item = items[j];
+          if (!item || !item.fields) continue;
+          const heading = stripHtmlText(item.fields.itemHeading || '');
+          const content = stripHtmlText(item.fields.itemLongLoc || item.fields.itemTextLoc || '');
+          if (!heading || !content) continue;
+
+          if (!result.category && /^(カテゴリ|カテゴリー|Category)$/i.test(heading)) {
+            result.category = content;
+          } else if (!result.examDuration && /(試験期間|試験時間|Exam duration)/i.test(heading)) {
+            result.examDuration = content;
+          } else if (!result.examFormat && /(試験の形態|出題形式|試験形式|Exam format)/i.test(heading)) {
+            result.examFormat = content;
+          } else if (!result.cost && /(費用|試験費用|Cost)/i.test(heading)) {
+            result.cost = content;
+          } else if (!result.testingOptions && /(受験オプション|Testing options|対面テストまたはオンラインテスト)/i.test(heading)) {
+            result.testingOptions = content;
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
+  // フォールバック（見出しタグ）
+  if (!result.category || !result.examDuration || !result.examFormat || !result.cost || !result.testingOptions) {
+    const headingRegex = /<(h[2-6]|dt|strong|b)\b[^>]*>([\s\S]*?)<\/\1>([\s\S]*?)(?=<(h[2-6]|dt|strong|b)\b|$)/gi;
+    let m;
+    while ((m = headingRegex.exec(html)) !== null) {
+      const heading = stripHtmlText(m[2]);
+      const content = stripHtmlText(m[3]);
+      if (!heading || !content) continue;
+
+      if (!result.category && /^(カテゴリ|カテゴリー|Category)$/i.test(heading)) {
+        result.category = content;
+      } else if (!result.examDuration && /(試験期間|試験時間|Exam duration)/i.test(heading)) {
+        result.examDuration = content;
+      } else if (!result.examFormat && /(試験の形態|出題形式|試験形式|Exam format)/i.test(heading)) {
+        result.examFormat = content;
+      } else if (!result.cost && /(費用|試験費用|Cost)/i.test(heading)) {
+        result.cost = content;
+      } else if (!result.testingOptions && /(受験オプション|Testing options|対面テストまたはオンラインテスト)/i.test(heading)) {
+        result.testingOptions = content;
+      }
+    }
+  }
+
+  // meta description からのフォールバック
+  if (!result.category || !result.examDuration || !result.examFormat || !result.cost) {
+    const metaMatch = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
+    if (metaMatch) {
+      const desc = metaMatch[1];
+      const catMatch = desc.match(/Category,\s*([^.]+)\./i);
+      const durMatch = desc.match(/Exam duration,\s*([^.]+)\./i);
+      const fmtMatch = desc.match(/Exam format,\s*([^.]+)\./i);
+      const costMatch = desc.match(/Cost,\s*([^.]+)\./i);
+      if (!result.category && catMatch) result.category = catMatch[1].trim();
+      if (!result.examDuration && durMatch) result.examDuration = durMatch[1].trim();
+      if (!result.examFormat && fmtMatch) result.examFormat = fmtMatch[1].trim();
+      if (!result.cost && costMatch) result.cost = costMatch[1].trim();
+    }
+  }
+
+  // Exam Guide リンク
+  const anchorRegex = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
+  let am;
+  while ((am = anchorRegex.exec(html)) !== null) {
+    const attrs = am[1];
+    const text = stripHtmlText(am[2]);
+    if (/試験ガイド|Exam Guide/i.test(text) || /試験ガイド|Exam Guide/i.test(attrs)) {
+      const hrefMatch = attrs.match(/href=["']([^"']+)["']/i);
+      if (hrefMatch) {
+        let guideUrl = hrefMatch[1].trim();
+        if (guideUrl.startsWith('//')) {
+          guideUrl = 'https:' + guideUrl;
+        } else if (guideUrl.startsWith('/')) {
+          guideUrl = base.replace(/\/+$/, '') + guideUrl;
+        }
+        result.examGuideUrl = guideUrl;
+        break;
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * AWS Exam Guide ページのパース処理
+ */
+function parseAwsExamGuidePage(html) {
+  const result = {
+    introduction: '',
+    examContent: '',
+    contentOutline: ''
+  };
+  if (!html) return result;
+
+  const sections = html.split(/(?=<h[12]\b)/i);
+  for (let i = 0; i < sections.length; i++) {
+    const sec = sections[i];
+    const headingMatch = sec.match(/^<h[12]\b[^>]*>([\s\S]*?)<\/h[12]>/i);
+    if (!headingMatch) continue;
+    const heading = stripHtmlText(headingMatch[1]);
+    const body = stripHtmlText(sec.slice(headingMatch[0].length));
+    if (!heading) continue;
+
+    if (!result.introduction && /(はじめに|Introduction)/i.test(heading)) {
+      result.introduction = body;
+    } else if (!result.contentOutline && /(試験内容の概要|Content outline)/i.test(heading)) {
+      result.contentOutline = body;
+    } else if (!result.examContent && /(試験内容|Exam content)/i.test(heading)) {
+      result.examContent = body;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * AWS資格情報取得元およびExam Guideから詳細情報を取得する
+ */
+function fetchAwsExamDetails(url) {
+  const html = fetchOfficialHtml(url);
+  const pageDetails = parseAwsExamPage(html, url);
+
+  let guideDetails = { introduction: '', examContent: '', contentOutline: '' };
+  if (pageDetails.examGuideUrl) {
+    try {
+      const gHtml = fetchOfficialHtml(pageDetails.examGuideUrl);
+      guideDetails = parseAwsExamGuidePage(gHtml);
+    } catch (e) {
+      console.warn(`[AWS] Exam Guide 取得エラー (${pageDetails.examGuideUrl}):`, e.message);
+    }
+  }
+
+  return {
+    category: pageDetails.category,
+    examDuration: pageDetails.examDuration,
+    examFormat: pageDetails.examFormat,
+    cost: pageDetails.cost,
+    testingOptions: pageDetails.testingOptions,
+    introduction: guideDetails.introduction,
+    examContent: guideDetails.examContent,
+    contentOutline: guideDetails.contentOutline,
+    examGuideUrl: pageDetails.examGuideUrl
+  };
+}
+
+/**
+ * AWS資格詳細情報（カテゴリ〜試験内容の概要）のチェック処理
+ */
+function checkAwsDetails(properties, webhookUrl) {
+  const targets = [
+    { no: 14, name: 'AWS認定 Practitioner系', url: 'https://aws.amazon.com/jp/certification/certified-cloud-practitioner/' },
+    { no: 15, name: 'AWS認定 Associate系', url: 'https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/' },
+    { no: 16, name: 'AWS認定 Professional系', url: 'https://aws.amazon.com/jp/certification/certified-solutions-architect-professional/' },
+    { no: 17, name: 'AWS認定 Specialty系', url: 'https://aws.amazon.com/jp/certification/our-certifications/' },
+    { no: 18, name: 'AWS Certified AI Business Strategist', url: 'https://aws.amazon.com/jp/certification/certified-ai-practitioner/' }
+  ];
+
+  const propKey = 'SAVED_STATE_AWS_DETAILS';
+  const savedRaw = properties.getProperty(propKey);
+  const savedMap = savedRaw ? JSON.parse(savedRaw) : {};
+  const isInitial = !savedRaw || Object.keys(savedMap).length === 0;
+
+  const currentMap = {};
+  const updateItems = [];
+
+  for (let i = 0; i < targets.length; i++) {
+    const target = targets[i];
+    if (i > 0) Utilities.sleep(1500);
+
+    let details = null;
+    try {
+      details = fetchAwsExamDetails(target.url);
+    } catch (e) {
+      console.warn(`[AWS] 詳細取得失敗 (${target.name}):`, e.message);
+      continue;
+    }
+
+    currentMap[target.no] = details;
+    const prev = savedMap[target.no];
+
+    const detailKeys = [
+      'category', 'examDuration', 'examFormat', 'cost', 'testingOptions',
+      'introduction', 'examContent', 'contentOutline'
+    ];
+
+    let hasDiff = false;
+    const changedFields = [];
+    if (prev) {
+      for (let k = 0; k < detailKeys.length; k++) {
+        const key = detailKeys[k];
+        const cVal = String(details[key] || '').trim();
+        const pVal = String(prev[key] || '').trim();
+        if (cVal !== pVal) {
+          hasDiff = true;
+          changedFields.push(key);
+        }
+      }
+    }
+
+    const todayStr = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+
+    if (isInitial) {
+      updateItems.push({
+        provider: 'Amazon Web Services (AWS)',
+        title: `${target.name} 資格情報`,
+        url: details.examGuideUrl || target.url,
+        date: '',
+        description: `${target.name} の資格詳細情報`,
+        category: details.category,
+        examDuration: details.examDuration,
+        examFormat: details.examFormat,
+        cost: details.cost,
+        testingOptions: details.testingOptions,
+        introduction: details.introduction,
+        examContent: details.examContent,
+        contentOutline: details.contentOutline,
+        relatedQualifications: [{ no: target.no, name: target.name }]
+      });
+    } else if (hasDiff) {
+      console.log(`[AWS] ${target.name} の変更を検知: ${changedFields.join(', ')}`);
+      updateItems.push({
+        provider: 'Amazon Web Services (AWS)',
+        title: `${target.name} 試験情報・ガイド更新`,
+        url: details.examGuideUrl || target.url,
+        date: todayStr,
+        description: `${target.name} の資格情報（${changedFields.join(', ')}）が更新されました`,
+        category: details.category,
+        examDuration: details.examDuration,
+        examFormat: details.examFormat,
+        cost: details.cost,
+        testingOptions: details.testingOptions,
+        introduction: details.introduction,
+        examContent: details.examContent,
+        contentOutline: details.contentOutline,
+        relatedQualifications: [{ no: target.no, name: target.name }]
+      });
+    }
+  }
+
+  if (updateItems.length > 0) {
+    const applied = updateQualificationSheet(updateItems);
+    if (!isInitial && applied && applied.length > 0) {
+      for (let j = 0; j < applied.length; j++) {
+        sendSlackNotification(applied[j], webhookUrl);
+      }
+    }
+  }
+
+  properties.setProperty(propKey, JSON.stringify(currentMap));
+}
+
+/**
  * AWS チェック処理
  */
 function checkAws(properties, webhookUrl) {
@@ -1153,34 +1430,42 @@ function checkAws(properties, webhookUrl) {
   if (res.getResponseCode() !== 200) {
     res = UrlFetchApp.fetch(ENDPOINTS.AWS_EN, { muteHttpExceptions: true });
   }
-  if (res.getResponseCode() !== 200) return;
-  const xml = res.getContentText('UTF-8');
-
-  const items = [];
-  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
-  let m;
-  while ((m = itemRegex.exec(xml)) !== null) {
-    const tMatch = m[1].match(/<title>([\s\S]*?)<\/title>/i);
-    const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
-    const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
-    const descMatch = m[1].match(/<description>([\s\S]*?)<\/description>/i);
-    if (tMatch && lMatch) {
-      const title = tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
-      const link = lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
-      const date = dMatch ? dMatch[1].trim() : '';
-      const desc = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').trim() : title;
-      items.push({
-        provider: 'Amazon Web Services (AWS)',
-        title: title,
-        url: link,
-        date: date,
-        description: desc,
-        relatedQualifications: matchAwsQualifications(`${title} ${desc}`)
-      });
+  if (res.getResponseCode() === 200) {
+    const xml = res.getContentText('UTF-8');
+    const items = [];
+    const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+    let m;
+    while ((m = itemRegex.exec(xml)) !== null) {
+      const tMatch = m[1].match(/<title>([\s\S]*?)<\/title>/i);
+      const lMatch = m[1].match(/<link>([\s\S]*?)<\/link>/i);
+      const dMatch = m[1].match(/<pubDate>([\s\S]*?)<\/pubDate>/i);
+      const descMatch = m[1].match(/<description>([\s\S]*?)<\/description>/i);
+      if (tMatch && lMatch) {
+        const title = tMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+        const link = lMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').trim();
+        const date = dMatch ? dMatch[1].trim() : '';
+        const desc = descMatch ? descMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1').replace(/<[^>]+>/g, '').trim() : title;
+        items.push({
+          provider: 'Amazon Web Services (AWS)',
+          title: title,
+          url: link,
+          date: date,
+          description: desc,
+          relatedQualifications: matchAwsQualifications(`${title} ${desc}`)
+        });
+      }
     }
+    handleDiff('AWS', items, properties, webhookUrl, 'url');
   }
 
-  handleDiff('AWS', items, properties, webhookUrl, 'url');
+  Utilities.sleep(1500);
+
+  // AWS資格情報取得元・Exam Guideの詳細情報チェック
+  try {
+    checkAwsDetails(properties, webhookUrl);
+  } catch (e) {
+    console.error('[AWS] 詳細情報チェック失敗:', e.message);
+  }
 }
 
 /**
@@ -1351,7 +1636,15 @@ function updateQualificationSheet(items) {
         date: item.date || item.lastModified || '',
         title: item.title || item.name || '',
         url: item.url || item.officialUrl || '',
-        description: item.description || item.summary || item.title || item.name || ''
+        description: item.description || item.summary || item.title || item.name || '',
+        category: item.category !== undefined ? item.category : '',
+        examDuration: item.examDuration !== undefined ? item.examDuration : '',
+        examFormat: item.examFormat !== undefined ? item.examFormat : '',
+        cost: item.cost !== undefined ? item.cost : '',
+        testingOptions: item.testingOptions !== undefined ? item.testingOptions : '',
+        introduction: item.introduction !== undefined ? item.introduction : '',
+        examContent: item.examContent !== undefined ? item.examContent : '',
+        contentOutline: item.contentOutline !== undefined ? item.contentOutline : ''
       };
       if (!candidate.title) continue;
 
@@ -1395,7 +1688,36 @@ function updateQualificationSheet(items) {
   if (urlColumn < 0) {
     urlColumn = headers.length;
     sheet.getRange(1, urlColumn + 1).setValue('URL');
+    headers.push('URL');
   }
+
+  // docs/interface.md 定義の詳細列（No 9〜16）
+  const detailColumnDefs = [
+    { key: 'category', name: 'カテゴリ' },
+    { key: 'examDuration', name: '試験期間' },
+    { key: 'examFormat', name: '試験の形態' },
+    { key: 'cost', name: '費用' },
+    { key: 'testingOptions', name: '受験オプション' },
+    { key: 'introduction', name: 'はじめに' },
+    { key: 'examContent', name: '試験内容' },
+    { key: 'contentOutline', name: '試験内容の概要' }
+  ];
+
+  // 詳細項目が1つでもある場合、不足している列をヘッダーに追加
+  const hasAnyDetail = Array.from(updatesByQualification.values()).some(u =>
+    detailColumnDefs.some(d => Boolean(u[d.key]))
+  );
+
+  const detailColIndices = {};
+  detailColumnDefs.forEach(d => {
+    let colIdx = headers.indexOf(d.name);
+    if (colIdx < 0 && hasAnyDetail) {
+      colIdx = headers.length;
+      sheet.getRange(1, colIdx + 1).setValue(d.name);
+      headers.push(d.name);
+    }
+    detailColIndices[d.key] = colIdx;
+  });
 
   const rowsByQualification = new Map();
   for (let index = 1; index < values.length; index++) {
@@ -1422,12 +1744,33 @@ function updateQualificationSheet(items) {
     const existingQualificationName = nameColumn >= 0 ? String(rowValues[nameColumn] || '').trim() : '';
     const qualificationName = existingQualificationName || update.qualificationName || `資格No.${no}`;
 
+    // 詳細列（カテゴリ〜試験内容の概要）の変更有無を検査
+    let detailChanged = false;
+    for (let d = 0; d < detailColumnDefs.length; d++) {
+      const def = detailColumnDefs[d];
+      const colIdx = detailColIndices[def.key];
+      if (colIdx >= 0 && update[def.key] !== undefined && update[def.key] !== '') {
+        const existingVal = String(rowValues[colIdx] || '').trim();
+        const newVal = String(update[def.key]).trim();
+        if (existingVal !== newVal) {
+          detailChanged = true;
+          break;
+        }
+      }
+    }
+
     // 各資格ごとに収集した更新情報が前回実行時（シート上の情報）より新しい情報があるか確認する
     const hasExistingDate = Boolean(existingDate && !Number.isNaN(getSheetUpdateTimestamp(existingDate)));
     const hasCandidateDate = Boolean(update.date && !Number.isNaN(getSheetUpdateTimestamp(update.date)));
 
     let isChanged = false;
-    if (hasCandidateDate && hasExistingDate) {
+    if (detailChanged) {
+      // AWS等の詳細項目に変更がある場合、最終更新日時および内容を更新
+      isChanged = true;
+      if (!update.date) {
+        update.date = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+      }
+    } else if (hasCandidateDate && hasExistingDate) {
       // 両方に日付がある場合、候補の日付が厳密に新しい場合のみ更新
       isChanged = isNewerSheetUpdate(update, { date: existingDate });
     } else if (hasCandidateDate && !hasExistingDate) {
@@ -1444,6 +1787,15 @@ function updateQualificationSheet(items) {
       if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
       sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
 
+      // 詳細列の書き込み
+      for (let d = 0; d < detailColumnDefs.length; d++) {
+        const def = detailColumnDefs[d];
+        const colIdx = detailColIndices[def.key];
+        if (colIdx >= 0 && update[def.key] !== undefined && update[def.key] !== '') {
+          sheet.getRange(row, colIdx + 1).setValue(update[def.key]);
+        }
+      }
+
       appliedUpdates.push({
         no: no,
         qualificationName: qualificationName,
@@ -1451,7 +1803,15 @@ function updateQualificationSheet(items) {
         title: update.title,
         url: update.url,
         description: update.description,
-        provider: update.provider
+        provider: update.provider,
+        category: update.category,
+        examDuration: update.examDuration,
+        examFormat: update.examFormat,
+        cost: update.cost,
+        testingOptions: update.testingOptions,
+        introduction: update.introduction,
+        examContent: update.examContent,
+        contentOutline: update.contentOutline
       });
     }
   }

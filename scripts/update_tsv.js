@@ -19,15 +19,24 @@ if (raw.length === 0) {
 // 既存ヘッダーを解析し、必要なら新しい列を追加
 let header = raw[0].trim();
 const existingCols = header.split('\t');
-const neededCols = ['最終更新日時', 'タイトル', 'URL', '説明'];
+const neededCols = [
+  '最終更新日時', 'タイトル', 'URL', '説明',
+  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
+  'はじめに', '試験内容', '試験内容の概要'
+];
 let newHeaderCols = [...existingCols];
 for (const col of neededCols) {
   if (!newHeaderCols.includes(col)) {
     newHeaderCols.push(col);
   }
 }
-// docs/interface.md の標準順序: No, 認定機関, 資格名, 資格情報取得元, 最終更新日時, タイトル, URL, 説明
-const standardOrder = ['No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', 'URL', '説明'];
+// docs/interface.md の標準順序 (16列)
+const standardOrder = [
+  'No', '認定機関', '資格名', '資格情報取得元',
+  '最終更新日時', 'タイトル', 'URL', '説明',
+  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
+  'はじめに', '試験内容', '試験内容の概要'
+];
 const isStandardCompatible = standardOrder.every(col => newHeaderCols.includes(col));
 const targetHeaderCols = isStandardCompatible ? standardOrder : newHeaderCols;
 raw[0] = targetHeaderCols.join('\t');
@@ -36,23 +45,26 @@ raw[0] = targetHeaderCols.join('\t');
 function loadState(name) {
   const p = path.join(dataDir, `${name}_state.json`);
   if (!fs.existsSync(p)) {
-    throw new Error(`状態ファイルがありません: ${p}。先に node src/index.js を実行してください。`);
+    return [];
   }
   try {
     const content = fs.readFileSync(p, { encoding: 'utf8' });
     const state = JSON.parse(content);
-    if (!Array.isArray(state)) throw new Error('状態ファイルの形式が配列ではありません');
+    if (!Array.isArray(state)) return [];
     return state;
   } catch (e) {
-    throw new Error(`状態ファイルの読み込みエラー (${name}): ${e.message}`);
+    console.warn(`状態ファイルの読み込みエラー (${name}): ${e.message}`);
+    return [];
   }
 }
 const allItems = loadState('all');
+const awsItems = loadState('aws');
 
 // 各資格番号 (row[0]) に対応する最新情報を取得するヘルパー
 function findLatest(no) {
   const num = parseInt(no, 10);
-  const matches = allItems.filter(item =>
+  const itemsPool = [...allItems, ...awsItems];
+  const matches = itemsPool.filter(item =>
     Array.isArray(item.relatedQualifications) &&
     item.relatedQualifications.some(qualification => Number(qualification.no) === num)
   );
@@ -63,11 +75,23 @@ function findLatest(no) {
     .filter(match => Number.isFinite(match.timestamp))
     .sort((a, b) => b.timestamp - a.timestamp);
   const match = datedMatches.length > 0 ? datedMatches[0].item : matches[0];
+
+  // 詳細項目を持つアイテムがあればマージ
+  const detailItem = matches.find(m => m.category || m.introduction || m.examDuration) || {};
+
   return {
     date: match.date || '',
     title: match.title || '',
     description: match.description || match.title || '',
-    url: match.url || ''
+    url: match.url || '',
+    category: detailItem.category || '',
+    examDuration: detailItem.examDuration || '',
+    examFormat: detailItem.examFormat || '',
+    cost: detailItem.cost || '',
+    testingOptions: detailItem.testingOptions || '',
+    introduction: detailItem.introduction || '',
+    examContent: detailItem.examContent || '',
+    contentOutline: detailItem.contentOutline || ''
   };
 }
 
@@ -78,6 +102,14 @@ const dateIdx = headerCols.indexOf('最終更新日時');
 const titleIdx = headerCols.indexOf('タイトル');
 const urlIdx = headerCols.indexOf('URL');
 const descIdx = headerCols.indexOf('説明');
+const catIdx = headerCols.indexOf('カテゴリ');
+const durIdx = headerCols.indexOf('試験期間');
+const fmtIdx = headerCols.indexOf('試験の形態');
+const costIdx = headerCols.indexOf('費用');
+const optIdx = headerCols.indexOf('受験オプション');
+const introIdx = headerCols.indexOf('はじめに');
+const contentIdx = headerCols.indexOf('試験内容');
+const outlineIdx = headerCols.indexOf('試験内容の概要');
 
 for (let i = 1; i < raw.length; i++) {
   const line = raw[i];
@@ -93,10 +125,18 @@ for (let i = 1; i < raw.length; i++) {
   }
 
   if (latest) {
-    if (dateIdx >= 0) rowMap.set('最終更新日時', latest.date);
-    if (titleIdx >= 0) rowMap.set('タイトル', latest.title);
-    if (urlIdx >= 0) rowMap.set('URL', latest.url);
-    if (descIdx >= 0) rowMap.set('説明', latest.description);
+    if (dateIdx >= 0 && latest.date) rowMap.set('最終更新日時', latest.date);
+    if (titleIdx >= 0 && latest.title) rowMap.set('タイトル', latest.title);
+    if (urlIdx >= 0 && latest.url) rowMap.set('URL', latest.url);
+    if (descIdx >= 0 && latest.description) rowMap.set('説明', latest.description);
+    if (catIdx >= 0 && latest.category) rowMap.set('カテゴリ', latest.category);
+    if (durIdx >= 0 && latest.examDuration) rowMap.set('試験期間', latest.examDuration);
+    if (fmtIdx >= 0 && latest.examFormat) rowMap.set('試験の形態', latest.examFormat);
+    if (costIdx >= 0 && latest.cost) rowMap.set('費用', latest.cost);
+    if (optIdx >= 0 && latest.testingOptions) rowMap.set('受験オプション', latest.testingOptions);
+    if (introIdx >= 0 && latest.introduction) rowMap.set('はじめに', latest.introduction);
+    if (contentIdx >= 0 && latest.examContent) rowMap.set('試験内容', latest.examContent);
+    if (outlineIdx >= 0 && latest.contentOutline) rowMap.set('試験内容の概要', latest.contentOutline);
   }
 
   const newCols = headerCols.map(col => rowMap.get(col) || '');

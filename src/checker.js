@@ -129,6 +129,67 @@ function detectDiff(currentItems, previousItems, idKey = 'url', updateKey = null
 }
 
 /**
+ * AWS資格詳細情報（カテゴリ、試験期間、試験の形態、費用、受験オプション、はじめに、試験内容、試験内容の概要）の差分を検知する
+ * @param {Array<object>} currentDetailsList 
+ * @param {Array<object>} prevDetailsList 
+ * @returns {Array<object>} 変更があった資格のリスト
+ */
+function detectAwsDetailsDiff(currentDetailsList, prevDetailsList) {
+  const prevMap = new Map();
+  for (const item of (prevDetailsList || [])) {
+    if (item && item.no) {
+      prevMap.set(Number(item.no), item);
+    }
+  }
+
+  const detailFields = [
+    'category',
+    'examDuration',
+    'examFormat',
+    'cost',
+    'testingOptions',
+    'introduction',
+    'examContent',
+    'contentOutline',
+  ];
+
+  const diffs = [];
+  for (const current of currentDetailsList) {
+    const no = Number(current.no);
+    if (!no) continue;
+
+    const prev = prevMap.get(no);
+    if (!prev) {
+      diffs.push({
+        ...current,
+        _diffType: 'NEW',
+        _changedFields: detailFields.filter(f => Boolean(current[f])),
+      });
+      continue;
+    }
+
+    const changedFields = [];
+    for (const field of detailFields) {
+      const currVal = String(current[field] || '').trim();
+      const prevVal = String(prev[field] || '').trim();
+      if (currVal !== prevVal) {
+        changedFields.push(field);
+      }
+    }
+
+    if (changedFields.length > 0) {
+      diffs.push({
+        ...current,
+        _diffType: 'UPDATED',
+        _changedFields: changedFields,
+      });
+    }
+  }
+
+  return diffs;
+}
+
+/**
  * 日本時間（JST）で現在が平日（月〜金）かどうかを判定する
  * @param {Date} [date]
  * @returns {boolean}
@@ -257,6 +318,7 @@ module.exports = {
   normalizeStateItem,
   mergeProviderItems,
   detectDiff,
+  detectAwsDetailsDiff,
   loadPreviousState,
   saveCurrentState,
   isWeekdayJST,
