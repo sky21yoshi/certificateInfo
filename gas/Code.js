@@ -49,9 +49,7 @@ const ENDPOINTS = {
   PYTHON_BASIC: 'https://www.pythonic-exam.com/exam/basic',
   PYTHON_DATA_ANALYST: 'https://www.pythonic-exam.com/exam/data-analyst',
   PYTHON_FEED: 'https://pythonic-exam.com/feed/',
-  PMAJ_PMC: 'https://www.pmaj.or.jp/p2m/exam/pmc/top.html',
-  PMAJ_PMS: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html',
-  PMAJ_PMR: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html',
+  PMAJ_NEWS: 'https://www.pmaj.or.jp/news/news_',
   PMI_PMP: 'https://www.pmi-japan.org/pmp_license/',
   ISACA_TOPICS: 'https://engage.isaca.org/tokyochapter',
   PEOPLECERT_ITIL: 'https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1',
@@ -609,20 +607,24 @@ function matchPmajQualifications(text) {
     .map(q => ({ no: q.no, name: q.name }));
 }
 
-function checkPmaj(properties, webhookUrl) {
-  const sources = [
-    { url: ENDPOINTS.PMAJ_PMC, no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)' },
-    { url: ENDPOINTS.PMAJ_PMS, no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)' },
-    { url: ENDPOINTS.PMAJ_PMR, no: 103, name: 'プログラムマネジャー・レジスタード (PMR)' }
+function getPmajNewsUrls() {
+  const currentYear = Number(Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy'));
+  return [
+    `${ENDPOINTS.PMAJ_NEWS}${currentYear}.html`,
+    `${ENDPOINTS.PMAJ_NEWS}${currentYear - 1}.html`
   ];
+}
+
+function checkPmaj(properties, webhookUrl) {
   const items = [];
-  sources.forEach((source, index) => {
+  const urls = getPmajNewsUrls();
+  urls.forEach((url, index) => {
     if (index > 0) Utilities.sleep(1500);
-    const html = fetchOfficialHtml(source.url);
+    const html = fetchOfficialHtml(url);
     items.push(createOfficialSnapshot('日本プロジェクトマネジメント協会 (PMAJ)',
-      `${source.name}の更新`, source.url, html, [{ no: source.no, name: source.name }]));
-    items.push(...extractOfficialLinks(html, source.url, '日本プロジェクトマネジメント協会 (PMAJ)',
-      matchPmajQualifications, /PMC|PMS|PMR|プロジェクトマネジメント|プロジェクトマネジャー/i));
+      'PMAJお知らせ一覧の更新', url, html, []));
+    items.push(...extractOfficialLinks(html, url, '日本プロジェクトマネジメント協会 (PMAJ)',
+      matchPmajQualifications, /PMC|PMS|PMR|P2M|プロジェクトマネジメント|プロジェクトマネジャー|資格|試験|認定/i));
   });
   handleDiff('PMAJ', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
 }

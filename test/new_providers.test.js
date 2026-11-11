@@ -26,6 +26,7 @@ const {
   fetchPythonAssociationUpdates,
 } = require('../src/fetcher/python_association');
 const {
+  getPmajNewsUrls,
   fetchPmajUpdates,
   matchPmajQualifications,
 } = require('../src/fetcher/pmaj');
@@ -89,13 +90,21 @@ async function main() {
   assert.strictEqual(python[0].relatedQualifications[0].no, 99);
   assert.strictEqual(python[2].relatedQualifications[0].no, 99);
 
+  const pmajUrls = getPmajNewsUrls(2026);
+  assert.deepStrictEqual(pmajUrls, [
+    'https://www.pmaj.or.jp/news/news_2026.html',
+    'https://www.pmaj.or.jp/news/news_2025.html',
+  ]);
   const pmajPages = {
-    'https://www.pmaj.or.jp/p2m/exam/pmc/top.html': '<main>PMC資格試験</main>',
-    'https://www.pmaj.or.jp/p2m/exam/pms/top.html': '<main>PMS資格試験</main>',
-    'https://www.pmaj.or.jp/p2m/exam/pmr/top.html': '<a href="/p2m/exam/pmr/annai.html">2026年度PMR資格試験の申込案内</a>',
+    [pmajUrls[0]]: '<a href="/news/pmc.html">2026年度PMC資格試験の申込案内</a>',
+    [pmajUrls[1]]: '<a href="/news/pmr.html">2025年度PMR資格試験の申込案内</a>',
   };
-  const pmaj = await fetchPmajUpdates(pmajPages);
+  const pmaj = await fetchPmajUpdates(pmajPages, 2026);
   assert.strictEqual(pmaj.length, 4);
+  assert(pmaj.some(item => item.url === 'https://www.pmaj.or.jp/news/pmc.html'
+    && item.relatedQualifications[0].no === 101));
+  assert(pmaj.some(item => item.url === 'https://www.pmaj.or.jp/news/pmr.html'
+    && item.relatedQualifications[0].no === 103));
   assert.strictEqual(matchPmajQualifications('PMC資格試験')[0].no, 101);
 
   for (const key of [

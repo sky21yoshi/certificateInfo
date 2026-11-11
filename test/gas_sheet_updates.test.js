@@ -37,6 +37,7 @@ const context = {
   console: { log() {}, warn() {}, error() {} },
   Utilities: {
     sleep: () => {},
+    formatDate: () => '2026',
   },
   PropertiesService: {
     getScriptProperties: () => ({
@@ -118,6 +119,11 @@ const context = {
 };
 
 vm.runInNewContext(fs.readFileSync(require.resolve('../gas/Code.js'), 'utf8'), context);
+
+assert.deepStrictEqual(Array.from(context.getPmajNewsUrls()), [
+  'https://www.pmaj.or.jp/news/news_2026.html',
+  'https://www.pmaj.or.jp/news/news_2025.html',
+]);
 
 // 1. 差分検知とスプレッドシート更新（初回ベースライン）
 context.handleDiff('AWS', [

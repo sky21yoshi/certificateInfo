@@ -24,7 +24,7 @@
 - UiPath: [UiPath Certification](https://www.uipath.com/ja/learning/certification)
 - サーティファイ: [C言語プログラミング能力認定試験](https://www.sikaku.gr.jp/js/cp/)
 - Pythonエンジニア育成推進協会: [お知らせRSS](https://pythonic-exam.com/feed/)・[基礎試験](https://www.pythonic-exam.com/exam/basic)・[データ分析試験](https://www.pythonic-exam.com/exam/data-analyst)
-- 日本プロジェクトマネジメント協会 (PMAJ): [PMC](https://www.pmaj.or.jp/p2m/exam/pmc/top.html)・[PMS](https://www.pmaj.or.jp/p2m/exam/pms/top.html)・[PMR](https://www.pmaj.or.jp/p2m/exam/pmr/top.html)
+- 日本プロジェクトマネジメント協会 (PMAJ): [本年のお知らせ](https://www.pmaj.or.jp/news/news_2026.html)・[前年のお知らせ](https://www.pmaj.or.jp/news/news_2025.html)（取得時点の本年・前年を監視）
 - Project Management Institute (PMI): [PMI日本支部 PMP資格・試験情報](https://www.pmi-japan.org/pmp_license/)
 - ISACA: [東京支部 (ISACA Engage)](https://engage.isaca.org/tokyochapter)
 - PeopleCert: [ITIL Certifications](https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1)

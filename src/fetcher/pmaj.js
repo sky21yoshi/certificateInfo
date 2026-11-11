@@ -5,10 +5,20 @@ const {
 } = require('./official_web');
 
 const PMAJ_QUALIFICATIONS = [
-  { no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)', url: 'https://www.pmaj.or.jp/p2m/exam/pmc/top.html', aliases: ['PMC', 'コーディネーター'] },
-  { no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)', url: 'https://www.pmaj.or.jp/p2m/exam/pms/top.html', aliases: ['PMS', 'スペシャリスト'] },
-  { no: 103, name: 'プログラムマネジャー・レジスタード (PMR)', url: 'https://www.pmaj.or.jp/p2m/exam/pmr/top.html', aliases: ['PMR', 'プログラムマネジャー'] },
+  { no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)', aliases: ['PMC', 'コーディネーター'] },
+  { no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)', aliases: ['PMS', 'スペシャリスト'] },
+  { no: 103, name: 'プログラムマネジャー・レジスタード (PMR)', aliases: ['PMR', 'プログラムマネジャー'] },
 ];
+
+function getPmajNewsUrls(year = Number(new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+}).format(new Date()))) {
+  return [
+    `https://www.pmaj.or.jp/news/news_${year}.html`,
+    `https://www.pmaj.or.jp/news/news_${year - 1}.html`,
+  ];
+}
 
 function matchPmajQualifications(text) {
   return PMAJ_QUALIFICATIONS
@@ -21,31 +31,33 @@ function matchPmajQualifications(text) {
     .map(({ no, name }) => ({ no, name }));
 }
 
-async function fetchPmajUpdates(customPages = null) {
+async function fetchPmajUpdates(customPages = null, year) {
   const items = [];
-  for (const qualification of PMAJ_QUALIFICATIONS) {
+  const urls = getPmajNewsUrls(year);
+  for (let index = 0; index < urls.length; index++) {
+    const url = urls[index];
     const html = customPages
-      ? customPages[qualification.url]
-      : await fetchOfficialPage(qualification.url);
+      ? customPages[url]
+      : await fetchOfficialPage(url);
     if (typeof html !== 'string') {
-      throw new Error(`PMAJ公式ページのテストデータがありません: ${qualification.url}`);
+      throw new Error(`PMAJ公式ページのテストデータがありません: ${url}`);
     }
 
     items.push(createPageSnapshot(
       '日本プロジェクトマネジメント協会 (PMAJ)',
-      `${qualification.name}の更新`,
-      qualification.url,
+      'PMAJお知らせ一覧の更新',
+      url,
       html,
-      [{ no: qualification.no, name: qualification.name }]
+      []
     ));
     items.push(...extractLinkedItems(
       html,
-      qualification.url,
+      url,
       '日本プロジェクトマネジメント協会 (PMAJ)',
       matchPmajQualifications,
-      /PMC|PMS|PMR|プロジェクトマネジメント|プロジェクトマネジャー/i
+      /PMC|PMS|PMR|P2M|プロジェクトマネジメント|プロジェクトマネジャー|資格|試験|認定/i
     ));
-    if (!customPages && qualification.no !== PMAJ_QUALIFICATIONS[PMAJ_QUALIFICATIONS.length - 1].no) {
+    if (!customPages && index < urls.length - 1) {
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
   }
@@ -54,6 +66,7 @@ async function fetchPmajUpdates(customPages = null) {
 
 module.exports = {
   PMAJ_QUALIFICATIONS,
+  getPmajNewsUrls,
   matchPmajQualifications,
   fetchPmajUpdates,
 };
