@@ -44,7 +44,7 @@ const ENDPOINTS = {
   CNCF: 'https://www.cncf.io/blog/',
   LINUX_FOUNDATION: 'https://training.linuxfoundation.org/blog/',
   ANTHROPIC: 'https://academy.claude.com/courses',
-  UIPATH: 'https://www.uipath.com/ja/learning/certification',
+  UIPATH_NEWSROOM: 'https://www.uipath.com/ja/newsroom/',
   CERTIFY: 'https://www.sikaku.gr.jp/js/cp/',
   PYTHON_BASIC: 'https://www.pythonic-exam.com/exam/basic',
   PYTHON_DATA_ANALYST: 'https://www.pythonic-exam.com/exam/data-analyst',
@@ -491,19 +491,44 @@ function matchUiPathQualifications(text) {
 }
 
 function checkUiPath(properties, webhookUrl) {
-  const html = fetchOfficialHtml(ENDPOINTS.UIPATH);
+  // newsroomページ（1〜10ページ）を順番にフェッチして更新情報を収集する
+  const NEWSROOM_URLS = [
+    ENDPOINTS.UIPATH_NEWSROOM,
+    'https://www.uipath.com/ja/newsroom/2',
+    'https://www.uipath.com/ja/newsroom/3',
+    'https://www.uipath.com/ja/newsroom/4',
+    'https://www.uipath.com/ja/newsroom/5',
+    'https://www.uipath.com/ja/newsroom/6',
+    'https://www.uipath.com/ja/newsroom/7',
+    'https://www.uipath.com/ja/newsroom/8',
+    'https://www.uipath.com/ja/newsroom/9',
+    'https://www.uipath.com/ja/newsroom/10'
+  ];
   const qualifications = [
     { no: 92, name: 'UiPath Automation Developer Associate' },
     { no: 93, name: 'UiPath Automation Developer Professional' },
     { no: 94, name: 'UiPath Agentic Automation Associate' },
     { no: 95, name: 'UiPath Agentic Automation Professional' }
   ];
-  const items = [
-    createOfficialSnapshot('UiPath', 'UiPath certification program updates', ENDPOINTS.UIPATH, html, qualifications),
-    ...extractOfficialLinks(html, ENDPOINTS.UIPATH, 'UiPath', matchUiPathQualifications,
-      /certification|認定|資格|automation developer|agentic automation|エージェンティック|オートメーション/i)
-  ];
-  handleDiff('UIPATH', uniqueItemsByUrl(items), properties, webhookUrl, 'url', 'contentHash');
+  const allItems = [];
+  for (let i = 0; i < NEWSROOM_URLS.length; i++) {
+    const url = NEWSROOM_URLS[i];
+    try {
+      const html = fetchOfficialHtml(url);
+      allItems.push(
+        createOfficialSnapshot('UiPath', `UiPath newsroom updates (${url})`, url, html, qualifications),
+        ...extractOfficialLinks(html, url, 'UiPath', matchUiPathQualifications,
+          /certification|認定|資格|automation developer|agentic automation|エージェンティック|オートメーション/i)
+      );
+    } catch (e) {
+      console.warn(`UiPath newsroom ページ取得エラー (${url}):`, e.message);
+    }
+    // サーバー負荷軽減のため各ページ取得後に1.5秒待機（最後のページは不要）
+    if (i < NEWSROOM_URLS.length - 1) {
+      Utilities.sleep(1500);
+    }
+  }
+  handleDiff('UIPATH', uniqueItemsByUrl(allItems), properties, webhookUrl, 'url', 'contentHash');
 }
 
 function checkCertify(properties, webhookUrl) {
