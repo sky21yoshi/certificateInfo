@@ -67,6 +67,15 @@ const targets = getQualificationDetailTargets('cisco', groupedRows, 0);
 assert.strictEqual(targets.length, 1);
 assert.deepStrictEqual(targets[0].qualifications.map(item => item.no), [1, 2]);
 
+const winActorRows = [
+  { no: 129, providerName: 'NTTアドバンステクノロジ（NTT-AT）', name: 'WinActor RPA技術者検定アソシエイト', url: 'https://winactor.com/rpa-kentei/associate/' },
+  { no: 130, providerName: 'NTTアドバンステクノロジ（NTT-AT）', name: 'WinActor RPA技術者検定エキスパート', url: 'https://winactor.com/rpa-kentei/expert/' },
+];
+const associateTarget = getQualificationDetailTargets('ntt_at', winActorRows, 0);
+const expertTarget = getQualificationDetailTargets('ntt_at', winActorRows, 1);
+assert.strictEqual(associateTarget[0].url, winActorRows[0].url);
+assert.strictEqual(expertTarget[0].url, winActorRows[1].url);
+
 async function main() {
   const items = await fetchQualificationDetails('ipa', {
     rows: [
@@ -89,6 +98,44 @@ async function main() {
   );
   assert.strictEqual(changedDetails.length, 1);
   assert.strictEqual(changedDetails[0]._diffType, 'UPDATED');
+
+  const winActorPages = {
+    [winActorRows[0].url]: `
+      <table><tr><td>試験日時</td><td>通年開催</td></tr>
+      <tr><td>検定形式</td><td>CBT（指定会場またはオンライン受検）</td></tr>
+      <tr><td>出題範囲</td><td>WinActorの概要、機能、シナリオに関する知識</td></tr>
+      <tr><td>受検料</td><td>7,150円（税込）</td></tr>
+      <tr><td>申し込みサイト・試験詳細</td><td><a href="https://example.test/associate">J-Testing</a></td></tr></table>
+    `,
+    [winActorRows[1].url]: `
+      <table><tr><td>試験日時</td><td>2026年5月22日（金）</td></tr>
+      <tr><td>申し込み期間</td><td>2026年4月13日～4月24日</td></tr>
+      <tr><td>合格発表日</td><td>2026年7月16日</td></tr>
+      <tr><td>検定形式</td><td>オンライン形式</td></tr>
+      <tr><td>受検料</td><td>21,780円（税込）</td></tr></table>
+    `,
+  };
+  const associateDetails = await fetchQualificationDetails('ntt_at', {
+    rows: winActorRows,
+    batchIndex: 0,
+    pages: winActorPages,
+    wait: async () => {},
+  });
+  const expertDetails = await fetchQualificationDetails('ntt_at', {
+    rows: winActorRows,
+    batchIndex: 1,
+    pages: winActorPages,
+    wait: async () => {},
+  });
+  assert.strictEqual(associateDetails[0].relatedQualifications[0].no, 129);
+  assert(associateDetails[0].examFormat.includes('CBT'));
+  assert.strictEqual(associateDetails[0].cost, '7,150円（税込）');
+  assert(associateDetails[0].contentOutline.includes('シナリオに関する知識'));
+  assert.strictEqual(associateDetails[0].testingOptions, 'J-Testing');
+  assert(expertDetails[0].examContent.includes('申し込み期間: 2026年4月13日～4月24日'));
+  assert(expertDetails[0].examContent.includes('合格発表日: 2026年7月16日'));
+  assert.strictEqual(expertDetails[0].cost, '21,780円（税込）');
+  assert.strictEqual(expertDetails[0].relatedQualifications[0].no, 130);
 
     console.log('✓ 資格詳細情報: 全認定機関の個別ルール、公式ページ抽出、5日分割 OK');
 }

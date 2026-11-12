@@ -4,7 +4,11 @@ const { fetchIsacaUpdates } = require('../src/fetcher/isaca');
 const { fetchPeopleCertUpdates } = require('../src/fetcher/peoplecert');
 const { fetchFortinetUpdates } = require('../src/fetcher/fortinet');
 const { fetchPaloAltoUpdates } = require('../src/fetcher/palo_alto');
-const { fetchNttAtUpdates } = require('../src/fetcher/ntt_at');
+const {
+  NTT_AT_QUALIFICATIONS,
+  fetchNttAtUpdates,
+  getNttAtQualifications,
+} = require('../src/fetcher/ntt_at');
 const { detectDiff } = require('../src/checker');
 const { PROVIDERS } = require('../src/index');
 
@@ -55,7 +59,13 @@ async function main() {
   assert.strictEqual(paloAlto[0].relatedQualifications[0].no, 108);
 
   const nttAt = await fetchNttAtUpdates('<main>WinActor Certification of WinActor CWA</main>');
-  assert.deepStrictEqual(nttAt[0].relatedQualifications.map(item => item.no), [109, 110]);
+  assert.deepStrictEqual(NTT_AT_QUALIFICATIONS.map(item => item.no), [129, 130]);
+  assert.deepStrictEqual(nttAt[0].relatedQualifications.map(item => item.no), [129, 130]);
+  assert.strictEqual(nttAt[0].url, 'https://winactor.com/rpa-kentei/');
+  assert.deepStrictEqual(getNttAtQualifications([
+    { no: 201, providerName: 'NTT-AT', name: 'WinActor RPA技術者検定アソシエイト' },
+    { no: 202, providerName: 'NTT-AT', name: 'WinActor RPA技術者検定エキスパート' },
+  ]).map(item => item.no), [201, 202]);
 
   for (const key of ['pmi', 'isaca', 'peoplecert', 'fortinet', 'palo_alto', 'ntt_at']) {
     assert.strictEqual(typeof PROVIDERS[key].fetch, 'function', `${key} must be registered`);

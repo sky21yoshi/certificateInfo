@@ -403,6 +403,37 @@ const splitAwsNewsMatches = context.matchAwsQualifications(
 );
 assert.deepStrictEqual(Array.from(splitAwsNewsMatches, item => item.no), [71]);
 
+const winActorRows = [
+  ['No', '認定機関', '資格名', '資格情報取得元'],
+  [129, 'NTTアドバンステクノロジ（NTT-AT）', 'WinActor RPA技術者検定アソシエイト', 'https://winactor.biz/certificate/associate.html'],
+  [130, 'NTTアドバンステクノロジ（NTT-AT）', 'WinActor RPA技術者検定エキスパート', 'https://winactor.biz/certificate/expert.html'],
+];
+const winActorSheet = { getDataRange: () => ({ getValues: () => winActorRows }) };
+spreadsheet.getSheetByName = () => winActorSheet;
+spreadsheet.getSheets = () => [winActorSheet];
+const winActorTargets = context.getOtherCredentialDetailTargets(
+  winActorRows, winActorRows[0]
+);
+assert.deepStrictEqual(Array.from(winActorTargets, target => target.url), [
+  'https://winactor.com/rpa-kentei/associate/',
+  'https://winactor.com/rpa-kentei/expert/',
+]);
+const associateWinActorDetails = context.parseOtherCredentialDetails(`
+  <table><tr><td>試験日時</td><td>通年開催</td></tr>
+  <tr><td>検定形式</td><td>CBT（指定会場またはオンライン受検）</td></tr>
+  <tr><td>出題範囲</td><td>WinActorの概要、機能に関する知識</td></tr>
+  <tr><td>受検料</td><td>7,150円（税込）</td></tr>
+  <tr><td>申し込みサイト・試験詳細</td><td><a href="https://example.test/associate">J-Testing</a></td></tr></table>
+`, 'NTTアドバンステクノロジ（NTT-AT）');
+assert(associateWinActorDetails.examFormat.includes('CBT'));
+assert.strictEqual(associateWinActorDetails.cost, '7,150円（税込）');
+assert(associateWinActorDetails.examContent.includes('試験日時: 通年開催'));
+assert(associateWinActorDetails.contentOutline.includes('WinActorの概要'));
+assert.strictEqual(associateWinActorDetails.testingOptions, 'J-Testing');
+context.checkNttAt(context.PropertiesService.getScriptProperties(), 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
+const savedWinActorSnapshot = JSON.parse(scriptProperties.get('SAVED_STATE_NTT_AT'));
+assert.deepStrictEqual(Array.from(savedWinActorSnapshot[0].relatedQualifications, item => item.no), [129, 130]);
+
 // 5. 毎平日トリガー（setupDailyTrigger）の検証
 installedTriggers.length = 0;
 triggerCalls.length = 0;

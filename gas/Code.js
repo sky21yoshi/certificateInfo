@@ -56,10 +56,14 @@ const ENDPOINTS = {
   FORTINET_CERTIFICATION: 'https://www.fortinet.com/jp/training-certification',
   FORTINET_UPDATE: 'https://www.fortinet.com/nse-training-update',
   PALO_ALTO_CERTIFICATION: 'https://www.paloaltonetworks.com/services/education/certification',
-  WINACTOR_CERTIFICATION: 'https://winactor.biz/use/winactor_certification.html'
+  WINACTOR_CERTIFICATION: 'https://winactor.com/rpa-kentei/'
 };
 
 const DEFAULT_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit';
+const WINACTOR_QUALIFICATION_URLS = {
+  'WinActor RPA技術者検定アソシエイト': 'https://winactor.com/rpa-kentei/associate/',
+  'WinActor RPA技術者検定エキスパート': 'https://winactor.com/rpa-kentei/expert/'
+};
 
 /**
  * 日本時間（JST）で現在が平日（月〜金）かどうかを判定する
@@ -389,7 +393,7 @@ const OTHER_CREDENTIAL_DETAIL_RULES = [
   { match: /PeopleCert|AXELOS/i, labels: { category: ['Level', 'レベル'], examDuration: ['Exam duration', '試験時間'], examFormat: ['Exam format', '問題数'], cost: ['Exam price', '受験料'], testingOptions: ['Exam delivery', '受験方法'] } },
   { match: /Fortinet|フォーティネット/i, labels: { category: ['認定レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', '問題数'], cost: ['受験料', 'Exam price'], testingOptions: ['試験方法', 'Exam delivery'] } },
   { match: /Palo Alto|パロアルト/i, labels: { category: ['レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['受験料', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'] } },
-  { match: /NTT.?AT|アドバンステクノロジ/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式'], cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'] } }
+  { match: /NTT.?AT|アドバンステクノロジ/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式', '検定形式'], cost: ['受験料', '受験料金', '受検料'], testingOptions: ['受験方法', '受検方法', '試験方式', '申し込みサイト・試験詳細'], contentOutline: ['出題範囲'], schedule: ['試験日時', '申込期間', '申し込み期間', '合格発表日'] } }
 ];
 
 function credentialHtmlToText(html) {
@@ -410,6 +414,7 @@ function extractCredentialField(html, labels, plainText) {
   const patterns = [
     new RegExp(`<dt\\b[^>]*>\\s*([^<]+)\\s*<\\/dt>\\s*<dd\\b[^>]*>([\\s\\S]*?)<\\/dd>`, 'gi'),
     new RegExp(`<th\\b[^>]*>\\s*([^<]+)\\s*<\\/th>\\s*<td\\b[^>]*>([\\s\\S]*?)<\\/td>`, 'gi'),
+    new RegExp(`<td\\b[^>]*>\\s*([^<]+)\\s*<\\/td>\\s*<td\\b[^>]*>([\\s\\S]*?)<\\/td>`, 'gi'),
     new RegExp(`<(?:p|li|div)\\b[^>]*>[\\s\\S]*?<(?:strong|b)\\b[^>]*>\\s*(${labelPattern})\\s*[:：]?\\s*<\\/(?:strong|b)>\\s*([\\s\\S]*?)<\\/(?:p|li|div)>`, 'gi')
   ];
   for (const pattern of patterns) {
@@ -448,6 +453,18 @@ function parseOtherCredentialDetails(html, providerName) {
   ['category', 'examDuration', 'examFormat', 'cost', 'testingOptions'].forEach(function (field) {
     details[field] = extractCredentialField(html, rules.labels[field], plainText);
   });
+  if (rules.labels.contentOutline) {
+    details.contentOutline = extractCredentialField(html, rules.labels.contentOutline, plainText);
+  }
+  if (rules.labels.schedule) {
+    const scheduleLines = rules.labels.schedule.map(function (label) {
+      const value = extractCredentialField(html, [label], plainText);
+      return value ? `${label}: ${value}` : '';
+    }).filter(Boolean);
+    if (scheduleLines.length > 0) {
+      details.examContent = scheduleLines.join('\n');
+    }
+  }
   const metaMatch = html.match(/<meta\b[^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*content=["']([^"']+)["'][^>]*>/i)
     || html.match(/<meta\b[^>]*content=["']([^"']+)["'][^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*>/i);
   if (metaMatch) details.introduction = credentialHtmlToText(metaMatch[1]).slice(0, 2000);
@@ -502,13 +519,16 @@ function getOtherCredentialDetailTargets(values, headers, batchIndex) {
     const no = Number(row[noColumn]);
     const providerName = String(row[providerColumn] || '').trim();
     const name = String(row[nameColumn] || '').trim();
-    const url = String(row[urlColumn] || '').trim();
+    const sourceUrl = String(row[urlColumn] || '').trim();
+    const url = WINACTOR_QUALIFICATION_URLS[name] || sourceUrl;
     if (!no || !providerName || !name || !url || /AWS|Amazon Web Services|Google Cloud|Google Cloud（/i.test(providerName)) continue;
     if (!OTHER_CREDENTIAL_DETAIL_RULES.some(rule => rule.match.test(providerName))) continue;
     if (!grouped.has(url)) grouped.set(url, { url: url, providerName: providerName, relatedQualifications: [] });
     grouped.get(url).relatedQualifications.push({ no: no, name: name });
   }
-  return Array.from(grouped.values()).filter(function (target, index) {
+  const targets = Array.from(grouped.values());
+  if (batchIndex === undefined) return targets;
+  return targets.filter(function (target, index) {
     return index % 5 === batchIndex;
   });
 }
@@ -970,11 +990,26 @@ function checkPaloAlto(properties, webhookUrl) {
 function checkNttAt(properties, webhookUrl) {
   const url = ENDPOINTS.WINACTOR_CERTIFICATION;
   const html = fetchOfficialHtml(url);
+  const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
+  const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
+  const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = sheetName ? spreadsheet.getSheetByName(sheetName) : spreadsheet.getSheets()[0];
+  if (!sheet) throw new Error('資格一覧シートが見つかりません');
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) throw new Error('資格一覧シートにヘッダー行がありません');
+  const headers = values[0].map(value => String(value).trim());
+  const targets = getOtherCredentialDetailTargets(values, headers)
+    .flatMap(function (target) { return target.relatedQualifications; })
+    .filter(function (qualification) {
+      return Object.prototype.hasOwnProperty.call(WINACTOR_QUALIFICATION_URLS, qualification.name);
+    });
+  const foundNames = new Set(targets.map(function (qualification) { return qualification.name; }));
+  const missingNames = Object.keys(WINACTOR_QUALIFICATION_URLS).filter(function (name) { return !foundNames.has(name); });
+  if (missingNames.length > 0) {
+    throw new Error(`資格一覧にWinActor資格がありません: ${missingNames.join(', ')}`);
+  }
   const items = [createOfficialSnapshot('NTTアドバンステクノロジ (NTT-AT)',
-    'WinActor認定情報の更新', url, html, [
-      { no: 109, name: 'WinActor RPA技術者検定アソシエイト' },
-      { no: 110, name: 'WinActor RPA技術者検定エキスパート' }
-    ])];
+    'WinActor認定情報の更新', url, html, targets)];
   handleDiff('NTT_AT', items, properties, webhookUrl, 'url', 'contentHash');
 }
 

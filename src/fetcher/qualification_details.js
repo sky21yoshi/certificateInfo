@@ -89,8 +89,10 @@ const PROVIDER_RULES = [
     cost: ['受験料', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'],
   } },
   { key: 'ntt_at', match: /NTT.?AT|アドバンステクノロジ/i, labels: {
-    category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式'],
-    cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'],
+    category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式', '検定形式'],
+    cost: ['受験料', '受験料金', '受検料'], testingOptions: ['受験方法', '受検方法', '試験方式', '申し込みサイト・試験詳細'],
+    contentOutline: ['出題範囲'],
+    schedule: ['試験日時', '申込期間', '申し込み期間', '合格発表日'],
   } },
 ];
 
@@ -122,6 +124,7 @@ function extractLabeledValue(html, labels, plainText) {
   const structuralPatterns = [
     new RegExp(`<dt\\b[^>]*>\\s*([^<]+)\\s*<\\/dt>\\s*<dd\\b[^>]*>([\\s\\S]*?)<\\/dd>`, 'gi'),
     new RegExp(`<th\\b[^>]*>\\s*([^<]+)\\s*<\\/th>\\s*<td\\b[^>]*>([\\s\\S]*?)<\\/td>`, 'gi'),
+    new RegExp(`<td\\b[^>]*>\\s*([^<]+)\\s*<\\/td>\\s*<td\\b[^>]*>([\\s\\S]*?)<\\/td>`, 'gi'),
     new RegExp(`<(?:p|li|div)\\b[^>]*>[\\s\\S]*?<(?:strong|b)\\b[^>]*>\\s*(${labelPattern})\\s*[:：]?\\s*<\\/(?:strong|b)>\\s*([\\s\\S]*?)<\\/(?:p|li|div)>`, 'gi'),
   ];
 
@@ -170,6 +173,16 @@ function parseCredentialDetails(html, providerName) {
   const details = Object.fromEntries(DETAIL_FIELDS.map(field => [field, '']));
   for (const field of ['category', 'examDuration', 'examFormat', 'cost', 'testingOptions']) {
     details[field] = extractLabeledValue(html, rules.labels[field], plainText);
+  }
+  if (rules.labels.contentOutline) {
+    details.contentOutline = extractLabeledValue(html, rules.labels.contentOutline, plainText);
+  }
+  if (rules.labels.schedule) {
+    const scheduleLines = rules.labels.schedule.map(label => {
+      const value = extractLabeledValue(html, [label], plainText);
+      return value ? `${label}: ${value}` : '';
+    }).filter(Boolean);
+    if (scheduleLines.length > 0) details.examContent = scheduleLines.join('\n');
   }
 
   const descriptionMatch = html.match(/<meta\b[^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*content=["']([^"']+)["'][^>]*>/i)
