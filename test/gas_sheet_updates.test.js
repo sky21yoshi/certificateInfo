@@ -367,6 +367,42 @@ assert.strictEqual(rows16Cols[2][13], '最新のCloud Digital Leader概要');
 assert.strictEqual(rows16Cols[2][15], 'Google Cloud によるAIトランスフォーメーションの探求');
 assert.notStrictEqual(rows16Cols[2][4], '2026-10-01', 'Google Cloud資格の最終更新日時が更新されていること');
 
+const splitCredentialRows = [
+  ['No', '認定機関', '資格名', '資格情報取得元'],
+  [70, 'Amazon Web Services (AWS)', 'AWS Certified Solutions Architect - Associate', 'https://example.com/aws-associate'],
+  [71, 'Amazon Web Services (AWS)', 'AWS Certified Developer - Associate', 'https://example.com/aws-associate'],
+  [72, 'Amazon Web Services (AWS)', 'AWS Certified Cloud Practitioner', 'https://example.com/aws-practitioner'],
+  [73, 'Google Cloud（グーグル）', 'Associate Cloud Engineer', 'https://example.com/gcp-associate'],
+];
+const splitCredentialSheet = {
+  getDataRange: () => ({ getValues: () => splitCredentialRows }),
+};
+spreadsheet.getSheetByName = () => splitCredentialSheet;
+spreadsheet.getSheets = () => [splitCredentialSheet];
+const splitAwsTargets = context.getAwsGoogleCredentialTargets(
+  context.PropertiesService.getScriptProperties(), 'aws', 0, true
+);
+assert.strictEqual(splitAwsTargets.length, 2, 'AWS資格を公式URL単位で取得すること');
+assert.deepStrictEqual(Array.from(splitAwsTargets[0].qualifications, item => item.no), [70, 71]);
+assert.strictEqual(splitAwsTargets[0].url, 'https://example.com/aws-associate');
+const awsBatchedUrls = [];
+for (let batch = 0; batch < 5; batch++) {
+  awsBatchedUrls.push(...context.getAwsGoogleCredentialTargets(
+    context.PropertiesService.getScriptProperties(), 'aws', batch
+  ).map(target => target.url));
+}
+assert.strictEqual(new Set(awsBatchedUrls).size, 2, 'AWSの資格詳細URLを5日分に重複なく分割すること');
+assert.strictEqual(awsBatchedUrls.length, 2);
+const splitGoogleTargets = context.getAwsGoogleCredentialTargets(
+  context.PropertiesService.getScriptProperties(), 'google_cloud', 0, true
+);
+assert.deepStrictEqual(Array.from(splitGoogleTargets[0].qualifications, item => item.no), [73]);
+const splitAwsNewsMatches = context.matchAwsQualifications(
+  'AWS Certified Developer - Associate exam',
+  splitAwsTargets.reduce((all, target) => all.concat(target.qualifications), [])
+);
+assert.deepStrictEqual(Array.from(splitAwsNewsMatches, item => item.no), [71]);
+
 // 5. 毎平日トリガー（setupDailyTrigger）の検証
 installedTriggers.length = 0;
 triggerCalls.length = 0;

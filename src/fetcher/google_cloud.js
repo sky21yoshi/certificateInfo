@@ -1,10 +1,12 @@
+const { getDailyBatchIndex, loadQualificationRows } = require('./qualification_details');
+
 /**
  * Google Cloud 公式 Training and Certifications 記事一覧および資格詳細情報を取得する
  */
 
 const GOOGLE_CLOUD_NEWS_URL = 'https://cloud.google.com/blog/products/training-certifications';
 
-const GOOGLE_CLOUD_QUALIFICATIONS = [
+const LEGACY_GOOGLE_CLOUD_QUALIFICATIONS = [
   {
     no: 40,
     name: 'GCP Leader系',
@@ -24,6 +26,30 @@ const GOOGLE_CLOUD_QUALIFICATIONS = [
     aliases: ['Professional Cloud', 'Professional certification'],
   },
 ];
+
+function getGoogleCloudAliases(name, officialUrl) {
+  const aliases = [name];
+  const normalizedName = name.replace(/^GCP(?:認定)?\s*/i, '').replace(/系$/, '').trim();
+  if (normalizedName && normalizedName !== name) aliases.push(normalizedName);
+  const slug = String(officialUrl || '').match(/\/certification\/([^/?#]+)/i);
+  if (slug) aliases.push(slug[1].replace(/-/g, ' '));
+  return Array.from(new Set(aliases.filter(Boolean)));
+}
+
+function getGoogleCloudQualifications(rows = loadQualificationRows()) {
+  rows = rows.filter(row => /Google Cloud|グーグル/i.test(row.providerName));
+  if (rows.length === 0) return LEGACY_GOOGLE_CLOUD_QUALIFICATIONS;
+  return rows.map(row => {
+    return {
+      no: row.no,
+      name: row.name,
+      officialUrl: row.url,
+      aliases: getGoogleCloudAliases(row.name, row.url),
+    };
+  });
+}
+
+const GOOGLE_CLOUD_QUALIFICATIONS = getGoogleCloudQualifications();
 
 function decodeHtml(value) {
   if (!value) return '';
@@ -53,13 +79,13 @@ function textFromHtml(value) {
     .trim();
 }
 
-function matchGoogleCloudQualifications(text) {
+function matchGoogleCloudQualifications(text, qualifications = GOOGLE_CLOUD_QUALIFICATIONS) {
   const normalized = text.toLowerCase();
-  const matched = GOOGLE_CLOUD_QUALIFICATIONS.filter(qualification =>
+  const matched = qualifications.filter(qualification =>
     qualification.aliases.some(alias => normalized.includes(alias.toLowerCase()))
   );
   if (/\b(google cloud )?certification(s)?\b|\bexam\b|\bcredential(s)?\b/i.test(text) && matched.length === 0) {
-    return GOOGLE_CLOUD_QUALIFICATIONS.map(({ no, name }) => ({ no, name }));
+    return qualifications.map(({ no, name }) => ({ no, name }));
   }
   return matched.map(({ no, name }) => ({ no, name }));
 }
@@ -286,7 +312,7 @@ function hashGoogleCloudDetails(details) {
  * @param {Array<object>} [customDetails]
  * @returns {Promise<Array<object>>}
  */
-async function fetchGoogleCloudAllUpdates(customHtml = null, customDetails = null) {
+async function fetchGoogleCloudAllUpdates(customHtml = null, customDetails = null, options = {}) {
   const newsItems = await fetchGoogleCloudNews(customHtml);
 
   const detailItems = [];
@@ -295,13 +321,25 @@ async function fetchGoogleCloudAllUpdates(customHtml = null, customDetails = nul
       detailItems.push(d);
     }
   } else {
-    for (const q of GOOGLE_CLOUD_QUALIFICATIONS) {
+    const batchIndex = options.batchIndex === undefined ? getDailyBatchIndex() : options.batchIndex;
+    const grouped = new Map();
+    for (const qualification of GOOGLE_CLOUD_QUALIFICATIONS) {
+      if (!grouped.has(qualification.officialUrl)) {
+        grouped.set(qualification.officialUrl, { officialUrl: qualification.officialUrl, qualifications: [] });
+      }
+      grouped.get(qualification.officialUrl).qualifications.push(qualification);
+    }
+    const targets = Array.from(grouped.values()).filter((_, index) => index % 5 === batchIndex);
+    for (let index = 0; index < targets.length; index++) {
+      const target = targets[index];
+      const q = target.qualifications[0];
       try {
-        const details = await fetchGoogleCloudExamDetails(q.officialUrl);
+        if (index > 0) await new Promise(resolve => setTimeout(resolve, 1500));
+        const details = await fetchGoogleCloudExamDetails(target.officialUrl);
         detailItems.push({
           provider: 'Google Cloud',
           title: `${q.name} 資格情報・試験ガイド`,
-          url: q.officialUrl,
+          url: target.officialUrl,
           date: '',
           description: `${q.name} の資格詳細および試験ガイド情報`,
           category: details.category,
@@ -313,7 +351,8 @@ async function fetchGoogleCloudAllUpdates(customHtml = null, customDetails = nul
           examContent: details.examContent,
           contentOutline: details.contentOutline,
           contentHash: hashGoogleCloudDetails(details),
-          relatedQualifications: [{ no: q.no, name: q.name }],
+          detailsOnly: true,
+          relatedQualifications: target.qualifications.map(({ no, name }) => ({ no, name })),
         });
       } catch (err) {
         console.warn(`[Google Cloud] ${q.name} の詳細取得に失敗しました:`, err.message);
@@ -326,6 +365,7 @@ async function fetchGoogleCloudAllUpdates(customHtml = null, customDetails = nul
 
 module.exports = {
   GOOGLE_CLOUD_QUALIFICATIONS,
+  getGoogleCloudQualifications,
   matchGoogleCloudQualifications,
   parseGoogleCloudNews,
   fetchGoogleCloudNews,

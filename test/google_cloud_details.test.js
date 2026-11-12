@@ -1,9 +1,20 @@
 const assert = require('assert');
 const {
+  getGoogleCloudQualifications,
+  matchGoogleCloudQualifications,
   parseGoogleCloudExamPage,
   hashGoogleCloudDetails,
 } = require('../src/fetcher/google_cloud');
 const { detectGoogleCloudDetailsDiff } = require('../src/checker');
+
+const splitGoogleCloudQualifications = getGoogleCloudQualifications([
+  { no: 70, providerName: 'Google Cloud（グーグル）', name: 'Associate Cloud Engineer', url: 'https://cloud.google.com/learn/certification/cloud-engineer' },
+  { no: 71, providerName: 'Google Cloud（グーグル）', name: 'Professional Cloud Architect', url: 'https://cloud.google.com/learn/certification/cloud-architect' },
+]);
+assert.deepStrictEqual(splitGoogleCloudQualifications.map(item => item.no), [70, 71]);
+assert.deepStrictEqual(matchGoogleCloudQualifications('Professional Cloud Architect certification', splitGoogleCloudQualifications), [
+  { no: 71, name: 'Professional Cloud Architect' },
+]);
 
 // 1. parseGoogleCloudExamPage のテスト
 const mockExamPageHtml = `

@@ -1,6 +1,10 @@
 const assert = require('assert');
 const { parseCiscoRss, matchCiscoQualifications } = require('../src/fetcher/cisco');
-const { parseGoogleCloudNews, matchGoogleCloudQualifications } = require('../src/fetcher/google_cloud');
+const {
+  GOOGLE_CLOUD_QUALIFICATIONS,
+  parseGoogleCloudNews,
+  matchGoogleCloudQualifications,
+} = require('../src/fetcher/google_cloud');
 const { parseOracleAnnouncements, matchOracleQualifications } = require('../src/fetcher/oracle');
 const { PROVIDERS } = require('../src/index');
 
@@ -39,7 +43,7 @@ const { PROVIDERS } = require('../src/index');
   const items = parseGoogleCloudNews(html);
   assert.strictEqual(items.length, 1);
   assert.strictEqual(items[0].title, 'New ways to keep Google Cloud certifications current');
-  assert.strictEqual(items[0].relatedQualifications.length, 3);
+  assert.strictEqual(items[0].relatedQualifications.length, GOOGLE_CLOUD_QUALIFICATIONS.length);
   assert.strictEqual(matchGoogleCloudQualifications('Associate Cloud Engineer').length, 1);
 }
 

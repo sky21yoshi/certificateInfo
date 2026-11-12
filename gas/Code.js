@@ -325,6 +325,51 @@ function fetchOfficialHtml(url) {
   return res.getContentText('UTF-8');
 }
 
+function getAwsGoogleCredentialTargets(properties, providerKey, batchIndex, includeAll) {
+  const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
+  const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
+  const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = sheetName ? spreadsheet.getSheetByName(sheetName) : spreadsheet.getSheets()[0];
+  if (!sheet) throw new Error('資格一覧シートが見つかりません');
+
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) throw new Error('資格一覧シートにヘッダー行がありません');
+  const headers = values[0].map(value => String(value).trim());
+  const indices = {
+    no: headers.indexOf('No'),
+    provider: headers.indexOf('認定機関'),
+    name: headers.indexOf('資格名'),
+    url: headers.indexOf('資格情報取得元')
+  };
+  if (Object.keys(indices).some(key => indices[key] < 0)) {
+    throw new Error('資格詳細取得に必要な列（No、認定機関、資格名、資格情報取得元）がありません');
+  }
+
+  const providerPattern = providerKey === 'aws'
+    ? /Amazon Web Services|\bAWS\b/i
+    : /Google Cloud|グーグル/i;
+  const groupedTargets = new Map();
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const no = Number(row[indices.no]);
+    const providerName = String(row[indices.provider] || '').trim();
+    const name = String(row[indices.name] || '').trim();
+    const url = String(row[indices.url] || '').trim();
+    if (!Number.isInteger(no) || no <= 0 || !name || !url || !providerPattern.test(providerName)) continue;
+    if (!groupedTargets.has(url)) {
+      groupedTargets.set(url, { url: url, providerName: providerName, qualifications: [] });
+    }
+    groupedTargets.get(url).qualifications.push({ no: no, name: name, url: url, providerName: providerName });
+  }
+
+  const targets = Array.from(groupedTargets.values());
+  if (includeAll) return targets;
+  const index = batchIndex === undefined ? getOtherCredentialDetailsBatchIndex() : batchIndex;
+  return targets.filter(function (target, targetIndex) {
+    return targetIndex % 5 === index;
+  });
+}
+
 const OTHER_CREDENTIAL_DETAIL_RULES = [
   { match: /情報処理推進機構|^IPA/i, labels: { category: ['試験区分'], examDuration: ['試験時間', '試験時間（目安）'], examFormat: ['出題形式', '試験方式'], cost: ['受験手数料', '受験料'], testingOptions: ['試験方式', '受験方法'] } },
   { match: /Microsoft|マイクロソフト/i, labels: { category: ['レベル', '認定レベル'], examDuration: ['試験時間', '時間', 'Exam duration'], examFormat: ['問題数', '試験形式', 'Exam format'], cost: ['受験料', '価格', 'Price'], testingOptions: ['試験の予約', 'Schedule exam'] } },
@@ -977,6 +1022,10 @@ function checkCisco(properties, webhookUrl) {
  * Google Cloud公式資格情報記事一覧のチェック処理
  */
 function checkGoogleCloud(properties, webhookUrl) {
+  const qualifications = getAwsGoogleCredentialTargets(properties, 'google_cloud', undefined, true)
+    .reduce(function (all, target) {
+      return all.concat(target.qualifications);
+    }, []);
   const res = UrlFetchApp.fetch(ENDPOINTS.GOOGLE_CLOUD, {
     headers: {
       'User-Agent': 'Mozilla/5.0 certificateInfo-GAS-bot/1.0',
@@ -999,7 +1048,7 @@ function checkGoogleCloud(properties, webhookUrl) {
       title: title,
       url: resolveOfficialUrl(match[1], ENDPOINTS.GOOGLE_CLOUD),
       date: '',
-      relatedQualifications: matchGoogleCloudQualifications(title)
+      relatedQualifications: matchGoogleCloudQualifications(title, qualifications)
     });
   }
 
@@ -1152,18 +1201,13 @@ function fetchGoogleCloudExamDetails(url) {
  * Google Cloud 資格詳細情報（カテゴリ〜試験内容の概要）のチェック処理
  */
 function checkGoogleCloudDetails(properties, webhookUrl) {
-  const targets = [
-    { no: 40, name: 'GCP Leader系', url: 'https://cloud.google.com/learn/certification/cloud-digital-leader?hl=ja' },
-    { no: 41, name: 'GCP認定 Associate系', url: 'https://cloud.google.com/learn/certification/cloud-engineer?hl=ja' },
-    { no: 42, name: 'GCP認定 Professional系', url: 'https://cloud.google.com/learn/certification/directory?hl=ja' }
-  ];
+  const targets = getAwsGoogleCredentialTargets(properties, 'google_cloud');
 
   const propKey = 'SAVED_STATE_GOOGLE_CLOUD_DETAILS';
   const savedRaw = properties.getProperty(propKey);
   const savedMap = savedRaw ? JSON.parse(savedRaw) : {};
-  const isInitial = !savedRaw || Object.keys(savedMap).length === 0;
 
-  const currentMap = {};
+  const currentMap = Object.assign({}, savedMap);
   const updateItems = [];
 
   for (let i = 0; i < targets.length; i++) {
@@ -1174,41 +1218,35 @@ function checkGoogleCloudDetails(properties, webhookUrl) {
     try {
       details = fetchGoogleCloudExamDetails(target.url);
     } catch (e) {
-      console.warn(`[Google Cloud] 詳細取得失敗 (${target.name}):`, e.message);
+      console.warn(`[Google Cloud] 詳細取得失敗 (${target.qualifications[0].name}):`, e.message);
       continue;
     }
-
-    currentMap[target.no] = details;
-    const prev = savedMap[target.no];
 
     const detailKeys = [
       'category', 'examDuration', 'examFormat', 'cost', 'testingOptions',
       'introduction', 'examContent', 'contentOutline'
     ];
-
-    let hasDiff = false;
-    const changedFields = [];
-    if (prev) {
-      for (let k = 0; k < detailKeys.length; k++) {
-        const key = detailKeys[k];
-        const cVal = String(details[key] || '').trim();
-        const pVal = String(prev[key] || '').trim();
-        if (cVal !== pVal) {
-          hasDiff = true;
-          changedFields.push(key);
-        }
-      }
-    }
-
     const todayStr = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+    target.qualifications.forEach(function (qualification) {
+      const no = String(qualification.no);
+      currentMap[no] = details;
+      const prev = savedMap[no];
+      const changedFields = detailKeys.filter(function (key) {
+        return prev && String(details[key] || '').trim() !== String(prev[key] || '').trim();
+      });
+      if (prev && changedFields.length === 0) return;
 
-    if (isInitial) {
+      const changed = Boolean(prev);
+      if (changed) console.log(`[Google Cloud] ${qualification.name} の変更を検知: ${changedFields.join(', ')}`);
       updateItems.push({
         provider: 'Google Cloud',
-        title: `${target.name} 資格情報`,
+        title: `${qualification.name}${changed ? ' 試験情報・ガイド更新' : ' 資格情報'}`,
         url: details.examGuideUrl || target.url,
-        date: '',
-        description: `${target.name} の資格詳細情報`,
+        date: changed ? todayStr : '',
+        description: changed
+          ? `${qualification.name} の資格情報（${changedFields.join(', ')}）が更新されました`
+          : `${qualification.name} の資格詳細情報`,
+        detailsOnly: true,
         category: details.category,
         examDuration: details.examDuration,
         examFormat: details.examFormat,
@@ -1217,34 +1255,16 @@ function checkGoogleCloudDetails(properties, webhookUrl) {
         introduction: details.introduction,
         examContent: details.examContent,
         contentOutline: details.contentOutline,
-        relatedQualifications: [{ no: target.no, name: target.name }]
+        relatedQualifications: [{ no: qualification.no, name: qualification.name }]
       });
-    } else if (hasDiff) {
-      console.log(`[Google Cloud] ${target.name} の変更を検知: ${changedFields.join(', ')}`);
-      updateItems.push({
-        provider: 'Google Cloud',
-        title: `${target.name} 試験情報・ガイド更新`,
-        url: details.examGuideUrl || target.url,
-        date: todayStr,
-        description: `${target.name} の資格情報（${changedFields.join(', ')}）が更新されました`,
-        category: details.category,
-        examDuration: details.examDuration,
-        examFormat: details.examFormat,
-        cost: details.cost,
-        testingOptions: details.testingOptions,
-        introduction: details.introduction,
-        examContent: details.examContent,
-        contentOutline: details.contentOutline,
-        relatedQualifications: [{ no: target.no, name: target.name }]
-      });
-    }
+    });
   }
 
   if (updateItems.length > 0) {
     const applied = updateQualificationSheet(updateItems);
-    if (!isInitial && applied && applied.length > 0) {
+    if (applied && applied.length > 0) {
       for (let j = 0; j < applied.length; j++) {
-        sendSlackNotification(applied[j], webhookUrl);
+        if (savedMap[applied[j].no]) sendSlackNotification(applied[j], webhookUrl);
       }
     }
   }
@@ -1399,13 +1419,20 @@ function matchCiscoQualifications(text) {
     .map(q => ({ no: q.no, name: q.name }));
 }
 
-function matchGoogleCloudQualifications(text) {
-  const qualifications = [
+function matchGoogleCloudQualifications(text, qualificationRows) {
+  const qualifications = qualificationRows || [
     { no: 40, name: 'GCP Leader系', aliases: ['Cloud Digital Leader', 'Digital Leader'] },
     { no: 41, name: 'GCP認定 Associate系', aliases: ['Associate Cloud Engineer', 'Associate certification'] },
     { no: 42, name: 'GCP認定 Professional系', aliases: ['Professional Cloud', 'Professional certification'] }
   ];
-  const matched = qualifications.filter(q => q.aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase())));
+  const matched = qualifications.filter(q => {
+    const aliases = q.aliases || [
+      q.name,
+      q.name.replace(/^GCP(?:認定)?\s*/i, '').replace(/系$/, '').trim(),
+      String(q.url || '').match(/\/certification\/([^/?#]+)/i)?.[1]?.replace(/-/g, ' ')
+    ].filter(Boolean);
+    return aliases.some(alias => text.toLowerCase().includes(alias.toLowerCase()));
+  });
   if (/\b(google cloud )?certification(s)?\b|\bexam\b|\bcredential(s)?\b/i.test(text) && matched.length === 0) {
     return qualifications.map(q => ({ no: q.no, name: q.name }));
   }
@@ -1460,9 +1487,21 @@ const AWS_QUALIFICATIONS = [
   { no: 18, name: 'AWS Certified AI Business Strategist', aliases: ['AI Business Strategist', 'AI Practitioner', 'AIF'] },
 ];
 
-function matchAwsQualifications(text) {
+function matchAwsQualifications(text, qualificationRows) {
   const matched = [];
-  for (const q of AWS_QUALIFICATIONS) {
+  const qualifications = qualificationRows || AWS_QUALIFICATIONS;
+  for (const q of qualifications) {
+    if (qualificationRows) {
+      const aliases = [
+        q.name,
+        q.name.replace(/^AWS(?:認定| Certified)?\s*/i, '').replace(/系$/, '').trim(),
+        String(q.url || '').match(/\/certification\/(?:certified-)?([^/?#]+)/i)?.[1]?.replace(/-/g, ' ')
+      ].filter(Boolean);
+      if (aliases.some(alias => alias && text.toLowerCase().includes(alias.toLowerCase()))) {
+        matched.push({ no: q.no, name: q.name });
+      }
+      continue;
+    }
     if (text.includes(q.name) || q.aliases.some(alias => new RegExp(`\\b${alias}\\b`, 'i').test(text))) {
       matched.push({ no: q.no, name: q.name });
     }
@@ -1773,20 +1812,13 @@ function fetchAwsExamDetails(url) {
  * AWS資格詳細情報（カテゴリ〜試験内容の概要）のチェック処理
  */
 function checkAwsDetails(properties, webhookUrl) {
-  const targets = [
-    { no: 14, name: 'AWS認定 Practitioner系', url: 'https://aws.amazon.com/jp/certification/certified-cloud-practitioner/' },
-    { no: 15, name: 'AWS認定 Associate系', url: 'https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/' },
-    { no: 16, name: 'AWS認定 Professional系', url: 'https://aws.amazon.com/jp/certification/certified-solutions-architect-professional/' },
-    { no: 17, name: 'AWS認定 Specialty系', url: 'https://aws.amazon.com/jp/certification/our-certifications/' },
-    { no: 18, name: 'AWS Certified AI Business Strategist', url: 'https://aws.amazon.com/jp/certification/certified-ai-practitioner/' }
-  ];
+  const targets = getAwsGoogleCredentialTargets(properties, 'aws');
 
   const propKey = 'SAVED_STATE_AWS_DETAILS';
   const savedRaw = properties.getProperty(propKey);
   const savedMap = savedRaw ? JSON.parse(savedRaw) : {};
-  const isInitial = !savedRaw || Object.keys(savedMap).length === 0;
 
-  const currentMap = {};
+  const currentMap = Object.assign({}, savedMap);
   const updateItems = [];
 
   for (let i = 0; i < targets.length; i++) {
@@ -1797,41 +1829,35 @@ function checkAwsDetails(properties, webhookUrl) {
     try {
       details = fetchAwsExamDetails(target.url);
     } catch (e) {
-      console.warn(`[AWS] 詳細取得失敗 (${target.name}):`, e.message);
+      console.warn(`[AWS] 詳細取得失敗 (${target.qualifications[0].name}):`, e.message);
       continue;
     }
-
-    currentMap[target.no] = details;
-    const prev = savedMap[target.no];
 
     const detailKeys = [
       'category', 'examDuration', 'examFormat', 'cost', 'testingOptions',
       'introduction', 'examContent', 'contentOutline'
     ];
-
-    let hasDiff = false;
-    const changedFields = [];
-    if (prev) {
-      for (let k = 0; k < detailKeys.length; k++) {
-        const key = detailKeys[k];
-        const cVal = String(details[key] || '').trim();
-        const pVal = String(prev[key] || '').trim();
-        if (cVal !== pVal) {
-          hasDiff = true;
-          changedFields.push(key);
-        }
-      }
-    }
-
     const todayStr = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+    target.qualifications.forEach(function (qualification) {
+      const no = String(qualification.no);
+      currentMap[no] = details;
+      const prev = savedMap[no];
+      const changedFields = detailKeys.filter(function (key) {
+        return prev && String(details[key] || '').trim() !== String(prev[key] || '').trim();
+      });
+      if (prev && changedFields.length === 0) return;
 
-    if (isInitial) {
+      const changed = Boolean(prev);
+      if (changed) console.log(`[AWS] ${qualification.name} の変更を検知: ${changedFields.join(', ')}`);
       updateItems.push({
         provider: 'Amazon Web Services (AWS)',
-        title: `${target.name} 資格情報`,
+        title: `${qualification.name}${changed ? ' 試験情報・ガイド更新' : ' 資格情報'}`,
         url: details.examGuideUrl || target.url,
-        date: '',
-        description: `${target.name} の資格詳細情報`,
+        date: changed ? todayStr : '',
+        description: changed
+          ? `${qualification.name} の資格情報（${changedFields.join(', ')}）が更新されました`
+          : `${qualification.name} の資格詳細情報`,
+        detailsOnly: true,
         category: details.category,
         examDuration: details.examDuration,
         examFormat: details.examFormat,
@@ -1840,34 +1866,16 @@ function checkAwsDetails(properties, webhookUrl) {
         introduction: details.introduction,
         examContent: details.examContent,
         contentOutline: details.contentOutline,
-        relatedQualifications: [{ no: target.no, name: target.name }]
+        relatedQualifications: [{ no: qualification.no, name: qualification.name }]
       });
-    } else if (hasDiff) {
-      console.log(`[AWS] ${target.name} の変更を検知: ${changedFields.join(', ')}`);
-      updateItems.push({
-        provider: 'Amazon Web Services (AWS)',
-        title: `${target.name} 試験情報・ガイド更新`,
-        url: details.examGuideUrl || target.url,
-        date: todayStr,
-        description: `${target.name} の資格情報（${changedFields.join(', ')}）が更新されました`,
-        category: details.category,
-        examDuration: details.examDuration,
-        examFormat: details.examFormat,
-        cost: details.cost,
-        testingOptions: details.testingOptions,
-        introduction: details.introduction,
-        examContent: details.examContent,
-        contentOutline: details.contentOutline,
-        relatedQualifications: [{ no: target.no, name: target.name }]
-      });
-    }
+    });
   }
 
   if (updateItems.length > 0) {
     const applied = updateQualificationSheet(updateItems);
-    if (!isInitial && applied && applied.length > 0) {
+    if (applied && applied.length > 0) {
       for (let j = 0; j < applied.length; j++) {
-        sendSlackNotification(applied[j], webhookUrl);
+        if (savedMap[applied[j].no]) sendSlackNotification(applied[j], webhookUrl);
       }
     }
   }
@@ -1879,6 +1887,10 @@ function checkAwsDetails(properties, webhookUrl) {
  * AWS チェック処理
  */
 function checkAws(properties, webhookUrl) {
+  const qualifications = getAwsGoogleCredentialTargets(properties, 'aws', undefined, true)
+    .reduce(function (all, target) {
+      return all.concat(target.qualifications);
+    }, []);
   let res = UrlFetchApp.fetch(ENDPOINTS.AWS, { muteHttpExceptions: true });
   if (res.getResponseCode() !== 200) {
     res = UrlFetchApp.fetch(ENDPOINTS.AWS_EN, { muteHttpExceptions: true });
@@ -1904,7 +1916,7 @@ function checkAws(properties, webhookUrl) {
           url: link,
           date: date,
           description: desc,
-          relatedQualifications: matchAwsQualifications(`${title} ${desc}`)
+          relatedQualifications: matchAwsQualifications(`${title} ${desc}`, qualifications)
         });
       }
     }

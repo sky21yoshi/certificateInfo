@@ -1,10 +1,21 @@
 const assert = require('assert');
 const {
+  getAwsQualifications,
+  matchAwsQualifications,
   parseAwsExamPage,
   parseAwsExamGuidePage,
   hashAwsDetails,
 } = require('../src/fetcher/aws');
 const { detectAwsDetailsDiff } = require('../src/checker');
+
+const splitAwsQualifications = getAwsQualifications([
+  { no: 70, providerName: 'Amazon Web Services (AWS)', name: 'AWS Certified Solutions Architect - Associate', url: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/' },
+  { no: 71, providerName: 'Amazon Web Services (AWS)', name: 'AWS Certified Developer - Associate', url: 'https://aws.amazon.com/certification/certified-developer-associate/' },
+]);
+assert.deepStrictEqual(splitAwsQualifications.map(item => item.no), [70, 71]);
+assert.deepStrictEqual(matchAwsQualifications('AWS Certified Developer - Associate exam', splitAwsQualifications), [
+  { no: 71, name: 'AWS Certified Developer - Associate' },
+]);
 
 // 1. parseAwsExamPage のテスト（JSON & HTML 見出し両方からの抽出）
 const mockExamPageHtml = `

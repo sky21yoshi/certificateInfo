@@ -3,12 +3,13 @@
  */
 
 const { textFromHtml } = require('./official_web');
+const { getDailyBatchIndex, loadQualificationRows } = require('./qualification_details');
 
 const AWS_BLOG_FEED_JA = 'https://aws.amazon.com/jp/blogs/training-and-certification/feed/';
 const AWS_BLOG_FEED_EN = 'https://aws.amazon.com/blogs/training-and-certification/feed/';
 
 // 監視対象のAWS資格一覧
-const AWS_QUALIFICATIONS = [
+const LEGACY_AWS_QUALIFICATIONS = [
   {
     no: 14,
     name: 'AWS認定 Practitioner系',
@@ -41,14 +42,43 @@ const AWS_QUALIFICATIONS = [
   },
 ];
 
+function getAwsAliases(name, officialUrl) {
+  const aliases = [name];
+  const normalizedName = name
+    .replace(/^AWS(?:認定| Certified)?\s*/i, '')
+    .replace(/系$/, '')
+    .trim();
+  if (normalizedName && normalizedName !== name) aliases.push(normalizedName);
+  const slug = String(officialUrl || '').match(/\/certification\/(?:certified-)?([^/?#]+)/i);
+  if (slug) aliases.push(slug[1].replace(/-/g, ' '));
+  const examCode = String(name).match(/\b[A-Z]{2,5}-[A-Z0-9]{2,4}\b/g) || [];
+  aliases.push(...examCode);
+  return Array.from(new Set(aliases.filter(Boolean)));
+}
+
+function getAwsQualifications(rows = loadQualificationRows()) {
+  rows = rows.filter(row => /Amazon Web Services|\bAWS\b/i.test(row.providerName));
+  if (rows.length === 0) return LEGACY_AWS_QUALIFICATIONS;
+  return rows.map(row => {
+    return {
+      no: row.no,
+      name: row.name,
+      officialUrl: row.url,
+      aliases: getAwsAliases(row.name, row.url),
+    };
+  });
+}
+
+const AWS_QUALIFICATIONS = getAwsQualifications();
+
 /**
  * テキストから関連するAWS資格を判定
  * @param {string} text 
  * @returns {Array<{no: number, name: string}>}
  */
-function matchAwsQualifications(text) {
+function matchAwsQualifications(text, qualifications = AWS_QUALIFICATIONS) {
   const matched = [];
-  for (const q of AWS_QUALIFICATIONS) {
+  for (const q of qualifications) {
     if (text.includes(q.name) || q.aliases.some(alias => new RegExp(`\\b${alias}\\b`, 'i').test(text))) {
       matched.push({ no: q.no, name: q.name });
     }
@@ -345,7 +375,7 @@ function hashAwsDetails(details) {
  * @param {Array<object>} [customDetails]
  * @returns {Promise<Array<object>>}
  */
-async function fetchAwsAllUpdates(customXml = null, customDetails = null) {
+async function fetchAwsAllUpdates(customXml = null, customDetails = null, options = {}) {
   const newsItems = await fetchAwsNews(customXml);
 
   const detailItems = [];
@@ -354,13 +384,25 @@ async function fetchAwsAllUpdates(customXml = null, customDetails = null) {
       detailItems.push(d);
     }
   } else {
-    for (const q of AWS_QUALIFICATIONS) {
+    const batchIndex = options.batchIndex === undefined ? getDailyBatchIndex() : options.batchIndex;
+    const grouped = new Map();
+    for (const qualification of AWS_QUALIFICATIONS) {
+      if (!grouped.has(qualification.officialUrl)) {
+        grouped.set(qualification.officialUrl, { officialUrl: qualification.officialUrl, qualifications: [] });
+      }
+      grouped.get(qualification.officialUrl).qualifications.push(qualification);
+    }
+    const targets = Array.from(grouped.values()).filter((_, index) => index % 5 === batchIndex);
+    for (let index = 0; index < targets.length; index++) {
+      const target = targets[index];
+      const q = target.qualifications[0];
       try {
-        const details = await fetchAwsExamDetails(q.officialUrl);
+        if (index > 0) await new Promise(resolve => setTimeout(resolve, 1500));
+        const details = await fetchAwsExamDetails(target.officialUrl);
         detailItems.push({
           provider: 'Amazon Web Services (AWS)',
           title: `${q.name} 資格情報・試験ガイド`,
-          url: q.officialUrl,
+          url: target.officialUrl,
           date: '',
           description: `${q.name} の資格詳細および試験ガイド情報`,
           category: details.category,
@@ -372,7 +414,8 @@ async function fetchAwsAllUpdates(customXml = null, customDetails = null) {
           examContent: details.examContent,
           contentOutline: details.contentOutline,
           contentHash: hashAwsDetails(details),
-          relatedQualifications: [{ no: q.no, name: q.name }]
+          detailsOnly: true,
+          relatedQualifications: target.qualifications.map(({ no, name }) => ({ no, name }))
         });
       } catch (err) {
         console.warn(`[AWS] ${q.name} の詳細取得に失敗しました:`, err.message);
@@ -385,6 +428,7 @@ async function fetchAwsAllUpdates(customXml = null, customDetails = null) {
 
 module.exports = {
   AWS_QUALIFICATIONS,
+  getAwsQualifications,
   matchAwsQualifications,
   parseAwsRss,
   fetchAwsNews,
