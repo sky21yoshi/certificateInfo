@@ -211,6 +211,62 @@ assert.strictEqual(rows8Cols[1][5], '最新のAWS認定Associate情報');
 assert.strictEqual(rows8Cols[1][6], 'https://example.com/news/newer');
 assert.strictEqual(rows8Cols[1][7], '新シラバス公開');
 
+const rowsWithDetails = [
+  ['No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', 'URL', '説明',
+    'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション', 'はじめに', '試験内容', '試験内容の概要'],
+  [19, 'Microsoft', 'Azure認定 fundamentals系', 'https://example.com/cert', '2026-10-01',
+    '既存のお知らせ', 'https://example.com/news', '既存説明', '', '', '', '', '', '', '', ''],
+];
+const sheetWithDetails = {
+  getDataRange: () => ({ getValues: () => rowsWithDetails }),
+  getRange: (row, column) => ({
+    setValue: value => {
+      rowsWithDetails[row - 1][column - 1] = value;
+    },
+  }),
+};
+spreadsheet.getSheetByName = () => sheetWithDetails;
+spreadsheet.getSheets = () => [sheetWithDetails];
+const detailUpdate = context.updateQualificationSheet([
+  {
+    detailsOnly: true,
+    title: 'Azure認定 fundamentals系 資格詳細情報',
+    url: 'https://example.com/cert',
+    category: 'Fundamentals',
+    examDuration: '45 minutes',
+    relatedQualifications: [{ no: 19, name: 'Azure認定 fundamentals系' }],
+  },
+]);
+assert.strictEqual(detailUpdate.length, 1);
+assert.deepStrictEqual(rowsWithDetails[1].slice(4, 8), [
+  '2026-10-01',
+  '既存のお知らせ',
+  'https://example.com/news',
+  '既存説明',
+]);
+assert.strictEqual(rowsWithDetails[1][8], 'Fundamentals');
+assert.strictEqual(rowsWithDetails[1][9], '45 minutes');
+
+const parsedOtherDetails = context.parseOtherCredentialDetails(`
+  <meta name="description" content="資格の概要です。">
+  <dl><dt>受験料</dt><dd>7,500円</dd></dl>
+  <h2>出題範囲</h2><p>試験の対象範囲です。</p>
+`, '情報処理推進機構（IPA）');
+assert.strictEqual(parsedOtherDetails.cost, '7,500円');
+assert.strictEqual(parsedOtherDetails.introduction, '資格の概要です。');
+assert.strictEqual(parsedOtherDetails.contentOutline, '試験の対象範囲です。');
+const otherDetailTargets = context.getOtherCredentialDetailTargets([
+  ['No', '認定機関', '資格名', '資格情報取得元'],
+  [1, 'IPA（情報処理推進機構）', 'IPA資格', 'https://example.com/ipa'],
+  [14, 'Amazon Web Services (AWS)', 'AWS資格', 'https://example.com/aws'],
+  [40, 'Google Cloud（グーグル）', 'Google資格', 'https://example.com/google'],
+  [19, 'Microsoft（マイクロソフト）', 'Microsoft資格', 'https://example.com/microsoft'],
+], ['No', '認定機関', '資格名', '資格情報取得元'], 0);
+assert.strictEqual(otherDetailTargets.length, 1);
+assert.strictEqual(otherDetailTargets[0].url, 'https://example.com/ipa');
+spreadsheet.getSheetByName = () => sheet8Cols;
+spreadsheet.getSheets = () => [sheet8Cols];
+
 // 古い情報では更新されない（前回実行時より新しくない）検証
 const updatedOlder = context.updateQualificationSheet([
   {

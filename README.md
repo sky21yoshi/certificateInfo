@@ -34,16 +34,18 @@
 
 記事URLを一意キーとして監視し、記事一覧がない資格ページはページ内容の指紋を前回状態と比較して更新を検知します。Node.js版では各社の `--provider=<キー>`（例: `node src/index.js --provider=pmi`）で個別実行できます。テストは `node test/additional_fetchers.test.js`、`node test/new_providers.test.js`、`node test/latest_providers.test.js` で実行します。
 
+スプレッドシートの詳細列（カテゴリ、試験時間・形式、費用、受験方法、概要、試験内容、出題範囲）は、AWS・Google Cloud以外についても資格情報取得元の公式ページから認定機関別の項目名・見出しを使って抽出します。全ページへのアクセスを避けるため、対象URLを5日間に分けて確認し、ページに明記された値だけを記録します。項目が見つからない場合や取得に失敗した場合は既存値を消去せず、通常のお知らせ欄（最終更新日時、タイトル、URL、説明）も詳細情報の更新だけでは上書きしません。
+
 Anthropicは資格告知専用ページを確認できなかったため、公式Claude Academyのコース一覧を監視対象としています。
 
 NTT-ATの資格一覧記載URL（`/certificate/associate.html`、`/certificate/expert.html`）は公式サイトで404となるため、現行の公式WinActor認定情報ページを監視します。現行ページのCWA認定レベルと一覧記載のアソシエイト／エキスパートの名称は一致しないため、資格情報の対応関係は公式ページで確認してください。
 
-全プロバイダーを実行すると、取得結果をIPA状態ファイルと同じ項目構成（`fiscalYear`、`date`、`title`、`url`、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。`fiscalYear` がない取得元では `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
+全プロバイダーを実行すると、取得結果を共通項目（`fiscalYear`、`date`、`title`、`url`、`description`、詳細8項目、`relatedQualifications`）に正規化して `data/all_state.json` に出力します。取得元に該当する情報がない項目は空文字列、`fiscalYear` がない場合は `null` を設定します。全プロバイダーの取得に失敗がある場合は、統合ファイルを不完全なデータで上書きしません。
 
 GAS版およびNode.js版は、`docs/requirements.md` および `docs/interface.md` に準拠しています：
 - **収集頻度**: 一日一回、毎平日（月〜金）に定期実行します（GASでは `setupDailyTrigger` で月〜金の10時JSTトリガーを登録し、実行時にも土日スキップガードを実装）。
 - **更新検知**: 各資格ごとに収集した更新情報が前回実行時（シート記載値または前回状態）より新しい情報があるかを確認します。複数の更新候補が同じ資格に関連する場合は、日付が最も新しい情報を反映します。
-- **スプレッドシート更新**: `docs/interface.md` の定義（No, 認定機関, 資格名, 資格情報取得元, 最終更新日時, タイトル, URL, 説明）に従い、更新を検知した資格行の「最終更新日時」「タイトル」「URL」「説明」を更新します（ヘッダー「URL」を優先認識し、旧形式の「更新情報URL」にも互換対応）。資格情報取得元などの入力列は保持します。
+- **スプレッドシート更新**: `docs/interface.md` の定義に従い、更新を検知した資格行の「最終更新日時」「タイトル」「URL」「説明」と、取得できた詳細列を更新します（ヘッダー「URL」を優先認識し、旧形式の「更新情報URL」にも互換対応）。詳細情報だけの更新では更新情報列を保持し、資格情報取得元などの入力列も保持します。
 - **Slack通知**: Slack Webhook（スクリプトプロパティ `SLACK_WEBHOOK_URL` または環境変数 `SLACK_WEBHOOK_URL`）へ、「更新日時」「資格名」「タイトル」「URL」「説明」を整形して投稿します。複数の更新がある場合はそれぞれ別々に投稿します。
 
-スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎平日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` および `node test/checker_requirements.test.js` で実行します。また、ローカルTSVは `node scripts/update_tsv.js` で `docs/interface.md` 仕様の8列構成に同期できます。
+スプレッドシートURLはApps Scriptの「プロジェクトの設定」>「スクリプト プロパティ」で `QUALIFICATIONS_SPREADSHEET_URL` に設定できます。未設定時は、上記「tmp資格情報一覧」のURLを使用します。別のタブを使う場合は `QUALIFICATIONS_SHEET_NAME` にシート名を設定してください。毎平日10時（日本時間）に実行するには、Apps Scriptへコードを反映した後、エディタで `setupDailyTrigger` を一度実行して権限を承認します。この関数は既存の同じチェック関数のトリガーを置き換えるため、重複登録されません。テストは `node test/gas_sheet_updates.test.js` および `node test/checker_requirements.test.js` で実行します。また、ローカルTSVは `node scripts/update_tsv.js` で `docs/interface.md` 仕様に同期できます（TSVは基本8項目を保持します）。

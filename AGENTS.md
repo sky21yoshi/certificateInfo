@@ -49,22 +49,35 @@
 - **エラーハンドリング & 耐障害性**:
   - 対象サイトのHTML構造変更（リニューアル・セレクタ変更）やネットワークエラー、一時的なタイムアウトに備え、例外処理を適切に実装し、エラー発生時はログ出力を確実に行ってください。
 - **日付・タイムゾーン**:
-  - 試験申込期間や試験実施日、合格発表日などの日付データは原則として**日本時間（JST: UTC+9）**を基準として正規化（例: `YYYY-MM-DD` または ISO 8601 形式）して扱ってください。
+  - スプレッドシートの「最終更新日時」には、取得元が提供する日付をその形式のまま記録してください。試験日程など独立した日付データを扱う場合は、日本時間（JST: UTC+9）を基準に正規化してください。
 - **データ構造化**:
-  - 取得した資格情報は、再利用しやすいようにモジュール化・型定義（TypeScript型定義やPythonのデータクラス/Pydanticモデル）を行ってください。
+  - スプレッドシート「tmp資格情報一覧」の列構成に合わせ、1資格につき次の16項目を保持してください。項目名と順序はシートのヘッダーに一致させます。
   ```json
   {
-    "category": "応用情報技術者試験 (AP)",
-    "targetExam": "令和X年秋期試験",
-    "applicationPeriod": { "start": "202X-07-XX", "end": "202X-08-XX" },
-    "examDate": "202X-10-XX",
-    "resultDate": "202X-12-XX",
-    "officialUrl": "https://www.ipa.go.jp/shiken/kubun/ap.html"
+    "No": 14,
+    "認定機関": "Amazon Web Services (AWS)",
+    "資格名": "AWS認定 Associate系",
+    "資格情報取得元": "https://aws.amazon.com/jp/certification/certified-solutions-architect-associate/",
+    "最終更新日時": "Tue, 27 Oct 2026 17:43:33 +0000",
+    "タイトル": "Register now: Updated Developer Associate and Solutions Architect Professional exams",
+    "URL": "https://aws.amazon.com/blogs/training-and-certification/register-now-updated-developer-associate-and-solutions-architect-professional-exams/",
+    "説明": "Registration is now open for updated AWS certification exams.",
+    "カテゴリ": "",
+    "試験期間": "",
+    "試験の形態": "",
+    "費用": "",
+    "受験オプション": "",
+    "はじめに": "",
+    "試験内容": "",
+    "試験内容の概要": ""
   }
+  ```
+  - `No` は数値、それ以外は文字列とします。情報を取得できない項目や対象外の任意項目は空文字列にしてください。資格情報は再利用しやすいようにモジュール化し、必要に応じて型定義（TypeScript型定義やPythonのデータクラス/Pydanticモデル）を行ってください。
 - **データ更新**:
   - スクレイピング結果を[tmp資格情報一覧](https://docs.google.com/spreadsheets/d/1QcS6NJRvvmveI2H31xNifauDQ1A7nmMyuiGFT3xRgO8/edit?usp=sharing)の該当資格の最終更新日時と比較し、より新しいお知らせがある場合、最終更新日時、タイトル、URL、説明を更新する。
   - また更新を検知したら、Slackの公開チャンネル（チャンネル名未定）に更新内容を自動的にPostする。
-  ```
+  - データ構造が変わってスクレイピングでエラーが発生した場合は、指定された人物にSlackのメッセージをDMする。
+  - ORACLEは常に403エラーが発生するため、DMの対象外とする。
 
 ---
 

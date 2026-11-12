@@ -269,6 +269,13 @@ function checkAllCertificateUpdates(options) {
     console.error('NTT-AT チェック失敗:', e.message);
   }
 
+  Utilities.sleep(1500);
+  try {
+    checkOtherCredentialDetails(properties, webhookUrl);
+  } catch (e) {
+    console.error('AWS / Google Cloud以外の資格詳細チェック失敗:', e.message);
+  }
+
   console.log('=== 全プロバイダーのチェック完了 ===');
 }
 
@@ -316,6 +323,206 @@ function fetchOfficialHtml(url) {
     throw new Error(`公式ページの取得に失敗しました (${url}): HTTP ${res.getResponseCode()}`);
   }
   return res.getContentText('UTF-8');
+}
+
+const OTHER_CREDENTIAL_DETAIL_RULES = [
+  { match: /情報処理推進機構|^IPA/i, labels: { category: ['試験区分'], examDuration: ['試験時間', '試験時間（目安）'], examFormat: ['出題形式', '試験方式'], cost: ['受験手数料', '受験料'], testingOptions: ['試験方式', '受験方法'] } },
+  { match: /Microsoft|マイクロソフト/i, labels: { category: ['レベル', '認定レベル'], examDuration: ['試験時間', '時間', 'Exam duration'], examFormat: ['問題数', '試験形式', 'Exam format'], cost: ['受験料', '価格', 'Price'], testingOptions: ['試験の予約', 'Schedule exam'] } },
+  { match: /Cisco|シスコ/i, labels: { category: ['レベル', '認定レベル'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['試験料金', '受験料', 'Exam price'], testingOptions: ['受験方法', '受験場所', 'Exam delivery'] } },
+  { match: /Linux Professional Institute|LPI-Japan|エルピーアイ|^LPI/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['問題数', '出題形式'], cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'] } },
+  { match: /Oracle|オラクル/i, labels: { category: ['認定レベル', '認定資格レベル'], examDuration: ['試験時間', 'Duration'], examFormat: ['問題数', '試験形式'], cost: ['受験料', '試験料', 'Exam price'], testingOptions: ['受験方法', '試験方法'] } },
+  { match: /Broadcom|VMware/i, labels: { category: ['認定レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['受験料', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'] } },
+  { match: /CompTIA|コンプティア/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間', 'Test duration'], examFormat: ['問題数', '出題形式', 'Exam format'], cost: ['試験価格', '受験料', 'Exam price'], testingOptions: ['試験実施方法', '受験方法', 'Testing options'] } },
+  { match: /CNCF|Linux Foundation/i, labels: { category: ['レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['受験料', '試験価格', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'] } },
+  { match: /Anthropic|アンスロピック/i, labels: { category: ['レベル', 'Level'], examDuration: ['所要時間', 'Duration'], examFormat: ['形式', 'Format'], cost: ['費用', '価格', 'Price'], testingOptions: ['受験方法', 'Delivery'] } },
+  { match: /UiPath|ユーアイパス/i, labels: { category: ['レベル', '認定レベル'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', '問題数'], cost: ['受験料', '試験料金', 'Price'], testingOptions: ['受験方法', '試験会場'] } },
+  { match: /サーティファイ|Certify/i, labels: { category: ['級', 'レベル'], examDuration: ['試験時間'], examFormat: ['出題形式', '問題数', '試験形式'], cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'] } },
+  { match: /Pythonエンジニア育成推進協会|pythonic-exam/i, labels: { category: ['試験区分', 'レベル'], examDuration: ['試験時間'], examFormat: ['問題数', '出題形式'], cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'] } },
+  { match: /PMAJ|プロジェクトマネジメント協会/i, labels: { category: ['資格区分', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験方式', '出題形式'], cost: ['受験料', '受験費用'], testingOptions: ['受験方法', '試験方式'] } },
+  { match: /Project Management Institute|PMI/i, labels: { category: ['Certification type', '資格区分'], examDuration: ['Exam duration', '試験時間'], examFormat: ['Exam format', '問題数'], cost: ['Exam fee', '受験料'], testingOptions: ['Exam options', '受験方法'] } },
+  { match: /ISACA|情報システムコントロール協会/i, labels: { category: ['Certification level', '資格区分'], examDuration: ['Exam length', '試験時間'], examFormat: ['Exam format', '問題数'], cost: ['Exam fee', '受験料'], testingOptions: ['Exam options', '受験方法'] } },
+  { match: /PeopleCert|AXELOS/i, labels: { category: ['Level', 'レベル'], examDuration: ['Exam duration', '試験時間'], examFormat: ['Exam format', '問題数'], cost: ['Exam price', '受験料'], testingOptions: ['Exam delivery', '受験方法'] } },
+  { match: /Fortinet|フォーティネット/i, labels: { category: ['認定レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', '問題数'], cost: ['受験料', 'Exam price'], testingOptions: ['試験方法', 'Exam delivery'] } },
+  { match: /Palo Alto|パロアルト/i, labels: { category: ['レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['受験料', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'] } },
+  { match: /NTT.?AT|アドバンステクノロジ/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式'], cost: ['受験料', '受験料金'], testingOptions: ['受験方法', '試験方式'] } }
+];
+
+function credentialHtmlToText(html) {
+  return decodeFeedText(String(html || '')
+    .replace(/<(script|style|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<(br|\/p|\/li|\/div|\/h[1-6]|\/tr|\/dt|\/dd)\b[^>]*>/gi, '\n')
+    .replace(/<[^>]*>/g, ' '))
+    .split(/\r?\n/)
+    .map(line => line.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n');
+}
+
+function extractCredentialField(html, labels, plainText) {
+  if (!labels || labels.length === 0) return '';
+  const escapedLabels = labels.map(label => label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const labelPattern = escapedLabels.join('|');
+  const patterns = [
+    new RegExp(`<dt\\b[^>]*>\\s*([^<]+)\\s*<\\/dt>\\s*<dd\\b[^>]*>([\\s\\S]*?)<\\/dd>`, 'gi'),
+    new RegExp(`<th\\b[^>]*>\\s*([^<]+)\\s*<\\/th>\\s*<td\\b[^>]*>([\\s\\S]*?)<\\/td>`, 'gi'),
+    new RegExp(`<(?:p|li|div)\\b[^>]*>[\\s\\S]*?<(?:strong|b)\\b[^>]*>\\s*(${labelPattern})\\s*[:：]?\\s*<\\/(?:strong|b)>\\s*([\\s\\S]*?)<\\/(?:p|li|div)>`, 'gi')
+  ];
+  for (const pattern of patterns) {
+    let match;
+    while ((match = pattern.exec(html)) !== null) {
+      const label = String(match[1] || '').replace(/[：:]\s*$/, '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (labels.some(candidate => candidate.toLowerCase() === label)) {
+        const value = credentialHtmlToText(match[2]);
+        if (value) return value;
+      }
+    }
+  }
+  const lines = plainText.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const match = lines[i].match(/^([^:：]{1,60})\s*[:：]\s*(.+)$/);
+    if (match && labels.some(label => label.toLowerCase() === match[1].trim().toLowerCase())) return match[2].trim();
+    if (labels.some(label => label.toLowerCase() === lines[i].toLowerCase()) && lines[i + 1]) return lines[i + 1];
+  }
+  return '';
+}
+
+function parseOtherCredentialDetails(html, providerName) {
+  const rules = OTHER_CREDENTIAL_DETAIL_RULES.find(rule => rule.match.test(providerName || ''));
+  if (!rules) throw new Error(`詳細情報の抽出ルールがありません: ${providerName}`);
+  const details = {
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: ''
+  };
+  const plainText = credentialHtmlToText(html);
+  ['category', 'examDuration', 'examFormat', 'cost', 'testingOptions'].forEach(function (field) {
+    details[field] = extractCredentialField(html, rules.labels[field], plainText);
+  });
+  const metaMatch = html.match(/<meta\b[^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*content=["']([^"']+)["'][^>]*>/i)
+    || html.match(/<meta\b[^>]*content=["']([^"']+)["'][^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*>/i);
+  if (metaMatch) details.introduction = credentialHtmlToText(metaMatch[1]).slice(0, 2000);
+
+  const headingRegex = /<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+  const headings = [];
+  let match;
+  while ((match = headingRegex.exec(html)) !== null) {
+    headings.push({ end: headingRegex.lastIndex, start: match.index, title: credentialHtmlToText(match[2]) });
+  }
+  headings.forEach(function (heading, index) {
+    const next = headings[index + 1];
+    const body = credentialHtmlToText(html.slice(heading.end, next ? next.start : html.length));
+    if (!body) return;
+    if (!details.introduction && /^(概要|資格概要|試験概要|Introduction|Overview|About this certification|About the exam)$/i.test(heading.title)) {
+      details.introduction = body.slice(0, 2000);
+    } else if (!details.contentOutline && /(試験範囲|出題範囲|試験内容の概要|Content outline|Exam objectives|Skills measured|Syllabus|Domains)/i.test(heading.title)) {
+      details.contentOutline = body.slice(0, 4000);
+    } else if (!details.examContent && /^(試験内容|試験について|Exam content|Exam details|Exam overview)$/i.test(heading.title)) {
+      details.examContent = body.slice(0, 4000);
+    }
+  });
+  return details;
+}
+
+function getOtherCredentialDetailsBatchIndex(date) {
+  const targetDate = date || new Date();
+  const targetDay = Math.floor(Date.UTC(
+    targetDate.getUTCFullYear(),
+    targetDate.getUTCMonth(),
+    targetDate.getUTCDate()
+  ) / 86400000);
+  const mondayEpoch = Math.floor(Date.UTC(2026, 0, 5) / 86400000);
+  const daysSinceEpoch = targetDay - mondayEpoch;
+  const fullWeeks = Math.floor(daysSinceEpoch / 7);
+  const daysInWeek = daysSinceEpoch - fullWeeks * 7;
+  const weekdays = fullWeeks * 5 + Math.min(daysInWeek, 5);
+  return ((weekdays - 1) % 5 + 5) % 5;
+}
+
+function getOtherCredentialDetailTargets(values, headers, batchIndex) {
+  const noColumn = headers.indexOf('No');
+  const providerColumn = headers.indexOf('認定機関');
+  const nameColumn = headers.indexOf('資格名');
+  const urlColumn = headers.indexOf('資格情報取得元');
+  if ([noColumn, providerColumn, nameColumn, urlColumn].some(column => column < 0)) {
+    throw new Error('資格詳細取得に必要な列（No、認定機関、資格名、資格情報取得元）がありません');
+  }
+  const grouped = new Map();
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const no = Number(row[noColumn]);
+    const providerName = String(row[providerColumn] || '').trim();
+    const name = String(row[nameColumn] || '').trim();
+    const url = String(row[urlColumn] || '').trim();
+    if (!no || !providerName || !name || !url || /AWS|Amazon Web Services|Google Cloud|Google Cloud（/i.test(providerName)) continue;
+    if (!OTHER_CREDENTIAL_DETAIL_RULES.some(rule => rule.match.test(providerName))) continue;
+    if (!grouped.has(url)) grouped.set(url, { url: url, providerName: providerName, relatedQualifications: [] });
+    grouped.get(url).relatedQualifications.push({ no: no, name: name });
+  }
+  return Array.from(grouped.values()).filter(function (target, index) {
+    return index % 5 === batchIndex;
+  });
+}
+
+function checkOtherCredentialDetails(properties, webhookUrl) {
+  const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
+  const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
+  const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = sheetName ? spreadsheet.getSheetByName(sheetName) : spreadsheet.getSheets()[0];
+  if (!sheet) throw new Error('資格一覧シートが見つかりません');
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) throw new Error('資格一覧シートにヘッダー行がありません');
+  const headers = values[0].map(value => String(value).trim());
+  const targets = getOtherCredentialDetailTargets(values, headers, getOtherCredentialDetailsBatchIndex());
+  const propKey = 'SAVED_STATE_OTHER_CREDENTIAL_DETAILS';
+  const savedRaw = properties.getProperty(propKey);
+  const savedMap = savedRaw ? JSON.parse(savedRaw) : {};
+  const currentMap = Object.assign({}, savedMap);
+  const updateItems = [];
+  const changedNos = {};
+
+  for (let i = 0; i < targets.length; i++) {
+    const target = targets[i];
+    if (i > 0) Utilities.sleep(1500);
+    try {
+      const details = parseOtherCredentialDetails(fetchOfficialHtml(target.url), target.providerName);
+      if (!Object.keys(details).some(function (key) { return Boolean(details[key]); })) continue;
+      target.relatedQualifications.forEach(function (qualification) {
+        const no = String(qualification.no);
+        const previous = savedMap[no];
+        const changed = !previous || Object.keys(details).some(function (key) {
+          return String(details[key] || '').trim() !== String(previous[key] || '').trim();
+        });
+        currentMap[no] = details;
+        if (!changed) return;
+        if (previous) changedNos[no] = true;
+        updateItems.push({
+          provider: target.providerName,
+          title: `${qualification.name} 資格詳細情報`,
+          url: target.url,
+          date: Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd'),
+          description: details.introduction || `${qualification.name} の公式資格詳細情報`,
+          detailsOnly: true,
+          ...details,
+          relatedQualifications: [qualification]
+        });
+      });
+    } catch (e) {
+      console.warn(`[${target.providerName}] 資格詳細取得失敗 (${target.url}):`, e.message);
+    }
+  }
+
+  const applied = updateQualificationSheet(updateItems);
+  if (savedRaw && applied.length > 0) {
+    applied.forEach(function (item) {
+      if (changedNos[String(item.no)]) sendSlackNotification(item, webhookUrl);
+    });
+  }
+  properties.setProperty(propKey, JSON.stringify(currentMap));
 }
 
 function hashVisibleText(value) {
@@ -1890,9 +2097,10 @@ function updateQualificationSheet(items) {
         testingOptions: item.testingOptions !== undefined ? item.testingOptions : '',
         introduction: item.introduction !== undefined ? item.introduction : '',
         examContent: item.examContent !== undefined ? item.examContent : '',
-        contentOutline: item.contentOutline !== undefined ? item.contentOutline : ''
+        contentOutline: item.contentOutline !== undefined ? item.contentOutline : '',
+        detailsOnly: item.detailsOnly === true
       };
-      if (!candidate.title) continue;
+      if (!candidate.title && !candidate.detailsOnly) continue;
 
       const previous = updatesByQualification.get(no);
       if (!previous || isNewerSheetUpdate(candidate, previous)) {
@@ -2010,7 +2218,9 @@ function updateQualificationSheet(items) {
     const hasCandidateDate = Boolean(update.date && !Number.isNaN(getSheetUpdateTimestamp(update.date)));
 
     let isChanged = false;
-    if (detailChanged) {
+    if (update.detailsOnly) {
+      isChanged = detailChanged;
+    } else if (detailChanged) {
       // AWS等の詳細項目に変更がある場合、最終更新日時および内容を更新
       isChanged = true;
       if (!update.date) {
@@ -2028,10 +2238,12 @@ function updateQualificationSheet(items) {
     }
 
     if (isChanged) {
-      if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
-      sheet.getRange(row, titleColumn + 1).setValue(update.title);
-      if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
-      sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
+      if (!update.detailsOnly) {
+        if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
+        sheet.getRange(row, titleColumn + 1).setValue(update.title);
+        if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
+        sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
+      }
 
       // 詳細列の書き込み
       for (let d = 0; d < detailColumnDefs.length; d++) {

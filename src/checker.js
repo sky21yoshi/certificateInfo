@@ -44,10 +44,20 @@ function saveProviderState(providerName, state) {
   fs.writeFileSync(filePath, JSON.stringify(state, null, 2), 'utf-8');
 }
 
+function mergeProviderState(currentItems, previousItems) {
+  const currentDetailUrls = new Set(
+    currentItems.filter(item => item.detailsOnly && item.url).map(item => item.url)
+  );
+  const previousUnfetchedDetails = previousItems.filter(item =>
+    item.detailsOnly && item.url && !currentDetailUrls.has(item.url)
+  );
+  return [...currentItems, ...previousUnfetchedDetails];
+}
+
 /**
  * 取得元ごとの情報を IPA 状態ファイルと同じ項目構成に正規化する
  * @param {object} item
- * @returns {{fiscalYear: number|null, date: string, title: string, url: string, relatedQualifications: Array<object>}}
+ * @returns {{fiscalYear: number|null, date: string, title: string, url: string, description: string, category: string, examDuration: string, examFormat: string, cost: string, testingOptions: string, introduction: string, examContent: string, contentOutline: string, relatedQualifications: Array<object>}}
  */
 function normalizeStateItem(item) {
   return {
@@ -55,6 +65,15 @@ function normalizeStateItem(item) {
     date: item.date || item.lastModified || '',
     title: item.title || item.name || '',
     url: item.url || item.officialUrl || '',
+    description: item.description || item.summary || '',
+    category: item.category || '',
+    examDuration: item.examDuration || '',
+    examFormat: item.examFormat || '',
+    cost: item.cost || '',
+    testingOptions: item.testingOptions || '',
+    introduction: item.introduction || '',
+    examContent: item.examContent || '',
+    contentOutline: item.contentOutline || '',
     relatedQualifications: Array.isArray(item.relatedQualifications) ? item.relatedQualifications : [],
   };
 }
@@ -86,6 +105,19 @@ function mergeProviderItems(providerItems) {
       existing.relatedQualifications = Array.from(qualifications.values());
       if (!existing.date && normalized.date) existing.date = normalized.date;
       if (!existing.fiscalYear && normalized.fiscalYear) existing.fiscalYear = normalized.fiscalYear;
+      if (!existing.description && normalized.description) existing.description = normalized.description;
+      for (const field of [
+        'category',
+        'examDuration',
+        'examFormat',
+        'cost',
+        'testingOptions',
+        'introduction',
+        'examContent',
+        'contentOutline',
+      ]) {
+        if (!existing[field] && normalized[field]) existing[field] = normalized[field];
+      }
     }
   }
   return Array.from(merged.values());
@@ -116,6 +148,11 @@ function detectDiff(currentItems, previousItems, idKey = 'url', updateKey = null
     if (!prevMap.has(id)) {
       // 新規アイテム
       diffs.push({ ...current, _diffType: 'NEW' });
+    } else if (current.detailsOnly && current.contentHash) {
+      const prev = prevMap.get(id);
+      if (prev.detailsOnly && prev.contentHash !== current.contentHash) {
+        diffs.push({ ...current, _diffType: 'UPDATED' });
+      }
     } else if (updateKey && current[updateKey]) {
       // 既存アイテムだが更新キー（最終更新日時など）が変更された場合
       const prev = prevMap.get(id);
@@ -318,6 +355,7 @@ function saveCurrentState(state) {
 module.exports = {
   loadProviderState,
   saveProviderState,
+  mergeProviderState,
   normalizeStateItem,
   mergeProviderItems,
   detectDiff,

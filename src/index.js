@@ -4,6 +4,7 @@ const { fetchMicrosoftCertifications } = require('./fetcher/microsoft');
 const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
 const { fetchCiscoNews } = require('./fetcher/cisco');
 const { fetchGoogleCloudNews, fetchGoogleCloudAllUpdates } = require('./fetcher/google_cloud');
+const { fetchQualificationDetails } = require('./fetcher/qualification_details');
 const { fetchOracleNews } = require('./fetcher/oracle');
 const { fetchBroadcomUpdates } = require('./fetcher/broadcom');
 const { fetchCompTIANews } = require('./fetcher/comptia');
@@ -22,6 +23,7 @@ const { fetchNttAtUpdates } = require('./fetcher/ntt_at');
 const {
   loadProviderState,
   saveProviderState,
+  mergeProviderState,
   mergeProviderItems,
   detectDiff,
   isWeekdayJST,
@@ -178,6 +180,8 @@ async function runProviderMonitor(key, provider) {
 
   try {
     const currentItems = await provider.fetch();
+    const detailItems = await fetchQualificationDetails(key);
+    currentItems.push(...detailItems);
     console.log(`取得完了: ${currentItems.length} 件`);
 
     const prevState = loadProviderState(key);
@@ -185,7 +189,7 @@ async function runProviderMonitor(key, provider) {
 
     if (isInitialRun) {
       console.log(`初回実行のため、現在のデータをベースラインとして保存します。`);
-      saveProviderState(key, currentItems);
+      saveProviderState(key, mergeProviderState(currentItems, prevState));
 
       // 上位3件をサンプル表示
       console.log(`\n--- 最新アイテム（抜粋） ---`);
@@ -220,7 +224,7 @@ async function runProviderMonitor(key, provider) {
       });
 
       // 状態ファイルを更新
-      saveProviderState(key, currentItems);
+      saveProviderState(key, mergeProviderState(currentItems, prevState));
       console.log('状態ファイルを最新に更新しました。');
 
       // Slack通知（環境変数 SLACK_WEBHOOK_URL が設定されている場合）
