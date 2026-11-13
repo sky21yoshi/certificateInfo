@@ -37,7 +37,7 @@ const context = {
   console: { log() {}, warn() {}, error() {} },
   Utilities: {
     sleep: () => {},
-    formatDate: () => '2026',
+    formatDate: (d, tz, fmt) => fmt === 'yyyy' ? '2026' : '2026-11-13 18:00',
   },
   PropertiesService: {
     getScriptProperties: () => ({
@@ -153,12 +153,12 @@ context.handleDiff('AWS', [
 
 assert.strictEqual(openedUrl, 'https://docs.google.com/spreadsheets/d/test-sheet-id/edit');
 assert.deepStrictEqual(rows7Cols[1].slice(4, 7), [
-  '2026-11-07',
+  '2026-11-13 18:00',
   'AWS資格の新着情報',
   '申込期間の更新',
 ]);
 assert.deepStrictEqual(rows7Cols[2].slice(4, 7), [
-  '2026-11-07',
+  '2026-11-13 18:00',
   'AWS資格の新着情報',
   '申込期間の更新',
 ]);
@@ -173,7 +173,7 @@ assert.strictEqual(slackCalls.length, 2);
 for (const call of slackCalls) {
   assert.strictEqual(call.url, 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
   const payloadStr = JSON.stringify(call.payload);
-  assert(payloadStr.includes('2026-11-07'), '更新日時が含まれていること');
+  assert(payloadStr.includes('2026-11-13 18:00'), '更新日時が含まれていること');
   assert(payloadStr.includes('AWS認定'), '資格名が含まれていること');
   assert(payloadStr.includes('AWS資格の新着情報'), 'タイトルが含まれていること');
   assert(payloadStr.includes('https://example.com/news/2'), 'URLが含まれていること');
@@ -206,7 +206,7 @@ const updated = context.updateQualificationSheet([
   },
 ]);
 assert.strictEqual(updated.length, 1);
-assert.strictEqual(rows8Cols[1][4], '2026-11-08');
+assert.strictEqual(rows8Cols[1][4], '2026-11-13 18:00');
 assert.strictEqual(rows8Cols[1][5], '最新のAWS認定Associate情報');
 assert.strictEqual(rows8Cols[1][6], 'https://example.com/news/newer');
 assert.strictEqual(rows8Cols[1][7], '新シラバス公開');
@@ -238,11 +238,12 @@ const detailUpdate = context.updateQualificationSheet([
   },
 ]);
 assert.strictEqual(detailUpdate.length, 1);
+// 詳細列に変更があった場合も、E列（最終更新日時）に現在日時が設定される
 assert.deepStrictEqual(rowsWithDetails[1].slice(4, 8), [
-  '2026-10-01',
-  '既存のお知らせ',
-  'https://example.com/news',
-  '既存説明',
+  '2026-11-13 18:00',
+  'Azure認定 fundamentals系 資格詳細情報',
+  'https://example.com/cert',
+  'Azure認定 fundamentals系 資格詳細情報',
 ]);
 assert.strictEqual(rowsWithDetails[1][8], 'Fundamentals');
 assert.strictEqual(rowsWithDetails[1][9], '45 minutes');
@@ -267,18 +268,18 @@ assert.strictEqual(otherDetailTargets[0].url, 'https://example.com/ipa');
 spreadsheet.getSheetByName = () => sheet8Cols;
 spreadsheet.getSheets = () => [sheet8Cols];
 
-// 古い情報では更新されない（前回実行時より新しくない）検証
-const updatedOlder = context.updateQualificationSheet([
+// 変更がない場合は更新されない（E列の日時も維持される）検証
+const updatedSame = context.updateQualificationSheet([
   {
-    url: 'https://example.com/news/older',
-    date: '2026-10-01',
-    title: '過去のAWS情報',
-    description: '過去説明',
+    url: 'https://example.com/news/newer',
+    date: '2026-11-08',
+    title: '最新のAWS認定Associate情報',
+    description: '新シラバス公開',
     relatedQualifications: [{ no: 15, name: 'AWS認定 Associate系' }],
   },
 ]);
-assert.strictEqual(updatedOlder.length, 0);
-assert.strictEqual(rows8Cols[1][4], '2026-11-08'); // 更新されない
+assert.strictEqual(updatedSame.length, 0);
+assert.strictEqual(rows8Cols[1][4], '2026-11-13 18:00'); // 更新されない
 
 // 4-2. docs/interface.md 完全準拠の16列シートでのAWS詳細更新検証
 const rows16Cols = [

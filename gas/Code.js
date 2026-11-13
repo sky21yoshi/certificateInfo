@@ -275,9 +275,10 @@ function checkAllCertificateUpdates(options) {
 
   Utilities.sleep(1500);
   try {
-    checkOtherCredentialDetails(properties, webhookUrl);
+    // スプレッドシートの全レコード（A〜D列）を動的走査してE〜H列およびI〜P列を取得・更新検知
+    checkAllSheetCertificates(properties, webhookUrl);
   } catch (e) {
-    console.error('AWS / Google Cloud以外の資格詳細チェック失敗:', e.message);
+    console.error('スプレッドシート全レコード詳細チェック失敗:', e.message);
   }
 
   console.log('=== 全プロバイダーのチェック完了 ===');
@@ -1839,8 +1840,303 @@ function fetchAwsExamDetails(url) {
     introduction: guideDetails.introduction,
     examContent: guideDetails.examContent,
     contentOutline: guideDetails.contentOutline,
-    examGuideUrl: pageDetails.examGuideUrl
+    examGuideUrl: pageDetails.examGuideUrl,
+    title: pageDetails.title || '',
+    url: pageDetails.examGuideUrl || url,
+    description: guideDetails.introduction || pageDetails.description || ''
   };
+}
+
+/**
+ * Microsoft Learn 認定試験・資格詳細ページ (HTML) をパースする
+ */
+function parseMicrosoftExamPage(html, url) {
+  const result = {
+    title: '',
+    url: url || '',
+    description: '',
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: ''
+  };
+
+  if (!html) return result;
+
+  const titleMatch = html.match(/<meta\b[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<title>([^<]+)<\/title>/i);
+  if (titleMatch) {
+    result.title = decodeFeedText(titleMatch[1]).replace(/\s*-\s*Certifications.*$/i, '').trim();
+  }
+
+  const descMatch = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<meta\b[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+  if (descMatch) {
+    result.description = decodeFeedText(descMatch[1]).trim();
+    result.introduction = result.description;
+  }
+
+  if (/\bfundamentals\b/i.test(url) || /\bfundamentals\b/i.test(html) || /基礎/i.test(html)) {
+    result.category = 'Fundamentals';
+  } else if (/\bassociate\b/i.test(url) || /\bassociate\b/i.test(html) || /アソシエイト/i.test(html)) {
+    result.category = 'Associate';
+  } else if (/\bexpert\b/i.test(url) || /\bexpert\b/i.test(html) || /エキスパート/i.test(html)) {
+    result.category = 'Expert';
+  } else if (/\bspecialty\b/i.test(url) || /\bspecialty\b/i.test(html) || /専門/i.test(html)) {
+    result.category = 'Specialty';
+  }
+
+  const overviewMatch = html.match(/<section[^>]*id=["']certification-overview["'][^>]*>([\s\S]*?)<\/section>/i);
+  if (overviewMatch) {
+    const text = credentialHtmlToText(overviewMatch[1])
+      .replace(/完了時に獲得したスキル[\s\S]*$/gi, '')
+      .trim();
+    if (text) {
+      result.introduction = text.slice(0, 2000);
+    }
+  }
+
+  const examEvalMatch = html.match(/<p class="font-weight-semibold margin-top-none">\s*この試験で評価\s*<\/p>[\s\S]*?<ul>([\s\S]*?)<\/ul>/i);
+  if (examEvalMatch) {
+    const items = [];
+    const liRegex = /<li\b[^>]*>([\s\S]*?)<\/li>/gi;
+    let m;
+    while ((m = liRegex.exec(examEvalMatch[1])) !== null) {
+      const itemText = stripHtmlText(m[1]).trim();
+      if (itemText) items.push(`・${itemText}`);
+    }
+    if (items.length > 0) {
+      result.examContent = items.join('\n');
+    }
+  }
+
+  if (/45\s*分/i.test(html)) {
+    result.examDuration = '45分';
+  } else if (/60\s*分/i.test(html)) {
+    result.examDuration = '60分';
+  } else if (/85\s*分/i.test(html)) {
+    result.examDuration = '85分';
+  } else if (/100\s*分/i.test(html)) {
+    result.examDuration = '100分';
+  } else if (/120\s*分/i.test(html)) {
+    result.examDuration = '120分';
+  } else if (/試験期間/i.test(html)) {
+    result.examDuration = '約45分〜120分（試験区分により異なる）';
+  }
+
+  if (/Pearson Vue/i.test(html)) {
+    result.examFormat = 'オンライン（監督付き）またはテストセンター';
+  }
+
+  const priceExplicit = html.match(/(?:価格|料金|費用|price)[:：]\s*([\$¥][0-9,]+|[0-9,]+\s*円)/i);
+  if (priceExplicit) {
+    result.cost = priceExplicit[1].trim();
+  } else if (/試験が監督されている国または地域に基づく価格/i.test(html)) {
+    result.cost = '国または地域に基づく価格（日本: 約12,500円〜21,000円 / 100〜165 USD）';
+  }
+
+  const options = [];
+  if (/Pearson Vue/i.test(html)) options.push('Pearson VUE (テストセンター / オンライン監視)');
+  if (/Certiport/i.test(html)) options.push('Certiport (学生・教育機関向け)');
+  if (options.length > 0) {
+    result.testingOptions = options.join(', ');
+  }
+
+  const skillsGuideMatch = html.match(/<a\b[^>]*href=["']([^"']*(?:study-guide|skills-measured)[^"']*)["'][^>]*>([\s\S]*?)<\/a>/i);
+  if (skillsGuideMatch) {
+    result.contentOutline = `学習ガイド・スキル測定: ${skillsGuideMatch[1]}`;
+  } else if (result.examContent) {
+    result.contentOutline = result.examContent;
+  }
+
+  return result;
+}
+
+/**
+ * 汎用公式試験ページパーサー
+ */
+function parseGenericExamPage(html, url, providerName) {
+  const result = {
+    title: '',
+    url: url || '',
+    description: '',
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: ''
+  };
+
+  if (!html) return result;
+
+  const titleMatch = html.match(/<meta\b[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<title>([^<]+)<\/title>/i);
+  if (titleMatch) {
+    result.title = decodeFeedText(titleMatch[1]).trim();
+  }
+
+  const descMatch = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<meta\b[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+  if (descMatch) {
+    result.description = decodeFeedText(descMatch[1]).trim();
+    result.introduction = result.description;
+  }
+
+  const plainText = credentialHtmlToText(html);
+
+  result.category = extractCredentialField(html, ['カテゴリ', '認定レベル', 'レベル', 'Category', 'Level', '区分'], plainText);
+  result.examDuration = extractCredentialField(html, ['試験期間', '試験時間', '所要時間', 'Duration', 'Time limit', 'Exam duration'], plainText);
+  result.examFormat = extractCredentialField(html, ['試験の形態', '試験形式', '出題形式', '問題数', 'Exam format', 'Format'], plainText);
+  result.cost = extractCredentialField(html, ['費用', '受験料', '試験料金', '受験料金', '受検料', 'Price', 'Fee', 'Cost', 'Exam price'], plainText);
+  result.testingOptions = extractCredentialField(html, ['受験オプション', '受験方法', '試験方式', '受験場所', 'Testing options', 'Delivery', 'Exam options'], plainText);
+
+  const headingRegex = /<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+  const headings = [];
+  let match;
+  while ((match = headingRegex.exec(html)) !== null) {
+    headings.push({ end: headingRegex.lastIndex, start: match.index, title: credentialHtmlToText(match[2]) });
+  }
+  headings.forEach(function (heading, index) {
+    const next = headings[index + 1];
+    const body = credentialHtmlToText(html.slice(heading.end, next ? next.start : html.length));
+    if (!body) return;
+    if (!result.introduction && /^(概要|資格概要|試験概要|はじめに|Introduction|Overview|About)/i.test(heading.title)) {
+      result.introduction = body.slice(0, 2000);
+    } else if (!result.contentOutline && /(試験範囲|出題範囲|試験内容の概要|Content outline|Exam objectives|Skills measured|Syllabus)/i.test(heading.title)) {
+      result.contentOutline = body.slice(0, 4000);
+    } else if (!result.examContent && /^(試験内容|試験について|Exam content|Exam details)/i.test(heading.title)) {
+      result.examContent = body.slice(0, 4000);
+    }
+  });
+
+  return result;
+}
+
+/**
+ * 資格情報取得元URLに応じた詳細情報フェッチ
+ */
+function fetchQualificationDetails(url, providerName, qualificationName) {
+  if (!url) return null;
+  const targetUrl = WINACTOR_QUALIFICATION_URLS[qualificationName] || url;
+
+  // 1. AWS
+  if (/aws\.amazon\.com/i.test(targetUrl) || /Amazon Web Services|\bAWS\b/i.test(providerName)) {
+    return fetchAwsExamDetails(targetUrl);
+  }
+
+  // 2. Google Cloud
+  if (/cloud\.google\.com/i.test(targetUrl) || /Google Cloud/i.test(providerName)) {
+    return fetchGoogleCloudExamDetails(targetUrl);
+  }
+
+  // 3. Microsoft Learn
+  if (/learn\.microsoft\.com/i.test(targetUrl) || /Microsoft/i.test(providerName)) {
+    const html = fetchOfficialHtml(targetUrl);
+    return parseMicrosoftExamPage(html, targetUrl);
+  }
+
+  // 4. その他の定義済みルール
+  if (OTHER_CREDENTIAL_DETAIL_RULES.some(rule => rule.match.test(providerName || ''))) {
+    const html = fetchOfficialHtml(targetUrl);
+    const details = parseOtherCredentialDetails(html, providerName);
+    const metaMatch = html.match(/<meta\b[^>]*(?:name|property)=["'](?:description|og:description)["'][^>]*content=["']([^"']+)["'][^>]*>/i);
+    const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+    return {
+      title: titleMatch ? decodeFeedText(titleMatch[1]).trim() : `${qualificationName} 資格詳細情報`,
+      url: targetUrl,
+      description: metaMatch ? decodeFeedText(metaMatch[1]).trim() : details.introduction || `${qualificationName} の公式資格情報`,
+      ...details
+    };
+  }
+
+  // 5. 汎用フォールバック
+  try {
+    const html = fetchOfficialHtml(targetUrl);
+    return parseGenericExamPage(html, targetUrl, providerName);
+  } catch (e) {
+    console.warn(`[${providerName}] 汎用パース取得失敗 (${targetUrl}):`, e.message);
+    return null;
+  }
+}
+
+/**
+ * スプレッドシートの全レコード（A〜D列）を動的に読み込み、
+ * E〜H列（タイトル、URL、説明）および I〜P列（詳細情報）を取得・更新検知する
+ */
+function checkAllSheetCertificates(properties, webhookUrl) {
+  const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
+  const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
+  const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
+  const sheet = sheetName ? spreadsheet.getSheetByName(sheetName) : spreadsheet.getSheets()[0];
+  if (!sheet) throw new Error('資格一覧シートが見つかりません');
+
+  const values = sheet.getDataRange().getValues();
+  if (!values.length) throw new Error('資格一覧シートにヘッダー行がありません');
+  const headers = values[0].map(v => String(v).trim());
+
+  const noCol = headers.indexOf('No');
+  const providerCol = headers.indexOf('認定機関');
+  const nameCol = headers.indexOf('資格名');
+  const urlCol = headers.indexOf('資格情報取得元');
+
+  if ([noCol, providerCol, nameCol, urlCol].some(c => c < 0)) {
+    throw new Error('資格一覧シートに必要な列（No、認定機関、資格名、資格情報取得元）がありません');
+  }
+
+  const updateItems = [];
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const no = Number(row[noCol]);
+    const providerName = String(row[providerCol] || '').trim();
+    const qualificationName = String(row[nameCol] || '').trim();
+    const sourceUrl = String(row[urlCol] || '').trim();
+
+    if (!no || !qualificationName || !sourceUrl) continue;
+    // ORACLEは常に403エラーが発生するため除外
+    if (/Oracle/i.test(providerName)) continue;
+
+    if (i > 1) Utilities.sleep(1500);
+
+    try {
+      const details = fetchQualificationDetails(sourceUrl, providerName, qualificationName);
+      if (!details) continue;
+
+      updateItems.push({
+        provider: providerName,
+        title: details.title || `${qualificationName} 資格詳細情報`,
+        url: details.url || sourceUrl,
+        description: details.description || details.introduction || `${qualificationName} の公式資格詳細情報`,
+        category: details.category || '',
+        examDuration: details.examDuration || '',
+        examFormat: details.examFormat || '',
+        cost: details.cost || '',
+        testingOptions: details.testingOptions || '',
+        introduction: details.introduction || '',
+        examContent: details.examContent || '',
+        contentOutline: details.contentOutline || '',
+        relatedQualifications: [{ no: no, name: qualificationName }]
+      });
+    } catch (e) {
+      console.warn(`[${providerName}] 資格詳細情報取得エラー (${qualificationName}):`, e.message);
+    }
+  }
+
+  if (updateItems.length > 0) {
+    const applied = updateQualificationSheet(updateItems);
+    if (applied && applied.length > 0) {
+      for (const item of applied) {
+        sendSlackNotification(item, webhookUrl);
+      }
+    }
+  }
 }
 
 /**
@@ -2242,11 +2538,33 @@ function updateQualificationSheet(items) {
     const existingDate = dateColumn >= 0 ? String(rowValues[dateColumn] || '').trim() : '';
     const existingTitle = titleColumn >= 0 ? String(rowValues[titleColumn] || '').trim() : '';
     const existingUrl = urlColumn >= 0 ? String(rowValues[urlColumn] || '').trim() : '';
+    const existingDescription = descriptionColumn >= 0 ? String(rowValues[descriptionColumn] || '').trim() : '';
     const existingQualificationName = nameColumn >= 0 ? String(rowValues[nameColumn] || '').trim() : '';
     const qualificationName = existingQualificationName || update.qualificationName || `資格No.${no}`;
 
-    // 詳細列（カテゴリ〜試験内容の概要）の変更有無を検査
-    let detailChanged = false;
+    // F〜P列（タイトル〜試験内容の概要）のいずれかに変更があるかを検査
+    let isChanged = false;
+    const changedFields = [];
+
+    // F列: タイトル
+    if (update.title && String(update.title).trim() !== existingTitle) {
+      isChanged = true;
+      changedFields.push('タイトル');
+    }
+
+    // G列: URL
+    if (update.url && String(update.url).trim() !== existingUrl) {
+      isChanged = true;
+      changedFields.push('URL');
+    }
+
+    // H列: 説明
+    if (update.description && String(update.description).trim() !== existingDescription) {
+      isChanged = true;
+      changedFields.push('説明');
+    }
+
+    // I〜P列: 詳細列（カテゴリ〜試験内容の概要）
     for (let d = 0; d < detailColumnDefs.length; d++) {
       const def = detailColumnDefs[d];
       const colIdx = detailColIndices[def.key];
@@ -2254,45 +2572,34 @@ function updateQualificationSheet(items) {
         const existingVal = String(rowValues[colIdx] || '').trim();
         const newVal = String(update[def.key]).trim();
         if (existingVal !== newVal) {
-          detailChanged = true;
-          break;
+          isChanged = true;
+          changedFields.push(def.name);
         }
       }
     }
 
-    // 各資格ごとに収集した更新情報が前回実行時（シート上の情報）より新しい情報があるか確認する
-    const hasExistingDate = Boolean(existingDate && !Number.isNaN(getSheetUpdateTimestamp(existingDate)));
-    const hasCandidateDate = Boolean(update.date && !Number.isNaN(getSheetUpdateTimestamp(update.date)));
-
-    let isChanged = false;
-    if (update.detailsOnly) {
-      isChanged = detailChanged;
-    } else if (detailChanged) {
-      // AWS等の詳細項目に変更がある場合、最終更新日時および内容を更新
-      isChanged = true;
-      if (!update.date) {
-        update.date = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
-      }
-    } else if (hasCandidateDate && hasExistingDate) {
-      // 両方に日付がある場合、候補の日付が厳密に新しい場合のみ更新
-      isChanged = isNewerSheetUpdate(update, { date: existingDate });
-    } else if (hasCandidateDate && !hasExistingDate) {
-      // シートに日付がなく、候補に日付がある場合は更新
-      isChanged = true;
-    } else {
-      // 日付がない取得元の場合はタイトルまたはURLの変更で判定
-      isChanged = !existingTitle || (update.title && update.title !== existingTitle) || (update.url && update.url !== existingUrl);
-    }
-
+    // いずれかに変更があった場合、E列（最終更新日時）に現在日時を設定する
     if (isChanged) {
-      if (!update.detailsOnly) {
-        if (update.date) sheet.getRange(row, dateColumn + 1).setValue(update.date);
+      const nowJst = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd HH:mm');
+      update.date = nowJst;
+
+      // E列（最終更新日時）に現在日時を書き込み
+      if (dateColumn >= 0) {
+        sheet.getRange(row, dateColumn + 1).setValue(nowJst);
+      }
+
+      // F〜H列（タイトル、URL、説明）の書き込み
+      if (update.title && titleColumn >= 0) {
         sheet.getRange(row, titleColumn + 1).setValue(update.title);
-        if (update.url) sheet.getRange(row, urlColumn + 1).setValue(update.url);
+      }
+      if (update.url && urlColumn >= 0) {
+        sheet.getRange(row, urlColumn + 1).setValue(update.url);
+      }
+      if (update.description && descriptionColumn >= 0) {
         sheet.getRange(row, descriptionColumn + 1).setValue(update.description);
       }
 
-      // 詳細列の書き込み
+      // I〜P列（詳細列）の書き込み
       for (let d = 0; d < detailColumnDefs.length; d++) {
         const def = detailColumnDefs[d];
         const colIdx = detailColIndices[def.key];
@@ -2305,9 +2612,9 @@ function updateQualificationSheet(items) {
         no: no,
         qualificationName: qualificationName,
         date: update.date,
-        title: update.title,
-        url: update.url,
-        description: update.description,
+        title: update.title || existingTitle,
+        url: update.url || existingUrl,
+        description: update.description || existingDescription,
         provider: update.provider,
         category: update.category,
         examDuration: update.examDuration,
@@ -2316,7 +2623,8 @@ function updateQualificationSheet(items) {
         testingOptions: update.testingOptions,
         introduction: update.introduction,
         examContent: update.examContent,
-        contentOutline: update.contentOutline
+        contentOutline: update.contentOutline,
+        changedFields: changedFields
       });
     }
   }

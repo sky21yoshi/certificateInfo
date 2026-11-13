@@ -226,6 +226,74 @@ function detectAwsDetailsDiff(currentDetailsList, prevDetailsList) {
   return diffs;
 }
 
+/**
+ * 日本時間（JST）の現在日時文字列（yyyy-MM-dd HH:mm）を取得する
+ * @param {Date} [date] 
+ * @returns {string}
+ */
+function getNowJstString(date = new Date()) {
+  const d = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+  const yyyy = d.getFullYear();
+  const MM = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const HH = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${MM}-${dd} ${HH}:${mm}`;
+}
+
+/**
+ * 資格レコードのF〜P列（タイトル〜試験内容の概要）の差分を検査し、
+ * いずれかに変更があった場合にE列（最終更新日時）に現在日時を設定する
+ * @param {object} current 新しく取得したレコード情報
+ * @param {object} existing 既存のレコード情報（シートまたはTSV）
+ * @param {string} [nowJst] 現在日時文字列（未指定時は現在時刻）
+ * @returns {{isChanged: boolean, changedFields: Array<string>, updatedRecord: object}}
+ */
+function checkQualificationRecordDiff(current, existing, nowJst = null) {
+  const fieldsToCheck = [
+    'title',
+    'url',
+    'description',
+    'category',
+    'examDuration',
+    'examFormat',
+    'cost',
+    'testingOptions',
+    'introduction',
+    'examContent',
+    'contentOutline'
+  ];
+
+  const changedFields = [];
+  const existingRecord = existing || {};
+
+  for (const field of fieldsToCheck) {
+    if (current[field] !== undefined && current[field] !== '') {
+      const currentVal = String(current[field]).trim();
+      const existingVal = String(existingRecord[field] || '').trim();
+      if (currentVal !== existingVal) {
+        changedFields.push(field);
+      }
+    }
+  }
+
+  const isChanged = changedFields.length > 0;
+  const now = nowJst || getNowJstString();
+
+  const updatedRecord = {
+    ...existingRecord,
+    ...current,
+    // いずれかに変更があった場合はE列（最終更新日時）に現在日時を設定
+    date: isChanged ? now : (existingRecord.date || current.date || '')
+  };
+
+  return {
+    isChanged,
+    changedFields,
+    updatedRecord
+  };
+}
+
 const detectQualificationDetailsDiff = detectAwsDetailsDiff;
 const detectGoogleCloudDetailsDiff = detectAwsDetailsDiff;
 
@@ -365,6 +433,8 @@ module.exports = {
   loadPreviousState,
   saveCurrentState,
   isWeekdayJST,
+  getNowJstString,
+  checkQualificationRecordDiff,
   getUpdateTimestamp,
   sendSlackNotification,
   notifySlackUpdates,
