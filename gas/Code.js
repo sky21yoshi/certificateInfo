@@ -2020,11 +2020,186 @@ function parseGenericExamPage(html, url, providerName) {
 }
 
 /**
+ * IPA試験区分ページから詳細情報を抽出する
+ */
+function parseIpaExamPage(html, url) {
+  const result = {
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '7,500円（税込）',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: '',
+  };
+
+  if (!html) return result;
+
+  // 1. タイトル取得およびカテゴリ判定
+  const h1Match = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+  const examTitle = h1Match ? stripHtmlText(h1Match[1]) : '';
+
+  if (/ip\.html/i.test(url) || /ITパスポート/i.test(examTitle)) {
+    result.category = 'レベル1（ITパスポート）';
+  } else if (/fe\.html/i.test(url) || /基本情報技術者/i.test(examTitle)) {
+    result.category = 'レベル2（基本情報技術者）';
+  } else if (/sg\.html/i.test(url) || /情報セキュリティマネジメント/i.test(examTitle)) {
+    result.category = 'レベル2（情報セキュリティマネジメント）';
+  } else if (/ap\.html/i.test(url) || /応用情報技術者/i.test(examTitle)) {
+    result.category = 'レベル3（応用情報技術者）';
+  } else if (/sc\.html|sg_riss\.html/i.test(url) || /情報処理安全確保支援士/i.test(examTitle)) {
+    result.category = 'レベル4（登録セキスペ・国家資格）';
+  } else if (/(nw|db|es|sm|sa|st|pm|au)\.html/i.test(url) || /スペシャリスト|マネージャ|アーキテクト|ストラテジスト|監査技術者/i.test(examTitle)) {
+    result.category = 'レベル4（高度試験）';
+  } else {
+    result.category = '情報処理技術者試験';
+  }
+
+  // 2. 費用（受験手数料 / 受験料）
+  const costMatch = html.match(/<dt\b[^>]*>[^<]*(?:受験手数料|受験料|費用)[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i)
+    || html.match(/<(?:p|li|div|th|td)\b[^>]*>[^<]*(?:受験手数料|受験料|費用)[:：]?\s*<(?:span|td|dd)\b[^>]*>([\s\S]*?)<\/(?:span|td|dd)>/i);
+  if (costMatch) {
+    result.cost = stripHtmlText(costMatch[1]);
+  } else {
+    result.cost = '7,500円（税込）';
+  }
+
+  // 3. 受験オプション（実施方式・実施時期）
+  const timingMatch = html.match(/<dt\b[^>]*>[^<]*実施方式・実施時期[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+  if (timingMatch) {
+    result.testingOptions = stripHtmlText(timingMatch[1]);
+  }
+
+  // 4. はじめに（キャッチコピー + リード文 + 1．対象者像）
+  let catchCopy = '';
+  const catchMatch = html.match(/<h1\b[^>]*>[\s\S]*?<\/h1>[\s\S]*?<h2\b[^>]*>([\s\S]*?)<\/h2>/i);
+  if (catchMatch) {
+    const cText = stripHtmlText(catchMatch[1]);
+    if (!/organization|category|関連リンク|出題/i.test(cText)) {
+      catchCopy = cText;
+    }
+  }
+
+  const targetMatch = html.match(/<h3\b[^>]*>[^<]*1[．\.]\s*対象者像[^<]*<\/h3>([\s\S]*?)(?=<h3\b|$)/i);
+  const targetText = targetMatch ? stripHtmlText(targetMatch[1]) : '';
+
+  let leadText = '';
+  const dlMatch = html.match(/<\/dl>\s*([\s\S]*?)(?=<div\b[^>]*class=["'][^"']*btn|<h3\b)/i);
+  if (dlMatch) {
+    leadText = stripHtmlText(dlMatch[1]);
+  }
+  if (!leadText) {
+    const metaDesc = html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i);
+    if (metaDesc) leadText = stripHtmlText(metaDesc[1]);
+  }
+
+  const introParts = [];
+  if (catchCopy) introParts.push(`【概要】${catchCopy}`);
+  if (leadText && leadText !== catchCopy) introParts.push(leadText);
+  if (targetText) introParts.push(`【対象者像】${targetText}`);
+  result.introduction = introParts.join(' ');
+  if (!result.introduction && leadText) {
+    result.introduction = leadText;
+  }
+
+  // 5. 試験内容（2．業務と役割）
+  const roleMatch = html.match(/<h3\b[^>]*>[^<]*2[．\.]\s*業務と役割[^<]*<\/h3>([\s\S]*?)(?=<h3\b|$)/i);
+  if (roleMatch) {
+    result.examContent = stripHtmlText(roleMatch[1]);
+  }
+
+  // 6. 試験内容の概要（3．期待する技術水準 または 出題範囲）
+  const skillMatch = html.match(/<h3\b[^>]*>[^<]*3[．\.]\s*期待する技術水準[^<]*<\/h3>([\s\S]*?)(?=<h3\b|<div\b[^>]*class=["'][^"']*(?:related|link|btn)|$)/i);
+  if (skillMatch) {
+    result.contentOutline = stripHtmlText(skillMatch[1]);
+  } else {
+    const outlineMatch = html.match(/<h[2-4]\b[^>]*>[^<]*(?:出題範囲|試験範囲|シラバス|Syllabus|Outline)[^<]*<\/h[2-4]>([\s\S]*?)(?=<h[2-4]\b|$)/i);
+    if (outlineMatch) {
+      result.contentOutline = stripHtmlText(outlineMatch[1]);
+    }
+  }
+
+  // 7. 試験時間・出題形式・出題数（4．試験時間・出題形式・出題数（解答数））
+  const examSectionMatch = html.match(/<h3\b[^>]*>[^<]*4[．\.]\s*試験時間[\s\S]*?<\/h3>([\s\S]*?)(?=<h3\b|<div\b[^>]*class=["'][^"']*(?:related|link|btn)|$)/i);
+  if (examSectionMatch) {
+    const secHtml = examSectionMatch[1];
+    const subSections = secHtml.split(/(?=<h4\b)/i);
+    const durationParts = [];
+    const formatParts = [];
+
+    for (let s = 0; s < subSections.length; s++) {
+      const sub = subSections[s];
+      const h4Match = sub.match(/<h4\b[^>]*>([\s\S]*?)<\/h4>/i);
+      const subTitle = h4Match ? stripHtmlText(h4Match[1]) : '';
+
+      const durMatch = sub.match(/<dt\b[^>]*>[^<]*試験時間[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+      const fmtMatch = sub.match(/<dt\b[^>]*>[^<]*出題形式[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+      const qMatch = sub.match(/<dt\b[^>]*>[^<]*出題数[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+
+      const durText = durMatch ? stripHtmlText(durMatch[1]) : '';
+      const fmtText = fmtMatch ? stripHtmlText(fmtMatch[1]) : '';
+      const qText = qMatch ? stripHtmlText(qMatch[1]) : '';
+
+      if (durText) {
+        durationParts.push(subTitle ? `${subTitle}: ${durText}` : durText);
+      }
+      if (fmtText || qText) {
+        let f = fmtText;
+        if (qText) {
+          f = f ? `${f}（${qText}）` : qText;
+        }
+        formatParts.push(subTitle ? `${subTitle}: ${f}` : f);
+      }
+    }
+
+    if (durationParts.length > 0) result.examDuration = durationParts.join('、');
+    if (formatParts.length > 0) result.examFormat = formatParts.join('、');
+  }
+
+  // 単一dl定義からのフォールバック（科目別h4がない場合）
+  if (!result.examDuration) {
+    const singleDurMatch = html.match(/<dt\b[^>]*>[^<]*試験時間[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+    if (singleDurMatch) {
+      result.examDuration = stripHtmlText(singleDurMatch[1]);
+    }
+  }
+  if (!result.examFormat) {
+    const singleFmtMatch = html.match(/<dt\b[^>]*>[^<]*(?:出題形式|試験形式)[^<]*<\/dt>\s*<dd\b[^>]*>([\s\S]*?)<\/dd>/i);
+    if (singleFmtMatch) {
+      result.examFormat = stripHtmlText(singleFmtMatch[1]);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * IPA資格詳細情報をURLからフェッチする
+ */
+function fetchIpaExamDetails(url, qualificationName) {
+  const html = fetchOfficialHtml(url);
+  const details = parseIpaExamPage(html, url);
+  const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+  return {
+    title: titleMatch ? decodeFeedText(titleMatch[1]).trim() : `${qualificationName || 'IPA'} 資格詳細情報`,
+    url: url,
+    description: details.introduction || `${qualificationName || 'IPA'} の公式資格詳細情報`,
+    ...details
+  };
+}
+
+/**
  * 資格情報取得元URLに応じた詳細情報フェッチ
  */
 function fetchQualificationDetails(url, providerName, qualificationName) {
   if (!url) return null;
   const targetUrl = WINACTOR_QUALIFICATION_URLS[qualificationName] || url;
+
+  // 0. IPA
+  if (/ipa\.go\.jp\/shiken/i.test(targetUrl) || /情報処理推進機構|^IPA/i.test(providerName)) {
+    return fetchIpaExamDetails(targetUrl, qualificationName);
+  }
 
   // 1. AWS
   if (/aws\.amazon\.com/i.test(targetUrl) || /Amazon Web Services|\bAWS\b/i.test(providerName)) {

@@ -1,4 +1,4 @@
-const { fetchIpaNews } = require('./fetcher/ipa');
+const { fetchIpaNews, fetchIpaAllUpdates } = require('./fetcher/ipa');
 const { fetchAwsNews, fetchAwsAllUpdates } = require('./fetcher/aws');
 const { fetchMicrosoftCertifications } = require('./fetcher/microsoft');
 const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
@@ -39,9 +39,9 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const PROVIDERS = {
   ipa: {
     name: 'IPA（情報処理推進機構）',
-    fetch: fetchIpaNews,
+    fetch: fetchIpaAllUpdates,
     idKey: 'url',
-    updateKey: null,
+    updateKey: 'contentHash',
   },
   aws: {
     name: 'Amazon Web Services (AWS)',

@@ -165,9 +165,14 @@ function extractSections(html) {
   }));
 }
 
-function parseCredentialDetails(html, providerName) {
+function parseCredentialDetails(html, providerName, url = '') {
   const rules = PROVIDER_RULES.find(rule => rule.match.test(providerName || ''));
   if (!rules) throw new Error(`詳細情報の抽出ルールがありません: ${providerName}`);
+
+  if (rules.key === 'ipa') {
+    const { parseIpaExamPage } = require('./ipa');
+    return parseIpaExamPage(html, url);
+  }
 
   const plainText = htmlToText(html);
   const details = Object.fromEntries(DETAIL_FIELDS.map(field => [field, '']));
@@ -248,7 +253,7 @@ async function fetchQualificationDetails(providerKey, options = {}) {
     try {
       const html = options.pages ? options.pages[target.url] : await fetchPage(target.url);
       if (typeof html !== 'string') throw new Error('公式ページからHTMLを取得できませんでした');
-      const details = parseCredentialDetails(html, target.providerName);
+      const details = parseCredentialDetails(html, target.providerName, target.url);
       if (!DETAIL_FIELDS.some(field => details[field])) continue;
       items.push({
         provider: target.providerName,
