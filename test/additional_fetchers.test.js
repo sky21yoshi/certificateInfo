@@ -27,7 +27,7 @@ const { PROVIDERS } = require('../src/index');
   const items = parseCiscoRss(rss);
   assert.strictEqual(items.length, 1);
   assert.strictEqual(items[0].url, 'https://blogs.cisco.com/learning/ccna-update');
-  assert(items[0].relatedQualifications.some(item => item.name === 'CCNA'));
+  assert(items[0].relatedQualifications.some(item => item.name.includes('CCNA')));
   assert(matchCiscoQualifications('CCNATraining').length === 0);
 }
 

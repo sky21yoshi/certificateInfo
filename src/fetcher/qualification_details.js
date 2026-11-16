@@ -174,6 +174,11 @@ function parseCredentialDetails(html, providerName, url = '') {
     return parseIpaExamPage(html, url);
   }
 
+  if (rules.key === 'cisco') {
+    const { parseCiscoExamPage } = require('./cisco');
+    return parseCiscoExamPage(html, url);
+  }
+
   const plainText = htmlToText(html);
   const details = Object.fromEntries(DETAIL_FIELDS.map(field => [field, '']));
   for (const field of ['category', 'examDuration', 'examFormat', 'cost', 'testingOptions']) {
@@ -251,7 +256,12 @@ async function fetchQualificationDetails(providerKey, options = {}) {
     const target = targets[index];
     if (index > 0) await wait(1500);
     try {
-      const html = options.pages ? options.pages[target.url] : await fetchPage(target.url);
+      let fetchUrl = target.url;
+      if (providerKey === 'cisco') {
+        const { resolveCiscoContentUrl } = require('./cisco');
+        fetchUrl = resolveCiscoContentUrl(target.url, target.qualifications[0] ? target.qualifications[0].name : '');
+      }
+      const html = options.pages ? (options.pages[fetchUrl] || options.pages[target.url]) : await fetchPage(fetchUrl);
       if (typeof html !== 'string') throw new Error('公式ページからHTMLを取得できませんでした');
       const details = parseCredentialDetails(html, target.providerName, target.url);
       if (!DETAIL_FIELDS.some(field => details[field])) continue;

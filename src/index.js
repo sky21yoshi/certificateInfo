@@ -2,7 +2,7 @@ const { fetchIpaNews, fetchIpaAllUpdates } = require('./fetcher/ipa');
 const { fetchAwsNews, fetchAwsAllUpdates } = require('./fetcher/aws');
 const { fetchMicrosoftCertifications } = require('./fetcher/microsoft');
 const { fetchLpiNews, fetchLinucNews } = require('./fetcher/lpi');
-const { fetchCiscoNews } = require('./fetcher/cisco');
+const { fetchCiscoNews, fetchCiscoAllUpdates } = require('./fetcher/cisco');
 const { fetchGoogleCloudNews, fetchGoogleCloudAllUpdates } = require('./fetcher/google_cloud');
 const { fetchQualificationDetails } = require('./fetcher/qualification_details');
 const { fetchOracleNews } = require('./fetcher/oracle');
@@ -68,9 +68,9 @@ const PROVIDERS = {
   },
   cisco: {
     name: 'Cisco Systems',
-    fetch: fetchCiscoNews,
+    fetch: fetchCiscoAllUpdates,
     idKey: 'url',
-    updateKey: null,
+    updateKey: 'contentHash',
   },
   google_cloud: {
     name: 'Google Cloud',

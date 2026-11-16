@@ -8,144 +8,160 @@ const path = require('path');
 // ファイルパス
 const tsvPath = path.join(__dirname, '..', 'qualifications.tsv');
 const dataDir = path.join(__dirname, '..', 'data');
+const masterDumpPath = 'C:/Users/sky21/.gemini/antigravity/brain/595f0cdd-dbe6-4cf1-b98f-841ebe8e8655/.system_generated/steps/248/output.txt';
 
-// 読み込みヘッダーと行を取得
-const raw = fs.readFileSync(tsvPath, { encoding: 'utf8' }).split(/\r?\n/);
-if (raw.length === 0) {
-  console.error('TSV が空です');
-  process.exit(1);
-}
+// 1. 既存の qualifications.tsv の行を取得
+const raw = fs.readFileSync(tsvPath, 'utf8').split(/\r?\n/);
+const masterLines = raw.slice(1).filter(l => /^\d+\t/.test(l));
 
-// 既存ヘッダーを解析し、必要なら新しい列を追加
-let header = raw[0].trim();
-const existingCols = header.split('\t');
-const neededCols = [
-  '最終更新日時', 'タイトル', 'URL', '説明',
-  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
-  'はじめに', '試験内容', '試験内容の概要'
-];
-let newHeaderCols = [...existingCols];
-for (const col of neededCols) {
-  if (!newHeaderCols.includes(col)) {
-    newHeaderCols.push(col);
-  }
-}
-// docs/interface.md の標準順序 (16列)
-const standardOrder = [
-  'No', '認定機関', '資格名', '資格情報取得元',
-  '最終更新日時', 'タイトル', 'URL', '説明',
-  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
-  'はじめに', '試験内容', '試験内容の概要'
-];
-const isStandardCompatible = standardOrder.every(col => newHeaderCols.includes(col));
-const targetHeaderCols = isStandardCompatible ? standardOrder : newHeaderCols;
-raw[0] = targetHeaderCols.join('\t');
-
-// 全プロバイダー統合状態をロードする
+// 2. プロバイダーごとの状態ファイルロード
 function loadState(name) {
   const p = path.join(dataDir, `${name}_state.json`);
-  if (!fs.existsSync(p)) {
-    return [];
-  }
+  if (!fs.existsSync(p)) return [];
   try {
-    const content = fs.readFileSync(p, { encoding: 'utf8' });
+    const content = fs.readFileSync(p, 'utf8');
     const state = JSON.parse(content);
-    if (!Array.isArray(state)) return [];
-    return state;
+    return Array.isArray(state) ? state : [];
   } catch (e) {
     console.warn(`状態ファイルの読み込みエラー (${name}): ${e.message}`);
     return [];
   }
 }
-const allItems = loadState('all');
-const ipaItems = loadState('ipa');
-const awsItems = loadState('aws');
-const googleCloudItems = loadState('google_cloud');
 
-// 各資格番号 (row[0]) に対応する最新情報を取得するヘルパー
-function findLatest(no) {
+const stateMap = {
+  ipa: loadState('ipa'),
+  aws: loadState('aws'),
+  cisco: loadState('cisco'),
+  google_cloud: loadState('google_cloud'),
+  microsoft: loadState('microsoft'),
+  lpi: loadState('lpi'),
+  oracle: loadState('oracle'),
+  broadcom: loadState('broadcom'),
+  comptia: loadState('comptia'),
+  cncf: loadState('cncf'),
+  anthropic: loadState('anthropic'),
+  uipath: loadState('uipath'),
+  certify: loadState('certify'),
+  python_association: loadState('python_association'),
+  pmaj: loadState('pmaj'),
+  pmi: loadState('pmi'),
+  isaca: loadState('isaca'),
+  peoplecert: loadState('peoplecert'),
+  fortinet: loadState('fortinet'),
+  palo_alto: loadState('palo_alto'),
+  ntt_at: loadState('ntt_at'),
+};
+
+function getProviderKey(providerName) {
+  if (!providerName) return null;
+  if (/ipa|情報処理推進機構/i.test(providerName)) return 'ipa';
+  if (/aws|amazon/i.test(providerName)) return 'aws';
+  if (/cisco|シスコ/i.test(providerName)) return 'cisco';
+  if (/google/i.test(providerName)) return 'google_cloud';
+  if (/microsoft/i.test(providerName)) return 'microsoft';
+  if (/lpi|linuc/i.test(providerName)) return 'lpi';
+  if (/oracle/i.test(providerName)) return 'oracle';
+  if (/broadcom|vmware/i.test(providerName)) return 'broadcom';
+  if (/comptia/i.test(providerName)) return 'comptia';
+  if (/cncf|linux foundation/i.test(providerName)) return 'cncf';
+  if (/anthropic/i.test(providerName)) return 'anthropic';
+  if (/uipath/i.test(providerName)) return 'uipath';
+  if (/サーティファイ|certify/i.test(providerName)) return 'certify';
+  if (/python/i.test(providerName)) return 'python_association';
+  if (/pmaj/i.test(providerName)) return 'pmaj';
+  if (/pmi/i.test(providerName)) return 'pmi';
+  if (/isaca/i.test(providerName)) return 'isaca';
+  if (/peoplecert/i.test(providerName)) return 'peoplecert';
+  if (/fortinet/i.test(providerName)) return 'fortinet';
+  if (/palo alto/i.test(providerName)) return 'palo_alto';
+  if (/ntt/i.test(providerName)) return 'ntt_at';
+  return null;
+}
+
+// 3. 資格番号 (No) と認定機関、資格名に対応する最新情報を取得するヘルパー
+function findLatest(no, providerName, qualificationName = '') {
   const num = parseInt(no, 10);
-  const itemsPool = [...allItems, ...ipaItems, ...awsItems, ...googleCloudItems];
-  const matches = itemsPool.filter(item =>
-    Array.isArray(item.relatedQualifications) &&
-    item.relatedQualifications.some(qualification => Number(qualification.no) === num)
-  );
-  if (matches.length === 0) return null;
+  const pKey = getProviderKey(providerName);
+  const pool = (pKey && stateMap[pKey]) ? stateMap[pKey] : [];
 
+  const matches = pool.filter(item => {
+    if (!Array.isArray(item.relatedQualifications)) return false;
+    return item.relatedQualifications.some(q => {
+      if (Number(q.no) === num) return true;
+      if (qualificationName && q.name) {
+        const cleanQ = q.name.replace(/\s*\([^)]*\)/g, '').trim().toLowerCase();
+        const cleanTarget = qualificationName.replace(/\s*\([^)]*\)/g, '').trim().toLowerCase();
+        if (cleanQ === cleanTarget) return true;
+      }
+      return false;
+    });
+  });
+
+  // 詳細項目を持つアイテムがあれば抽出
+  const detailItem = matches.find(m => m.category || m.introduction || m.examDuration)
+    || (matches.length > 0 ? matches[0] : null);
+
+  // ニュースなど日付を持つアイテムがあれば抽出
   const datedMatches = matches
-    .map(item => ({ item, timestamp: Date.parse(item.date || '') }))
-    .filter(match => Number.isFinite(match.timestamp))
-    .sort((a, b) => b.timestamp - a.timestamp);
-  const match = datedMatches.length > 0 ? datedMatches[0].item : matches[0];
+    .filter(m => !m.detailsOnly && m.date)
+    .sort((a, b) => (Date.parse(b.date || '') || 0) - (Date.parse(a.date || '') || 0));
+  const newsItem = datedMatches.length > 0 ? datedMatches[0] : null;
 
-  // 詳細項目を持つアイテムがあればマージ
-  const detailItem = matches.find(m => m.category || m.introduction || m.examDuration) || {};
+  if (!detailItem && !newsItem) return null;
 
   return {
-    date: match.date || '',
-    title: match.title || '',
-    description: match.description || match.title || '',
-    url: match.url || '',
-    category: detailItem.category || '',
-    examDuration: detailItem.examDuration || '',
-    examFormat: detailItem.examFormat || '',
-    cost: detailItem.cost || '',
-    testingOptions: detailItem.testingOptions || '',
-    introduction: detailItem.introduction || '',
-    examContent: detailItem.examContent || '',
-    contentOutline: detailItem.contentOutline || ''
+    date: (newsItem && newsItem.date) || (detailItem && detailItem.date) || '',
+    title: (newsItem && newsItem.title) || (detailItem && detailItem.title) || '',
+    description: (newsItem && newsItem.description) || (detailItem && (detailItem.introduction || detailItem.description)) || '',
+    url: (newsItem && newsItem.url) || (detailItem && detailItem.url) || '',
+    category: (detailItem && detailItem.category) || '',
+    examDuration: (detailItem && detailItem.examDuration) || '',
+    examFormat: (detailItem && detailItem.examFormat) || '',
+    cost: (detailItem && detailItem.cost) || '',
+    testingOptions: (detailItem && detailItem.testingOptions) || '',
+    introduction: (detailItem && detailItem.introduction) || '',
+    examContent: (detailItem && detailItem.examContent) || '',
+    contentOutline: (detailItem && detailItem.contentOutline) || ''
   };
 }
 
-// データ行を更新
+// 4. 標準ヘッダー (16列)
+const standardHeaders = [
+  'No', '認定機関', '資格名', '資格情報取得元',
+  '最終更新日時', 'タイトル', 'URL', '説明',
+  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション',
+  'はじめに', '試験内容', '試験内容の概要'
+];
+
+// 5. データ行を生成
 const updatedLines = [];
-const headerCols = targetHeaderCols;
-const dateIdx = headerCols.indexOf('最終更新日時');
-const titleIdx = headerCols.indexOf('タイトル');
-const urlIdx = headerCols.indexOf('URL');
-const descIdx = headerCols.indexOf('説明');
-const catIdx = headerCols.indexOf('カテゴリ');
-const durIdx = headerCols.indexOf('試験期間');
-const fmtIdx = headerCols.indexOf('試験の形態');
-const costIdx = headerCols.indexOf('費用');
-const optIdx = headerCols.indexOf('受験オプション');
-const introIdx = headerCols.indexOf('はじめに');
-const contentIdx = headerCols.indexOf('試験内容');
-const outlineIdx = headerCols.indexOf('試験内容の概要');
+for (let i = 0; i < masterLines.length; i++) {
+  const masterLine = masterLines[i];
+  const [no, provider, name, sourceUrl] = masterLine.split('\t');
+  const latest = findLatest(no, provider, name);
 
-for (let i = 1; i < raw.length; i++) {
-  const line = raw[i];
-  if (!line) continue; // 空行はスキップ
-  const oldCols = line.split('\t');
-  const no = oldCols[0];
-  const latest = findLatest(no);
+  const row = [
+    no,
+    provider,
+    name,
+    sourceUrl,
+    latest ? (latest.date || '') : '',
+    latest ? (latest.title || '') : '',
+    latest ? (latest.url || '') : '',
+    latest ? (latest.description || '') : '',
+    latest ? (latest.category || '') : '',
+    latest ? (latest.examDuration || '') : '',
+    latest ? (latest.examFormat || '') : '',
+    latest ? (latest.cost || '') : '',
+    latest ? (latest.testingOptions || '') : '',
+    latest ? (latest.introduction || '') : '',
+    latest ? (latest.examContent || '') : '',
+    latest ? (latest.contentOutline || '') : '',
+  ];
 
-  // 新しいヘッダー列に合わせてマッピング
-  const rowMap = new Map();
-  for (let c = 0; c < existingCols.length; c++) {
-    rowMap.set(existingCols[c], oldCols[c] || '');
-  }
-
-  if (latest) {
-    if (dateIdx >= 0 && latest.date) rowMap.set('最終更新日時', latest.date);
-    if (titleIdx >= 0 && latest.title) rowMap.set('タイトル', latest.title);
-    if (urlIdx >= 0 && latest.url) rowMap.set('URL', latest.url);
-    if (descIdx >= 0 && latest.description) rowMap.set('説明', latest.description);
-    if (catIdx >= 0 && latest.category) rowMap.set('カテゴリ', latest.category);
-    if (durIdx >= 0 && latest.examDuration) rowMap.set('試験期間', latest.examDuration);
-    if (fmtIdx >= 0 && latest.examFormat) rowMap.set('試験の形態', latest.examFormat);
-    if (costIdx >= 0 && latest.cost) rowMap.set('費用', latest.cost);
-    if (optIdx >= 0 && latest.testingOptions) rowMap.set('受験オプション', latest.testingOptions);
-    if (introIdx >= 0 && latest.introduction) rowMap.set('はじめに', latest.introduction);
-    if (contentIdx >= 0 && latest.examContent) rowMap.set('試験内容', latest.examContent);
-    if (outlineIdx >= 0 && latest.contentOutline) rowMap.set('試験内容の概要', latest.contentOutline);
-  }
-
-  const newCols = headerCols.map(col => rowMap.get(col) || '');
-  updatedLines.push(newCols.join('\t'));
+  updatedLines.push(row.join('\t'));
 }
 
-// 書き戻し
-const output = [raw[0], ...updatedLines].join('\n') + '\n';
-fs.writeFileSync(tsvPath, output, { encoding: 'utf8' });
-console.log('qualifications.tsv を更新しました');
+const finalTsv = [standardHeaders.join('\t'), ...updatedLines].join('\n') + '\n';
+fs.writeFileSync(tsvPath, finalTsv, 'utf8');
+console.log(`qualifications.tsv を全 ${masterLines.length} 行で正常に更新しました。`);

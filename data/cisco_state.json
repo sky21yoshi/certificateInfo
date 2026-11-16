@@ -21,7 +21,12 @@
     "url": "https://blogs.cisco.com/learning/ccie-collaboration-design/",
     "date": "Wed, 21 Oct 2026 23:58:05 +0000",
     "description": "Think like an architect. Turn blueprint topics into 'Design-grade' practice for the CCIE Collaboration v3.1 Practical Exam.",
-    "relatedQualifications": []
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "CCIE Enterprise Infrastructure"
+      }
+    ]
   },
   {
     "provider": "Cisco Systems",
@@ -30,5 +35,235 @@
     "date": "Tue, 20 Oct 2026 15:00:32 +0000",
     "description": "Discover how the OT Security Practitioner certification and CML 2.11 updates help you bridge the gap between IT and OT, building the practical, hands-on skills needed to secure evolving industrial networks.",
     "relatedQualifications": []
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Cisco Certified Network Associate (200-301 CCNA)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/ccna-200-301.html",
+    "date": "",
+    "description": "CCNA 試験 v1.0（CCNA 200-301）は、CCNA 認定に関する試験であり、試験時間は 120 分です。この試験では、ネットワークの基礎、ネットワーク アクセス、IP コネクティビティ、IP サービス、セキュリティの基礎、および自動化とプログラマビリティに関する受験者の知識とスキルが問われます。本試験の受験対策として、Implementing and Administering Cisco Solutions（CCNA）コースの受講をお勧めします。",
+    "category": "Associate",
+    "examDuration": "120 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "CCNA 試験 v1.0（CCNA 200-301）は、CCNA 認定に関する試験であり、試験時間は 120 分です。この試験では、ネットワークの基礎、ネットワーク アクセス、IP コネクティビティ、IP サービス、セキュリティの基礎、および自動化とプログラマビリティに関する受験者の知識とスキルが問われます。本試験の受験対策として、Implementing and Administering Cisco Solutions（CCNA）コースの受講をお勧めします。",
+    "examContent": "この試験では、次に挙げる事項に関する受験者の知識とスキルが問われます。 ネットワークの基礎 ネットワーク アクセス IP コネクティビティ IP サービス セキュリティの基礎 自動化とプログラマビリティ",
+    "contentOutline": "【出題分野】1.0 ネットワークの基礎 (20%)、2.0 ネットワークアクセス (20%)、3.0 IPコネクティビティ (25%)、4.0 IPサービス (10%)、5.0 セキュリティの基礎 (15%)、6.0 自動化とプログラマビリティ (10%)",
+    "contentHash": "bef8dfce0fbe468fb43364e8c17a70454313e5a195038ca97eda0dc0524276ac",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 92,
+        "name": "CCNA (200-301)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Implementing Cisco Enterprise Network Core Technologies (350-401 ENCOR)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/encor-350-401.html",
+    "date": "",
+    "description": "Implementing Cisco Enterprise Network Core Technologies v1.0（ENCOR 350-401）は、CCNPおよび CCIE Enterprise 認定に関する試験であり、試験時間は 120 分です。この試験では、デュアル スタック（IPv4 および IPv6）アーキテクチャ、仮想化、インフラストラクチャ、ネットワーク アシュアランス、セキュリティ、自動化など、コア エンタープライズ ネットワーク テクノロジーの実装に関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Network Core Technologies コースの受講をお勧めします。",
+    "category": "Professional / Expert（コア試験）",
+    "examDuration": "120 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "400 USD（約60,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Implementing Cisco Enterprise Network Core Technologies v1.0（ENCOR 350-401）は、CCNPおよび CCIE Enterprise 認定に関する試験であり、試験時間は 120 分です。この試験では、デュアル スタック（IPv4 および IPv6）アーキテクチャ、仮想化、インフラストラクチャ、ネットワーク アシュアランス、セキュリティ、自動化など、コア エンタープライズ ネットワーク テクノロジーの実装に関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Network Core Technologies コースの受講をお勧めします。",
+    "examContent": "この試験では、コア エンタープライズ ネットワーク テクノロジーの実装に関する受験者の知識とスキルが問われます。 デュアルスタック (IPv4 および IPv6）アーキテクチャ 仮想化 インフラストラクチャ ネットワークアシュアランス セキュリティ 自動化",
+    "contentOutline": "【出題分野】1.0 アーキテクチャ (15%)、2.0 仮想化 (10%)、3.0 インフラストラクチャ (30%)、4.0 ネットワークアシュアランス (10%)、5.0 セキュリティ (20%)、6.0 自動化 (15%)。CCNP Enterprise および CCIE Enterprise のコア要件。",
+    "contentHash": "d73d24c9a9c54189e12400b8eadbffb8db8f8b8b9d21ae51a5b4463fbc12b45d",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 93,
+        "name": "ENCOR (350-401)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Implementing Cisco Enterprise Advanced Routing and Services (300-410 ENARSI)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/enarsi-300-410.html",
+    "date": "",
+    "description": "Implementing Cisco Enterprise Advanced Routing and Services v1.0（ENARSI 300-410）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、レイヤ 3、VPN サービス、インフラストラクチャのセキュリティ、サービス、自動化など、高度なルーティング技術およびサービスの実装およびトラブルシューティングに関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Advanced Routing and Services コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Implementing Cisco Enterprise Advanced Routing and Services v1.0（ENARSI 300-410）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、レイヤ 3、VPN サービス、インフラストラクチャのセキュリティ、サービス、自動化など、高度なルーティング技術およびサービスの実装およびトラブルシューティングに関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Advanced Routing and Services コースの受講をお勧めします。",
+    "examContent": "この試験では、高度なルーティング技術およびサービスの実装およびトラブルシューティングに関する受験者の知識とスキルが問われます。 レイヤ 3 VPN サービス インフラストラクチャ セキュリティ インフラストラクチャ サービス インフラストラクチャの自動化",
+    "contentOutline": "【出題分野】1.0 レイヤ3技術 (35%)、2.0 VPNサービス (20%)、3.0 インフラストラクチャセキュリティ (20%)、4.0 インフラストラクチャサービス (25%)",
+    "contentHash": "c39aa01b1580fa321003e63c21e9e14872426136c82c80af834c076adf0b394d",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 94,
+        "name": "ENARSI (300-410)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Implementing Cisco SD-WAN Solutions (300-415 ENSDWI)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/ensdwi-300-415.html",
+    "date": "",
+    "description": "Implementing Cisco SD-WAN Solutions v1.0（ENSDWI 300-415）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、SD-WAN アーキテクチャ、コントローラの展開、エッジ ルータの展開、ポリシー、セキュリティ、サービス品質、マルチキャスト、管理および運用など、シスコの SD-WAN ソリューションに関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco SD-WAN Solutions コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Implementing Cisco SD-WAN Solutions v1.0（ENSDWI 300-415）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、SD-WAN アーキテクチャ、コントローラの展開、エッジ ルータの展開、ポリシー、セキュリティ、サービス品質、マルチキャスト、管理および運用など、シスコの SD-WAN ソリューションに関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco SD-WAN Solutions コースの受講をお勧めします。",
+    "examContent": "この試験では、シスコの SD-WAN ソリューションに関する受験者の知識とスキルが問われます。 SD-WAN アーキテクチャ コントローラの展開 エッジルータの展開 ポリシー セキュリティ QoS マルチキャスト 管理と運用",
+    "contentOutline": "【出題分野】1.0 Cisco SD-WANアーキテクチャ (20%)、2.0 コントローラ導入 (15%)、3.0 WANエッジルータ導入 (20%)、4.0 ポリシー (20%)、5.0 セキュリティとQoS (15%)、6.0 管理と運用 (10%)",
+    "contentHash": "2d5cb46c70bda56d74d9e0985dd35065853c6004dc666c92e24193e12d75b813",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 95,
+        "name": "ENSDWI (300-415)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Designing Cisco Enterprise Networks (300-420 ENSLD)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/ensld-300-420.html",
+    "date": "",
+    "description": "Designing Cisco Enterprise Networks v1.0（ENSLD 300-420）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、高度なアドレッシングおよびルーティング ソリューション、高度なエンタープライズ キャンパス ネットワーク、WAN、セキュリティ サービス、ネットワーク サービス、および SDA など、エンタープライズ デザインに関する受験者の知識が問われます。本試験の受験対策として、Designing Cisco Enterprise Networks コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Designing Cisco Enterprise Networks v1.0（ENSLD 300-420）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、高度なアドレッシングおよびルーティング ソリューション、高度なエンタープライズ キャンパス ネットワーク、WAN、セキュリティ サービス、ネットワーク サービス、および SDA など、エンタープライズ デザインに関する受験者の知識が問われます。本試験の受験対策として、Designing Cisco Enterprise Networks コースの受講をお勧めします。",
+    "examContent": "この試験では、エンタープライズ デザインに関する受験者の知識とスキルが問われます。 高度なアドレッシングおよびルーティング ソリューション 高度なエンタープライズ キャンパス ネットワーク WAN セキュリティサービス ネットワークサービス SDA",
+    "contentOutline": "【出題分野】1.0 高度なアドレス指定およびルーティングソリューション (25%)、2.0 高度なエンタープライズキャンパスネットワーク (25%)、3.0 WAN (20%)、4.0 ネットワークサービス (20%)、5.0 自動化 (10%)",
+    "contentHash": "b38b431868c5b5bf1554ddfd740f0b7d7762fe1ab92063ad211f56af8b40e88d",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 96,
+        "name": "ENSLD (300-420)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Designing Cisco Enterprise Wireless Networks (300-425 ENWLSD)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/enwlsd-300-425.html",
+    "date": "",
+    "description": "Designing Cisco Enterprise Wireless Networks v1.0（ENWLSD 300-425）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、サイト調査、有線およびワイヤレスインフラストラクチャ、モビリティ、および WLAN ハイ アベイラビリティなど、ワイヤレス ネットワーク デザインに関する受験者の知識が問われます。本試験の受験対策として、Designing Cisco Enterprise Wireless Networks コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Designing Cisco Enterprise Wireless Networks v1.0（ENWLSD 300-425）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、サイト調査、有線およびワイヤレスインフラストラクチャ、モビリティ、および WLAN ハイ アベイラビリティなど、ワイヤレス ネットワーク デザインに関する受験者の知識が問われます。本試験の受験対策として、Designing Cisco Enterprise Wireless Networks コースの受講をお勧めします。",
+    "examContent": "この試験では、ワイヤレス ネットワーク デザインに関する受験者の知識とスキルが問われます。 サイト調査 有線およびワイヤレス インフラストラクチャ モビリティ WLAN ハイ アベイラビリティ",
+    "contentOutline": "【出題分野】1.0 ワイヤレスサイト調査 (25%)、2.0 有線およびワイヤレスインフラストラクチャ設計 (30%)、3.0 モビリティ設計 (25%)、4.0 WLANの高可用性 (20%)",
+    "contentHash": "2a0ff0954ea6a1a485b2462170f41a553b34b28b751db80434dde55349ad2d9b",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 97,
+        "name": "ENWLSI (300-425)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Automating Cisco Enterprise Solutions (ENAUTO 300-435)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/enauto-300-435.html",
+    "date": "",
+    "description": "Automating and Programming Cisco Enterprise Solutions v1.0 （ENAUTO 300-435）は、CCNP Enterprise 認定および DevNet Professional 認定に関する試験であり、試験時間は 90 分です。この試験では、プログラミングの概念、Python プログラミング、API、コントローラ、自動化ツールなど、エンタープライズ自動化ソリューションの実装に関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Automation Solutions コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Automating and Programming Cisco Enterprise Solutions v1.0 （ENAUTO 300-435）は、CCNP Enterprise 認定および DevNet Professional 認定に関する試験であり、試験時間は 90 分です。この試験では、プログラミングの概念、Python プログラミング、API、コントローラ、自動化ツールなど、エンタープライズ自動化ソリューションの実装に関する受験者の知識が問われます。本試験の受験対策として、Implementing Cisco Enterprise Automation Solutions コースの受講をお勧めします。",
+    "examContent": "この試験では、エンタープライズ自動化ソリューションの実装に関する受験者の知識とスキルが問われます。 プログラミングの概念 Python プログラミング API コントローラ 自動化ツール",
+    "contentOutline": "【出題分野】1.0 ネットワークプログラマビリティの基礎 (15%)、2.0 Cisco DNA Center (20%)、3.0 Cisco SD-WAN (15%)、4.0 Cisco ISE (15%)、5.0 Cisco Meraki (15%)、6.0 ネットワークデバイスプログラマビリティ (20%)",
+    "contentHash": "e4eb4250ddd2f5c1deda00a65f73e3de278b0854325c5af704229c39278f4e17",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 98,
+        "name": "ENAUTO (300-435)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "Implementing Cisco Enterprise Wireless Networks (300-430 ENWLSI)",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/exams/current-list/enwlsi-300-430.html",
+    "date": "",
+    "description": "Implementing Cisco Enterprise Wireless Networks v1.0（ENWLSI 300-430）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、FlexConnect、QoS、マルチキャスト、高度なロケーション サービス、クライアント接続のセキュリティ、モニタリング、およびデバイスハードニングなど、ワイヤレス ネットワークの実装に関する受験者の知識が試されます。本試験の受験対策として、Implementing Cisco Enterprise Wireless Networks コースの受講をお勧めします。",
+    "category": "Professional（コンセントレーション試験）",
+    "examDuration": "90 分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "300 USD（約45,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "Implementing Cisco Enterprise Wireless Networks v1.0（ENWLSI 300-430）は、CCNP Enterprise 認定に関する試験であり、試験時間は 90 分です。この試験では、FlexConnect、QoS、マルチキャスト、高度なロケーション サービス、クライアント接続のセキュリティ、モニタリング、およびデバイスハードニングなど、ワイヤレス ネットワークの実装に関する受験者の知識が試されます。本試験の受験対策として、Implementing Cisco Enterprise Wireless Networks コースの受講をお勧めします。",
+    "examContent": "この試験では、ワイヤレス ネットワークの実装に関する受験者の知識とスキルが問われます。 FlexConnect QoS マルチキャスト 高度なロケーション サービス クライアントの接続におけるセキュリティ モニタリング デバイス ハードニング",
+    "contentOutline": "【出題分野】1.0 FlexConnect (15%)、2.0 QoS (10%)、3.0 マルチキャスト (10%)、4.0 高度なロケーションサービス (10%)、5.0 クライアント接続のセキュリティ (20%)、6.0 デバイスとインフラの監視 (15%)、7.0 デバイスの保守とトラブルシューティング (20%)",
+    "contentHash": "adcc8f243e3d986e0a486a80bd595124a9faf4d367840d200866c9611963aa7a",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 99,
+        "name": "ENWLSD (300-430)"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "CCNP Enterprise 認定とトレーニングプログラム",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/certifications/professional/ccnp-enterprise.html",
+    "date": "",
+    "description": "新しいCCNP Enterprise認定は、今日のエンタープライズネットワーキング技術におけるプロフェッショナルレベルの職務に備えるプログラムです。",
+    "category": "Professional",
+    "examDuration": "コア試験: 120分、コンセントレーション試験: 90分",
+    "examFormat": "多肢選択式（単一・複数選択）、ドラッグ＆ドロップ、シミュレーション",
+    "cost": "700 USD（コア試験 400 USD + コンセントレーション試験 300 USD）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督付き試験（OnVUE）",
+    "introduction": "新しいCCNP Enterprise認定は、今日のエンタープライズネットワーキング技術におけるプロフェッショナルレベルの職務に備えるプログラムです。",
+    "examContent": "新しいCCNP Enterprise認定は、今日のエンタープライズネットワーキング技術におけるプロフェッショナルレベルの職務に備えるプログラムです。",
+    "contentOutline": "【認定要件】コア試験（350-401 ENCOR）合格、および以下のコンセントレーション試験のうちいずれか1つに合格: 300-410 ENARSI、300-415 ENSDWI、300-420 ENSLD、300-425 ENWLSD、300-430 ENWLSI、300-435 ENAUTO。",
+    "contentHash": "ce3866be97e9d9a789283f9c38bd61e5939e65951b7a5797dd8931e58a5b4bfe",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "CCNP Enterprise"
+      }
+    ]
+  },
+  {
+    "provider": "Cisco Systems（シスコシステムズ）",
+    "title": "CCIE Enterprise Infrastructure 認定とトレーニングプログラム",
+    "url": "https://www.cisco.com/c/ja_jp/training-events/training-certifications/certifications/expert/ccie-enterprise-infrastructure.html",
+    "date": "",
+    "description": "新しい CCIE Enterprise Infrastructure 認定は、今日のエンタープライズ インフラストラクチャ技術におけるエキスパートレベルの職務に備えるプログラムです。エンタープライズ インフラストラクチャの拡張に寄与する自動化とプログラマビリティが含まれます。",
+    "category": "Expert",
+    "examDuration": "クオリファイ試験: 120分、実技ラボ試験: 8時間",
+    "examFormat": "筆記試験（多肢選択式等）および実技ラボ試験（ハンズオン実機環境）",
+    "cost": "2,000 USD（コア試験 400 USD + ラボ試験 1,600 USD）",
+    "testingOptions": "ピアソンVUE テストセンター（クオリファイ試験）/ シスコ ラボ試験会場（実技試験）",
+    "introduction": "新しい CCIE Enterprise Infrastructure 認定は、今日のエンタープライズ インフラストラクチャ技術におけるエキスパートレベルの職務に備えるプログラムです。エンタープライズ インフラストラクチャの拡張に寄与する自動化とプログラマビリティが含まれます。",
+    "examContent": "新しい CCIE Enterprise Infrastructure 認定は、今日のエンタープライズ インフラストラクチャ技術におけるエキスパートレベルの職務に備えるプログラムです。エンタープライズ インフラストラクチャの拡張に寄与する自動化とプログラマビリティが含まれます。",
+    "contentOutline": "【認定要件】ステップ1: クオリファイ試験（350-401 ENCOR）合格、ステップ2: CCIE Enterprise Infrastructure v1.1 実技ラボ試験（8時間）合格。ネットワークの設計・導入・運用・最適化のライフサイクル全体を検証。",
+    "contentHash": "983f2b91e1244a60cea68d608bc458f67c55a78a8da3698e5b0ea64d8792e836",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "CCIE Enterprise Infrastructure"
+      }
+    ]
   }
 ]
