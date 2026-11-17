@@ -6,13 +6,13 @@ const LPI_FEED_URL = 'https://www.lpi.org/feed/';
 const LINUC_NEWS_URL = 'https://linuc.org/news/';
 
 const LPI_QUALIFICATIONS = [
-  { no: 53, name: 'LPIC-1', aliases: ['LPIC-1', 'Linux Administrator'] },
-  { no: 54, name: 'LPIC-2', aliases: ['LPIC-2', 'Linux Engineer'] },
-  { no: 55, name: 'LPIC-3', aliases: ['LPIC-3', 'Enterprise Professional'] },
-  { no: 56, name: 'LinuC-1', aliases: ['LinuC-1', 'LinuC レベル1'] },
-  { no: 57, name: 'LinuC-2', aliases: ['LinuC-2', 'LinuC レベル2'] },
-  { no: 58, name: 'LinuC-3', aliases: ['LinuC-3', 'LinuC レベル3'] },
-  { no: 59, name: 'HTML5プロフェッショナル認定試験', aliases: ['HTML5プロフェッショナル', 'HTML5'] },
+  { no: 73, name: 'LPIC-1', aliases: ['LPIC-1', 'Linux Administrator'] },
+  { no: 74, name: 'LPIC-2', aliases: ['LPIC-2', 'Linux Engineer'] },
+  { no: 75, name: 'LPIC-3', aliases: ['LPIC-3', 'Enterprise Professional'] },
+  { no: 76, name: 'LinuC-1', aliases: ['LinuC-1', 'LinuC レベル1'] },
+  { no: 77, name: 'LinuC-2', aliases: ['LinuC-2', 'LinuC レベル2'] },
+  { no: 78, name: 'LinuC-3', aliases: ['LinuC-3', 'LinuC レベル3'] },
+  { no: 79, name: 'HTML5プロフェッショナル認定試験', aliases: ['HTML5プロフェッショナル', 'HTML5'] },
 ];
 
 /**

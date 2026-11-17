@@ -10,7 +10,15 @@
         "no": 99,
         "name": "Python3 エンジニア認定基礎試験"
       }
-    ]
+    ],
+    "category": "基礎試験",
+    "examDuration": "60分",
+    "examFormat": "CBT多肢選択式、40問",
+    "cost": "11,000円（税込、学割 5,500円）",
+    "testingOptions": "オデッセイコミュニケーションズCBTテストセンター",
+    "introduction": "主教材「オライリー・ジャパン『Pythonチュートリアル』」に基づき、Pythonの文法基礎と標準ライブラリの使い方を証明する基礎資格です。",
+    "examContent": "気軽な入門、制御構造ツール、データ構造、モジュール、入出力、エラーと例外、クラス、標準ライブラリの紹介、仮想環境とパッケージ。",
+    "contentOutline": "【出題分野】1.0 Pythonの特徴、2.0 気軽な入門 (6%)、3.0 制御構造ツール (22.5%)、4.0 データ構造 (17.5%)、5.0 モジュール (5%)、6.0 出入力 (5%)、7.0 エラーと例外 (10%)、8.0 クラス (7.5%)、9.0 標準ライブラリ (10%)、10.0 仮想環境・その他。"
   },
   {
     "provider": "Pythonエンジニア育成推進協会",
@@ -23,7 +31,15 @@
         "no": 100,
         "name": "Python3 エンジニア認定データ分析試験"
       }
-    ]
+    ],
+    "category": "データ分析試験",
+    "examDuration": "60分",
+    "examFormat": "CBT多肢選択式、40問",
+    "cost": "11,000円（税込、学割 5,500円）",
+    "testingOptions": "オデッセイコミュニケーションズCBTテストセンター",
+    "introduction": "主教材「翔泳社『Pythonによるあたらしいデータ分析の教科書』」に基づき、NumPy, pandas, Matplotlib, scikit-learnを用いたデータ分析スキルを評価します。",
+    "examContent": "データ分析エンジニアの役割、Pythonと環境、数学の基礎、ライブラリによる分析実践（NumPy, pandas, Matplotlib, scikit-learn）。",
+    "contentOutline": "【出題分野】1.0 データ分析エンジニアの役割 (5%)、2.0 Pythonと環境 (7.5%)、3.0 数学の基礎 (15%)、4.0 ライブラリによる分析実践 (72.5% [NumPy 17.5%, pandas 22.5%, Matplotlib 15%, scikit-learn 17.5%])。"
   },
   {
     "provider": "Pythonエンジニア育成推進協会",

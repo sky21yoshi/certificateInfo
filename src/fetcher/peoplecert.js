@@ -6,7 +6,7 @@ const {
 
 const PEOPLECERT_ITIL_URL = 'https://www.peoplecert.org/jp/browse-certifications/it-governance-and-service-management/ITIL-1';
 const PEOPLECERT_QUALIFICATIONS = [
-  { no: 106, name: 'ITIL Foundation' },
+  { no: 126, name: 'ITIL Foundation' },
 ];
 
 async function fetchPeopleCertUpdates(customHtml = null) {

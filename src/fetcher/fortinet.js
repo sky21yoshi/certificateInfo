@@ -6,7 +6,7 @@ const {
 const FORTINET_CERTIFICATION_URL = 'https://www.fortinet.com/jp/training-certification';
 const FORTINET_PROGRAM_UPDATE_URL = 'https://www.fortinet.com/nse-training-update';
 const FORTINET_QUALIFICATIONS = [
-  { no: 107, name: 'Fortinet Certified Professional (FCP)' },
+  { no: 127, name: 'Fortinet Certified Professional (FCP)' },
 ];
 
 async function fetchFortinetUpdates(customPages = null) {

@@ -5,9 +5,9 @@ const {
 
 const CERTIFY_C_LANGUAGE_URL = 'https://www.sikaku.gr.jp/js/cp/';
 const CERTIFY_QUALIFICATIONS = [
-  { no: 96, name: 'C言語プログラミング能力認定試験3級' },
-  { no: 97, name: 'C言語プログラミング能力認定試験2級' },
-  { no: 98, name: 'C言語プログラミング能力認定試験1級' },
+  { no: 116, name: 'C言語プログラミング能力認定試験3級' },
+  { no: 117, name: 'C言語プログラミング能力認定試験2級' },
+  { no: 118, name: 'C言語プログラミング能力認定試験1級' },
 ];
 
 async function fetchCertifyUpdates(customHtml = null) {

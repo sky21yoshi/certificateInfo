@@ -6,19 +6,19 @@ const {
 
 const COMPTIA_BLOG_URL = 'https://www.comptia.org/ja-jp/blog/';
 const COMPTIA_QUALIFICATIONS = [
-  { no: 71, name: 'IT Fundamentals', aliases: ['IT Fundamentals', 'ITF+'] },
-  { no: 72, name: 'A+', aliases: ['CompTIA A+', 'A+'] },
-  { no: 73, name: 'Network+', aliases: ['Network+'] },
-  { no: 74, name: 'Security+', aliases: ['Security+'] },
-  { no: 75, name: 'Cloud+', aliases: ['Cloud+'] },
-  { no: 76, name: 'Linux+', aliases: ['Linux+'] },
-  { no: 77, name: 'Server+', aliases: ['Server+'] },
-  { no: 78, name: 'CASP+', aliases: ['CASP+', 'SecurityX'] },
-  { no: 79, name: 'F+', aliases: ['CompTIA F+', 'F+'] },
-  { no: 80, name: 'PenTest+', aliases: ['PenTest+'] },
-  { no: 81, name: 'Project+', aliases: ['Project+'] },
-  { no: 82, name: 'CTT+', aliases: ['CTT+'] },
-  { no: 83, name: 'Cloud Essentials', aliases: ['Cloud Essentials'] },
+  { no: 91, name: 'IT Fundamentals', aliases: ['IT Fundamentals', 'ITF+'] },
+  { no: 92, name: 'A+', aliases: ['CompTIA A+', 'A+'] },
+  { no: 93, name: 'Network+', aliases: ['Network+'] },
+  { no: 94, name: 'Security+', aliases: ['Security+'] },
+  { no: 95, name: 'Cloud+', aliases: ['Cloud+'] },
+  { no: 96, name: 'Linux+', aliases: ['Linux+'] },
+  { no: 97, name: 'Server+', aliases: ['Server+'] },
+  { no: 98, name: 'CASP+', aliases: ['CASP+', 'SecurityX'] },
+  { no: 99, name: 'F+', aliases: ['CompTIA F+', 'F+'] },
+  { no: 100, name: 'PenTest+', aliases: ['PenTest+'] },
+  { no: 101, name: 'Project+', aliases: ['Project+'] },
+  { no: 102, name: 'CTT+', aliases: ['CTT+'] },
+  { no: 103, name: 'Cloud Essentials', aliases: ['Cloud Essentials'] },
 ];
 
 function matchCompTIAQualifications(text) {

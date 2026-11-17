@@ -6,10 +6,10 @@ const {
 
 const ANTHROPIC_ACADEMY_URL = 'https://academy.claude.com/courses';
 const ANTHROPIC_QUALIFICATIONS = [
-  { no: 88, name: 'Claude Certified Associate – Foundations (CCAO-F)' },
-  { no: 89, name: 'Claude Certified Architect – Foundations (CCAR-F)' },
-  { no: 90, name: 'Claude Certified Developer – Foundations (CCDV-F)' },
-  { no: 91, name: 'Claude Certified Architect – Professional (CCAR-P)' },
+  { no: 108, name: 'Claude Certified Associate – Foundations (CCAO-F)' },
+  { no: 109, name: 'Claude Certified Architect – Foundations (CCAR-F)' },
+  { no: 110, name: 'Claude Certified Developer – Foundations (CCDV-F)' },
+  { no: 111, name: 'Claude Certified Architect – Professional (CCAR-P)' },
 ];
 
 function matchAnthropicQualifications(text) {

@@ -142,5 +142,281 @@
     "date": "",
     "contentHash": "0a79625d",
     "relatedQualifications": []
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "IT Fundamentals 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/core/comptia_itf/",
+    "date": "",
+    "description": "ITの基礎概念、ハードウェア、ソフトウェア、ネットワーク、セキュリティ、データベースの基礎を包括的にカバーする入門資格です。",
+    "category": "Core / Foundational",
+    "examDuration": "60分",
+    "examFormat": "多肢選択式、75問",
+    "cost": "18,700円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン（OnVUE）",
+    "introduction": "ITの基礎概念、ハードウェア、ソフトウェア、ネットワーク、セキュリティ、データベースの基礎を包括的にカバーする入門資格です。",
+    "examContent": "ITインフラ、ソフトウェア開発の基礎、データベースの基礎、セキュリティの基礎、トラブルシューティング。",
+    "contentOutline": "【出題分野】1.0 ITの概念と用語 (17%)、2.0 インフラストラクチャ (22%)、3.0 アプリケーションとソフトウェア (18%)、4.0 ソフトウェア開発 (12%)、5.0 データベースの基礎 (11%)、6.0 セキュリティ (20%)。",
+    "contentHash": "4088b45fc85cfc51f05f7496640161f3c82c99c3bdb4aad59b52bd47ac06da5c",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 91,
+        "name": "IT Fundamentals"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "A+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/core/comptia_a/",
+    "date": "",
+    "description": "PCハードウェア、モバイルデバイス、OS、ネットワーク、セキュリティ、クラウドのトラブルシューティングを担うサポート技術者の業界標準資格です。",
+    "category": "Core",
+    "examDuration": "Core 1: 90分、Core 2: 90分",
+    "examFormat": "多肢選択式およびパフォーマンスベーステスト（PBT）、最大各90問",
+    "cost": "各試験 36,960円（税込、2試験合計 73,920円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "PCハードウェア、モバイルデバイス、OS、ネットワーク、セキュリティ、クラウドのトラブルシューティングを担うサポート技術者の業界標準資格です。",
+    "examContent": "Core 1 (220-1101): モバイルデバイス、ネットワーキング技術、ハードウェア、仮想化とクラウド。Core 2 (220-1102): OSのインストールと構成、セキュリティ、ソフトウェアトラブルシューティング、運用手順。",
+    "contentOutline": "【出題分野】Core 1: モバイル(15%)、ネットワーク(20%)、ハードウェア(25%)、仮想化/クラウド(11%)、トラブルシューティング(29%)。Core 2: OS(31%)、セキュリティ(25%)、ソフトウェアトラブルシューティング(22%)、運用手順(22%)。",
+    "contentHash": "94c2b9705ef826001f0cba2c0fa666001b85564482d9fe9378a3be74e12b09b8",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 92,
+        "name": "A+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Network+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/core/comptia_network/",
+    "date": "",
+    "description": "ベンダーニュートラルなネットワーク設計、構成、管理、トラブルシューティングスキルを網羅する中級ネットワーク認定です。",
+    "category": "Core / Infrastructure",
+    "examDuration": "90分",
+    "examFormat": "単一・複数選択式およびパフォーマンスベーステスト（PBT）、最大90問",
+    "cost": "49,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "ベンダーニュートラルなネットワーク設計、構成、管理、トラブルシューティングスキルを網羅する中級ネットワーク認定です。",
+    "examContent": "ネットワーク概念、ネットワーク実装、ネットワーク運用、ネットワークセキュリティ、ネットワークトラブルシューティング。",
+    "contentOutline": "【出題分野】1.0 ネットワークの概念 (23%)、2.0 ネットワークの実装 (19%)、3.0 ネットワークの運用 (16%)、4.0 ネットワークセキュリティ (19%)、5.0 ネットワークのトラブルシューティング (23%)。",
+    "contentHash": "50c9f53b73e18d9cce59f9744df061d51afd36e024bc1b2a70de123d9454cbbb",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 93,
+        "name": "Network+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Security+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/core/comptia_security/",
+    "date": "",
+    "description": "セキュリティ実務担当者として不可欠なベースラインスキルを証明する、グローバルで最も認知されているセキュリティ資格です。",
+    "category": "Core / Cybersecurity",
+    "examDuration": "90分",
+    "examFormat": "単一・複数選択式およびパフォーマンスベーステスト（PBT）、最大90問",
+    "cost": "55,440円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "セキュリティ実務担当者として不可欠なベースラインスキルを証明する、グローバルで最も認知されているセキュリティ資格です。",
+    "examContent": "一般的なセキュリティ概念、脅威・脆弱性・インシデントへの対策、セキュリティアーキテクチャ、セキュリティ運用、セキュリティプログラム管理・ガバナンス。",
+    "contentOutline": "【出題分野】1.0 一般的なセキュリティの概念 (12%)、2.0 脅威、脆弱性、および対策 (22%)、3.0 セキュリティアーキテクチャ (18%)、4.0 セキュリティ運用 (28%)、5.0 セキュリティプログラム管理および監視 (20%)。",
+    "contentHash": "6ed3cb668f2878178af12bad4cfba541cc5eeb3ccd1692f280d6ddef073a8dc7",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 94,
+        "name": "Security+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Cloud+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/infrastructure/comptia_cloud/",
+    "date": "",
+    "description": "マルチクラウド環境におけるインフラ構築、サービス移行、セキュリティ、最適化、トラブルシューティングスキルを評価します。",
+    "category": "Infrastructure",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式およびパフォーマンスベーステスト、最大90問",
+    "cost": "49,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "マルチクラウド環境におけるインフラ構築、サービス移行、セキュリティ、最適化、トラブルシューティングスキルを評価します。",
+    "examContent": "クラウドアーキテクチャ、クラウドセキュリティ、クラウド展開、運用・サポート、トラブルシューティング。",
+    "contentOutline": "【出題分野】1.0 クラウドアーキテクチャ (13%)、2.0 セキュリティ (20%)、3.0 展開 (23%)、4.0 運用とサポート (22%)、5.0 トラブルシューティング (22%)。",
+    "contentHash": "30a2135f4a5b63e991d9d78a844e272bf2f5eaacaab4099e8da803ca0a15a274",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 95,
+        "name": "Cloud+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Linux+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/infrastructure/comptia_linux/",
+    "date": "",
+    "description": "Linuxサーバーの導入、運用保守、コマンドライン管理、セキュリティ、コンテナや自動化を含む包括的スキルを評価します。",
+    "category": "Infrastructure",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式およびパフォーマンスベーステスト、最大90問",
+    "cost": "49,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "Linuxサーバーの導入、運用保守、コマンドライン管理、セキュリティ、コンテナや自動化を含む包括的スキルを評価します。",
+    "examContent": "システム管理、セキュリティ、Linuxのトラブルシューティング・診断、自動化・スクリプト作成。",
+    "contentOutline": "【出題分野】1.0 システム管理 (32%)、2.0 セキュリティ (21%)、3.0 スクリプト、コンテナ、自動化 (19%)、4.0 トラブルシューティング (28%)。",
+    "contentHash": "ef7fdf42596bf8445667d5ddc530bd643f7b10780fb50788a501a7b2a53e9e51",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 96,
+        "name": "Linux+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Server+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/infrastructure/comptia_server/",
+    "date": "",
+    "description": "データセンターやオンプレミス・クラウド環境におけるサーバーハードウェア、ストレージ、トラブルシューティングを網羅する資格です。",
+    "category": "Infrastructure",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式、最大90問",
+    "cost": "49,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "データセンターやオンプレミス・クラウド環境におけるサーバーハードウェア、ストレージ、トラブルシューティングを網羅する資格です。",
+    "examContent": "サーバーハードウェアのインストール・管理、サーバー管理、セキュリティ、ストレージ、障害復旧。",
+    "contentOutline": "【出題分野】1.0 サーバーハードウェアのインストールと管理 (18%)、2.0 サーバー管理 (30%)、3.0 セキュリティとディザスタリカバリ (24%)、4.0 トラブルシューティング (28%)。",
+    "contentHash": "eae0b7547536d69c51cf2e0207b3de705b9784b639d69e766b0d2532c8c73407",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 97,
+        "name": "Server+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "CASP 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/cybersecurity/comptia_casp/",
+    "date": "",
+    "description": "複雑なエンタープライズ環境でセキュアなソリューションを設計・設計監理できる高度セキュリティアーキテクト向け認定です（CompTIA SecurityX）。",
+    "category": "Cybersecurity（最上位）",
+    "examDuration": "165分",
+    "examFormat": "多肢選択式およびパフォーマンスベーステスト、最大90問",
+    "cost": "66,000円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "複雑なエンタープライズ環境でセキュアなソリューションを設計・設計監理できる高度セキュリティアーキテクト向け認定です（CompTIA SecurityX）。",
+    "examContent": "セキュリティアーキテクチャ、セキュリティ運用、セキュリティエンジニアリング・暗号技術、ガバナンス・リスク・コンプライアンス。",
+    "contentOutline": "【出題分野】1.0 セキュリティアーキテクチャ (29%)、2.0 セキュリティ運用 (30%)、3.0 セキュリティエンジニアリングおよび暗号技術 (26%)、4.0 ガバナンス、リスク、コンプライアンス (15%)。",
+    "contentHash": "06401e6af0c4b9daa5b306f837b493882c46e8b3fe1e74eb4c5ee530f1f2c7dc",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 98,
+        "name": "CASP"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "PenTest+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/cybersecurity/comptia_pentest/",
+    "date": "",
+    "description": "ペネトレーションテスト（侵入テスト）の計画、スコープ定義、情報収集、攻撃手法、脆弱性報告までの一連の実践スキルを認定します。",
+    "category": "Cybersecurity",
+    "examDuration": "165分",
+    "examFormat": "多肢選択式およびパフォーマンスベーステスト、最大85問",
+    "cost": "55,440円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "ペネトレーションテスト（侵入テスト）の計画、スコープ定義、情報収集、攻撃手法、脆弱性報告までの一連の実践スキルを認定します。",
+    "examContent": "計画とスコープ定義、情報収集と脆弱性スキャン、攻撃とエクスプロイト、報告と伝達、ツールとコード分析。",
+    "contentOutline": "【出題分野】1.0 計画とスコープ定義 (14%)、2.0 情報収集と脆弱性スキャン (22%)、3.0 攻撃とエクスプロイト (30%)、4.0 レポーティングとコミュニケーション (18%)、5.0 ツールとコード分析 (16%)。",
+    "contentHash": "100888c1e34131f211b70407d6c8e136736ea03f727f2b1ed50d3f1f5d1a4e75",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 100,
+        "name": "PenTest+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Project+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/additional/comptia_project/",
+    "date": "",
+    "description": "小〜中規模プロジェクトのライフサイクル管理、スコープ・リソース・スケジュール管理、リスクマネジメントスキルを認定します。",
+    "category": "Professional",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式、最大90問",
+    "cost": "49,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "小〜中規模プロジェクトのライフサイクル管理、スコープ・リソース・スケジュール管理、リスクマネジメントスキルを認定します。",
+    "examContent": "プロジェクトの基礎、プロジェクトの制約、リソースと調達、プロジェクトの進捗と品質、変更管理とコミュニケーション。",
+    "contentOutline": "【出題分野】1.0 プロジェクトの基礎 (28%)、2.0 プロジェクトの制約 (20%)、3.0 コミュニケーションと変更管理 (24%)、4.0 プロジェクトツールとドキュメント (28%)。",
+    "contentHash": "39eaff3842fa9fafb8232b7dfc3e212a6eccc3cf2001e4743fe56b84b7c2d092",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 101,
+        "name": "Project+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "CTT+ 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/additional/comptia_ctt/",
+    "date": "",
+    "description": "ITおよび技術教育のプロフェッショナルインストラクターとして、優れた指導技法とコミュニケーション能力を証明します。",
+    "category": "Training / Education",
+    "examDuration": "筆記試験: 90分、実技審査: 模擬講義ビデオ提出",
+    "examFormat": "多肢選択式（95問）および実技ビデオ提出審査",
+    "cost": "筆記 44,000円 + 実技審査 48,400円",
+    "testingOptions": "ピアソンVUE テストセンター（筆記）およびオンライン提出（実技）",
+    "introduction": "ITおよび技術教育のプロフェッショナルインストラクターとして、優れた指導技法とコミュニケーション能力を証明します。",
+    "examContent": "コース準備、効果的な指導手法、学習者との対話とファシリテーション、評価とフィードバック。",
+    "contentOutline": "【出題分野】1.0 コースの計画と準備、2.0 指導方法とメディア、3.0 インストラクターの信頼性とコミュニケーション、4.0 グループのファシリテーション、5.0 学習成果の評価。",
+    "contentHash": "935d4f4ba6037da79c23ff767ad9d228204dcec0d5e2ba5dda7301ea56235c10",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 102,
+        "name": "CTT+"
+      }
+    ]
+  },
+  {
+    "provider": "CompTIA（コンプティア）",
+    "title": "Cloud Essentials 資格詳細情報",
+    "url": "https://www.comptia.jp/certif/additional/comptia_cloud_essentials/",
+    "date": "",
+    "description": "クラウドの基礎原理、ビジネス面および技術面のメリット・リスク、クラウド導入戦略の判断基準を理解していることを証明します。",
+    "category": "Foundational / Business",
+    "examDuration": "60分",
+    "examFormat": "多肢選択式、最大75問",
+    "cost": "18,700円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "クラウドの基礎原理、ビジネス面および技術面のメリット・リスク、クラウド導入戦略の判断基準を理解していることを証明します。",
+    "examContent": "クラウドの概念、ビジネスの原則、運用の優先順位、ガバナンス・リスク・コンプライアンス。",
+    "contentOutline": "【出題分野】1.0 クラウドの概念 (24%)、2.0 ビジネス原則 (21%)、3.0 管理と運用 (25%)、4.0 ガバナンス、リスク、コンプライアンス (30%)。",
+    "contentHash": "c899aca0e0a8f2f5eddb39590fbd50ec4ada826ef7a8e93b829ac2cd93f999a4",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 103,
+        "name": "Cloud Essentials"
+      }
+    ]
   }
 ]

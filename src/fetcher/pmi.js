@@ -5,7 +5,7 @@ const {
 
 const PMI_PMP_URL = 'https://www.pmi-japan.org/pmp_license/';
 const PMI_QUALIFICATIONS = [
-  { no: 104, name: 'Project Management Professional (PMP)' },
+  { no: 124, name: 'Project Management Professional (PMP)' },
 ];
 
 async function fetchPmiUpdates(customHtml = null) {

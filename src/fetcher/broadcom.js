@@ -5,10 +5,10 @@ const {
 
 const BROADCOM_CERTIFICATION_URL = 'https://www.broadcom.com/support/education/vmware/certification';
 const BROADCOM_QUALIFICATIONS = [
-  { no: 67, name: 'VCP (VMware Certified Professional)' },
-  { no: 68, name: 'VCAP (VMware Certified Advanced Professional)' },
-  { no: 69, name: 'VCDX (VMware Certified Design Expert)' },
-  { no: 70, name: 'VCTA (VMware Certified Technical Associate)' },
+  { no: 87, name: 'VCP (VMware Certified Professional)' },
+  { no: 88, name: 'VCAP (VMware Certified Advanced Professional)' },
+  { no: 89, name: 'VCDX (VMware Certified Design Expert)' },
+  { no: 90, name: 'VCTA (VMware Certified Technical Associate)' },
 ];
 
 async function fetchBroadcomUpdates(customHtml = null) {

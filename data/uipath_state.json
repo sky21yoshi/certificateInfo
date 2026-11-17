@@ -38,7 +38,15 @@
           "エージェンティック オートメーション プロフェッショナル"
         ]
       }
-    ]
+    ],
+    "category": "Associate",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式、60問",
+    "cost": "150 USD（約22,500円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督試験",
+    "introduction": "UiPath Studioを用いた基本的な自動化プロセスの開発、データ操作、セレクター制御、例外処理を実務で適用できる開発者を認定します。",
+    "examContent": "UiPath Studioの基礎、変数と引数、制御フロー、データ操作、セレクターの基礎とUI自動化、例外処理とデバッグ。",
+    "contentOutline": "【出題分野】1.0 UiPath Studioの基本操作、2.0 変数、引数、データ型、3.0 制御フローとループ構造、4.0 UI自動化とセレクター、5.0 データ操作（DataTable/Excel/文字列）、6.0 エラー処理とデバッグ。"
   },
   {
     "provider": "UiPath",

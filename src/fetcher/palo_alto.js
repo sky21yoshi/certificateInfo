@@ -5,7 +5,7 @@ const {
 
 const PALO_ALTO_CERTIFICATION_URL = 'https://www.paloaltonetworks.com/services/education/certification';
 const PALO_ALTO_QUALIFICATIONS = [
-  { no: 108, name: 'Palo Alto Networks Network Security Professional' },
+  { no: 128, name: 'Palo Alto Networks Network Security Professional' },
 ];
 
 async function fetchPaloAltoUpdates(customHtml = null) {

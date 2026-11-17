@@ -15,5 +15,51 @@
         "name": "WinActor RPA技術者検定エキスパート"
       }
     ]
+  },
+  {
+    "provider": "NTTアドバンステクノロジ（NTT-AT）",
+    "title": "WinActor RPA技術者検定アソシエイト 資格詳細情報",
+    "url": "https://winactor.com/rpa-kentei/associate/",
+    "date": "",
+    "description": "WinActorの基本的な操作方法、各種ノードの機能理解、基礎的なシナリオ作成能力を評価する検定です。",
+    "category": "アソシエイト",
+    "examDuration": "60分",
+    "examFormat": "CBT多肢選択式、50問",
+    "cost": "7,700円（税込）",
+    "testingOptions": "CBTテストセンター（全国）",
+    "introduction": "WinActorの基本的な操作方法、各種ノードの機能理解、基礎的なシナリオ作成能力を評価する検定です。",
+    "examContent": "WinActorの基本概念・画面構成、基本ノード（待機、変数、条件分岐、繰り返し）、画像マッチング、エミュレーション、Excel操作ノード。",
+    "contentOutline": "【出題範囲】1.0 WinActorの基本概念と画面操作、2.0 変数とデータ管理、3.0 基本的な制御ノード（条件分岐・繰り返し）、4.0 GUI操作ノード（画像マッチング・エミュレーション）、5.0 ライブラリノード（Excel操作・ファイル操作）、6.0 シナリオ作成手順とデバッグ。",
+    "contentHash": "e0642d9bd1e483b00957dacb3ef31857d89d9903249b8630a4f88f5f9cc24888",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 129,
+        "name": "WinActor RPA技術者検定アソシエイト"
+      }
+    ]
+  },
+  {
+    "provider": "NTTアドバンステクノロジ（NTT-AT）",
+    "title": "WinActor RPA技術者検定エキスパート 資格詳細情報",
+    "url": "https://winactor.com/rpa-kentei/expert/",
+    "date": "",
+    "description": "複雑な業務要件に対応する高品質で例外処理を考慮した実用的なWinActorシナリオを短時間で構築できる高度技術者を認定します。",
+    "category": "エキスパート",
+    "examDuration": "120分",
+    "examFormat": "実技試験（PC環境での複雑な業務自動化シナリオの作成・編集）",
+    "cost": "19,800円（税込）",
+    "testingOptions": "指定試験会場での実技試験",
+    "introduction": "複雑な業務要件に対応する高品質で例外処理を考慮した実用的なWinActorシナリオを短時間で構築できる高度技術者を認定します。",
+    "examContent": "複合的なシナリオ設計・作成、エラーハンドリング（例外処理）、正規表現やスクリプト実行、外部アプリケーション連携、シナリオの保守性・可読性の担保。",
+    "contentOutline": "【実技課題】1.0 仕様書に基づく複雑な自動化シナリオの設計と構築、2.0 例外処理とエラーハンドリングの実装、3.0 効率的な変数設計と保守性の高いモジュール構造、4.0 各種アプリケーション（Web/Windows/Excel等）の確実な操作制御。",
+    "contentHash": "31aeeb2c605741f9fd41177155b821df41e5ae8fd16389091249a7b4aa2c0212",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 130,
+        "name": "WinActor RPA技術者検定エキスパート"
+      }
+    ]
   }
 ]

@@ -23,5 +23,97 @@
         "name": "VCTA (VMware Certified Technical Associate)"
       }
     ]
+  },
+  {
+    "provider": "Broadcom（旧 VMware）",
+    "title": "VCP(VMware Certied Professional) 資格詳細情報",
+    "url": "https://www.vmware.com/learning/certification/vcp-dcv.html",
+    "date": "",
+    "description": "VMware vSphere環境のインストール、構成、管理、最適化を独立して行えるエンジニアを認定する中核資格です。",
+    "category": "Professional",
+    "examDuration": "130分",
+    "examFormat": "CBT多肢選択式（約70問）",
+    "cost": "250 USD（約37,500円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン（OnVUE）",
+    "introduction": "VMware vSphere環境のインストール、構成、管理、最適化を独立して行えるエンジニアを認定する中核資格です。",
+    "examContent": "VMware vSphereアーキテクチャ、vCenter ServerおよびESXiホストの構成、vSphere標準・分散スイッチのネットワーク、VMFS/vSANストレージ、仮想マシン管理、vSphereクラスタ（HA/DRS）の導入・保守。",
+    "contentOutline": "【出題分野】1.0 アーキテクチャとテクノロジー、2.0 VMware製品とソリューション、3.0 vSphereのインストール、構成、セットアップ、4.0 パフォーマンスの調整・最適化、5.0 管理および運用タスク、6.0 トラブルシューティング。",
+    "contentHash": "7f04353807046ed3b06133f286068c6c3c6aeb4a94b66c03d921c18123f7f994",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 87,
+        "name": "VCP(VMware Certied Professional)"
+      }
+    ]
+  },
+  {
+    "provider": "Broadcom（旧 VMware）",
+    "title": "VCAP(VMware Certified Advanced Processional) 資格詳細情報",
+    "url": "https://www.vmware.com/learning/certification/vcap-dcv-deploy.html",
+    "date": "",
+    "description": "大規模エンタープライズ向けのVMware仮想化インフラの高度な設計（Design）およびハンズオン展開・運用（Deploy）能力を認定します。",
+    "category": "Advanced Professional",
+    "examDuration": "Design試験: 135分、Deploy試験: 205分",
+    "examFormat": "Design試験（多肢選択・ドラッグ&ドロップ）または Deploy試験（実技ラボ操作試験）",
+    "cost": "各試験 450 USD（約67,500円）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "大規模エンタープライズ向けのVMware仮想化インフラの高度な設計（Design）およびハンズオン展開・運用（Deploy）能力を認定します。",
+    "examContent": "要件分析・概念/論理/物理設計、高度なvSphere/vSAN/NSX機能の実装、CLI/APIによる自動化、高度なパフォーマンストラブルシューティング。",
+    "contentOutline": "【出題分野】Design: 1.0 概念設計の作成、2.0 論理設計の作成、3.0 物理設計の作成。Deploy: 1.0 vSphere環境の展開・管理、2.0 高度なネットワーク・ストレージ構成、3.0 障害復旧とセキュリティ強化の実機実装。",
+    "contentHash": "100f1f9334dc4eae4006fd274f29a06fcfb95ebdadab164a64cedf7eb88697d3",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 88,
+        "name": "VCAP(VMware Certified Advanced Processional)"
+      }
+    ]
+  },
+  {
+    "provider": "Broadcom（旧 VMware）",
+    "title": "VCDX(VMware Certified Design Expert) 資格詳細情報",
+    "url": "https://www.vmware.com/learning/certification/vcdx.html",
+    "date": "",
+    "description": "仮想化業界最高峰の資格であり、ミッションクリティカルな大規模エンタープライズ基盤のアーキテクチャ設計・統括ができる世界トップレベルの技術者に授与されます。",
+    "category": "Expert（最高峰）",
+    "examDuration": "設計書提出＋審査員による口頭試問（ディフェンス）",
+    "examFormat": "本格的な本番システム設計書の審査、および面接・プレゼンテーションによる防衛口頭試問",
+    "cost": "設計書審査料 995 USD + ディフェンス審査料 3,000 USD",
+    "testingOptions": "Broadcom審査会場またはリモート審査パネル",
+    "introduction": "仮想化業界最高峰の資格であり、ミッションクリティカルな大規模エンタープライズ基盤のアーキテクチャ設計・統括ができる世界トップレベルの技術者に授与されます。",
+    "examContent": "実際の顧客要件に基づく完全な仮想化基盤設計書の作成、審査員（VCDXパネル）の前での設計意図のプレゼンテーション、および突発的なトラブル対応シナリオへの質疑応答。",
+    "contentOutline": "【評価分野】1.0 ビジネス要件の分析とアーキテクチャへの反映、2.0 可用性・管理容易性・パフォーマンス・リカバリ可能性・セキュリティの設計検証、3.0 実践的な設計防御プレゼンテーションとシナリオ質疑応答。",
+    "contentHash": "a9e93d476c92a7f5c77095b1ecce75d6e965d98d29ac588254f9cd3e41e7f3c4",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 89,
+        "name": "VCDX(VMware Certified Design Expert)"
+      }
+    ]
+  },
+  {
+    "provider": "Broadcom（旧 VMware）",
+    "title": "VCTA（VMware Certified Technical Associate） 資格詳細情報",
+    "url": "https://www.vmware.com/learning/certification/vcta-dcv.html",
+    "date": "",
+    "description": "仮想化の基本概念、VMware製品群の基礎、日常的な仮想マシン管理タスクを実行できる初級エンジニア向け認定です。",
+    "category": "Technical Associate (Entry)",
+    "examDuration": "90分",
+    "examFormat": "CBT多肢選択式（約50問）",
+    "cost": "125 USD（約18,500円）",
+    "testingOptions": "ピアソンVUE オンライン監督試験またはテストセンター",
+    "introduction": "仮想化の基本概念、VMware製品群の基礎、日常的な仮想マシン管理タスクを実行できる初級エンジニア向け認定です。",
+    "examContent": "仮想化の基礎知識、vSphereのコンポーネント概要、仮想マシンの作成と設定、基本的なストレージとネットワーク、監視機能の利用。",
+    "contentOutline": "【出題分野】1.0 仮想化およびvSphereの基本概念、2.0 vSphereコンポーネントの識別、3.0 基本的な仮想マシン操作とテンプレート、4.0 リソース監視とアラーム確認。",
+    "contentHash": "87bc269a4a9293feb9017a20d779dda745ac7fc14e41f2e897935c39de51abfe",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 90,
+        "name": "VCTA（VMware Certified Technical Associate）"
+      }
+    ]
   }
 ]

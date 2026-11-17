@@ -10,7 +10,15 @@
         "no": 107,
         "name": "Fortinet Certified Professional (FCP)"
       }
-    ]
+    ],
+    "category": "Professional",
+    "examDuration": "90分",
+    "examFormat": "CBT多肢選択式（約50〜60問）",
+    "cost": "200〜400 USD（約30,000円〜60,000円、コア＋選択試験）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン（OnVUE）",
+    "introduction": "FortiGateを中心とするFortinetセキュリティファブリック製品の導入・構成・運用管理を担うセキュリティプロフェッショナル認定です。",
+    "examContent": "ネットワークセキュリティ（FortiGate Administrator等）コア試験、およびパブリック/プライベートクラウドセキュリティ、セキュアアクセス等の選択試験。",
+    "contentOutline": "【出題分野】1.0 システム展開と初期設定、2.0 ファイアウォールポリシーとNAT、3.0 セキュリティファブリック統合、4.0 認証とアクセス制御、5.0 SSL/IPsec VPN、6.0 セキュリティプロファイル（アンチウイルス/IPS/Webフィルタ）、7.0 診断とトラブルシューティング。"
   },
   {
     "provider": "Fortinet",

@@ -37,5 +37,28 @@
         "name": "ITIL Foundation"
       }
     ]
+  },
+  {
+    "provider": "PeopleCert（AXELOS）",
+    "title": "ITIL Foundation 資格詳細情報",
+    "url": "https://www.peoplecert.org/ways-to-certify/peoplecert-and-axelos",
+    "date": "",
+    "description": "ITサービスマネジメント（ITSM）のベストプラクティス「ITIL 4」の基礎概念、サービス価値システム（SVS）、4つの側面を理解していることを証明します。",
+    "category": "Foundation",
+    "examDuration": "60分",
+    "examFormat": "多肢選択式（四肢択一）、40問",
+    "cost": "約55,000円〜65,000円（PeopleCertバウチャー価格）",
+    "testingOptions": "PeopleCertオンライン監督試験または公認研修機関",
+    "introduction": "ITサービスマネジメント（ITSM）のベストプラクティス「ITIL 4」の基礎概念、サービス価値システム（SVS）、4つの側面を理解していることを証明します。",
+    "examContent": "サービスマネジメントの主要概念、ITILの7つの指導原則、サービスマネジメントの4つの側面、サービスバリューシステム（SVS）とサービスバリューチェーン（SVC）、主要なITILプラクティス。",
+    "contentOutline": "【出題分野】1.0 サービスマネジメントの主要概念、2.0 ITILの指導原則、3.0 サービスマネジメントの4つの側面、4.0 サービスバリューシステム(SVS)の目的と構成要素、5.0 主要プラクティス（インシデント管理、サービスデスク、変更実現、問題管理等）。",
+    "contentHash": "23d8c37eb5e43fb257d247bf706ac6aea16a32168d9c9dd79a5dd6b5f91dcedb",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 126,
+        "name": "ITIL Foundation"
+      }
+    ]
   }
 ]

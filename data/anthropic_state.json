@@ -23,5 +23,28 @@
         "name": "Claude Certified Architect – Professional (CCAR-P)"
       }
     ]
+  },
+  {
+    "provider": "Anthropic（アンスロピック）",
+    "title": "Claude Certified Associate – Foundations（CCAO-F） 資格詳細情報",
+    "url": "https://anthropic.com/",
+    "date": "",
+    "description": "Claudeの基本機能、プロンプトエンジニアリングの原則、責任あるAI利用の基礎を身に付けた実務者を認定します。",
+    "category": "Foundations",
+    "examDuration": "60分",
+    "examFormat": "オンライン選択式（約50問）",
+    "cost": "100 USD（約15,000円）",
+    "testingOptions": "オンライン監督付き試験",
+    "introduction": "Claudeの基本機能、プロンプトエンジニアリングの原則、責任あるAI利用の基礎を身に付けた実務者を認定します。",
+    "examContent": "Claudeモデルファミリーの特徴（Opus/Sonnet/Haiku）、プロンプト設計原則（Few-shot, CoT等）、コンテキストウィンドウの活用、安全性・ハルシネーション対策。",
+    "contentOutline": "【出題分野】1.0 Claudeモデルの特性と選定、2.0 効果的なプロンプト設計手法、3.0 コンテキストとトークン管理、4.0 AI安全性とバイアス軽減、5.0 業務プロセスのAI活用。",
+    "contentHash": "0e3e766bb8071532c4c9ffafbdfe4129d461a9283d001f1992aebbdbf1408be8",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 108,
+        "name": "Claude Certified Associate – Foundations（CCAO-F）"
+      }
+    ]
   }
 ]

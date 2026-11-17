@@ -168,5 +168,97 @@
     "date": "",
     "contentHash": "9ea26672",
     "relatedQualifications": []
+  },
+  {
+    "provider": "Cloud Native Computing Foundation (CNCF) / Linux Foundation",
+    "title": "認定Kubernetes管理者（CKA-JP） 資格詳細情報",
+    "url": "https://training.linuxfoundation.org/ja/certification/certified-kubernetes-administrator-cka/",
+    "date": "",
+    "description": "Kubernetesクラスタのインストール、構成、ネットワーク、ストレージ、トラブルシューティングを実機で完遂できる管理者認定です。",
+    "category": "Kubernetes Certification (Administrator)",
+    "examDuration": "2時間（120分）",
+    "examFormat": "実技試験（オンライン監督下のハンズオン実機操作、15〜20問）",
+    "cost": "395 USD（約59,000円、日本語版 CKA-JP）",
+    "testingOptions": "オンライン監督付きリモート受験（ブラウザベースのLinux端末環境）",
+    "introduction": "Kubernetesクラスタのインストール、構成、ネットワーク、ストレージ、トラブルシューティングを実機で完遂できる管理者認定です。",
+    "examContent": "ストレージ (10%)、トラブルシューティング (30%)、ワークロードとスケジューリング (15%)、クラスタのアーキテクチャ・導入・保守 (25%)、サービスとネットワーキング (20%)。",
+    "contentOutline": "【出題分野】1.0 クラスタのアーキテクチャ、インストール、保守 (25%)、2.0 ワークロードとスケジューリング (15%)、3.0 サービスとネットワーキング (20%)、4.0 ストレージ (10%)、5.0 トラブルシューティング (30%)。",
+    "contentHash": "0669e75521e9ac8d9b03e1374c3dbf71ec7e91370adfb1efb8d0949f3a929f77",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 104,
+        "name": "認定Kubernetes管理者（CKA-JP）"
+      }
+    ]
+  },
+  {
+    "provider": "Cloud Native Computing Foundation (CNCF) / Linux Foundation",
+    "title": "認定Kubernetesアプリケーション開発者（CKAD-JP） 資格詳細情報",
+    "url": "https://training.linuxfoundation.org/ja/certification/certified-kubernetes-application-developer-ckad/",
+    "date": "",
+    "description": "Kubernetesクラスタのインストール、構成、ネットワーク、ストレージ、トラブルシューティングを実機で完遂できる管理者認定です。",
+    "category": "Kubernetes Certification (Administrator)",
+    "examDuration": "2時間（120分）",
+    "examFormat": "実技試験（オンライン監督下のハンズオン実機操作、15〜20問）",
+    "cost": "395 USD（約59,000円、日本語版 CKA-JP）",
+    "testingOptions": "オンライン監督付きリモート受験（ブラウザベースのLinux端末環境）",
+    "introduction": "Kubernetesクラスタのインストール、構成、ネットワーク、ストレージ、トラブルシューティングを実機で完遂できる管理者認定です。",
+    "examContent": "ストレージ (10%)、トラブルシューティング (30%)、ワークロードとスケジューリング (15%)、クラスタのアーキテクチャ・導入・保守 (25%)、サービスとネットワーキング (20%)。",
+    "contentOutline": "【出題分野】1.0 クラスタのアーキテクチャ、インストール、保守 (25%)、2.0 ワークロードとスケジューリング (15%)、3.0 サービスとネットワーキング (20%)、4.0 ストレージ (10%)、5.0 トラブルシューティング (30%)。",
+    "contentHash": "0669e75521e9ac8d9b03e1374c3dbf71ec7e91370adfb1efb8d0949f3a929f77",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 105,
+        "name": "認定Kubernetesアプリケーション開発者（CKAD-JP）"
+      }
+    ]
+  },
+  {
+    "provider": "Cloud Native Computing Foundation (CNCF) / Linux Foundation",
+    "title": "認定Kubernetesセキュリティスペシャリスト（CKS-JP） 資格詳細情報",
+    "url": "https://training.linuxfoundation.org/ja/certification/certified-kubernetes-security-specialist-cks/",
+    "date": "",
+    "description": "ビルド、デプロイ、実行時の各フェーズにおいて、Kubernetesクラスタおよびクラウドネイティブ環境を保護する高度セキュリティ資格です。",
+    "category": "Kubernetes Certification (Security)",
+    "examDuration": "2時間（120分）",
+    "examFormat": "実技試験（オンライン監督下のハンズオン実機操作、事前CKA合格必須）",
+    "cost": "395 USD（約59,000円、日本語版 CKS-JP）",
+    "testingOptions": "オンライン監督付きリモート受験",
+    "introduction": "ビルド、デプロイ、実行時の各フェーズにおいて、Kubernetesクラスタおよびクラウドネイティブ環境を保護する高度セキュリティ資格です。",
+    "examContent": "クラスタ設定 (10%)、クラスタのハードニング (15%)、システムのハードニング (15%)、マイクロサービスの脆弱性最小化 (20%)、サプライチェーンセキュリティ (20%)、監視・監査・実行時セキュリティ (20%)。",
+    "contentOutline": "【出題分野】1.0 クラスタ設定 (10%)、2.0 クラスタのハードニング (15%)、3.0 システムのハードニング (15%)、4.0 マイクロサービスの脆弱性最小化 (20%)、5.0 サプライチェーンセキュリティ (20%)、6.0 監視・ロギング・実行時セキュリティ (20%)。",
+    "contentHash": "95837e7f41d983579b1417b88caaf6ba41686804907e73614443e6b430d6a8f8",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 106,
+        "name": "認定Kubernetesセキュリティスペシャリスト（CKS-JP）"
+      }
+    ]
+  },
+  {
+    "provider": "Cloud Native Computing Foundation (CNCF) / Linux Foundation",
+    "title": "認定Kubernetesクラウドネイティブアソシエイト（KCNA-JP） 資格詳細情報",
+    "url": "https://training.linuxfoundation.org/ja/certification/kubernetes-cloud-native-associate-kcna/",
+    "date": "",
+    "description": "Kubernetesおよびクラウドネイティブエコシステム（CNCFランドスケープ）の基礎概念とアーキテクチャを理解していることを証明します。",
+    "category": "Cloud Native Associate (Entry)",
+    "examDuration": "90分",
+    "examFormat": "多肢選択式（60問）",
+    "cost": "250 USD（約37,500円、日本語版 KCNA-JP）",
+    "testingOptions": "オンライン監督付きリモート受験",
+    "introduction": "Kubernetesおよびクラウドネイティブエコシステム（CNCFランドスケープ）の基礎概念とアーキテクチャを理解していることを証明します。",
+    "examContent": "Kubernetesの基礎 (46%)、コンテナオーケストレーション (22%)、クラウドネイティブアーキテクチャ (16%)、クラウドネイティブの可観測性 (8%)、クラウドネイティブアプリケーション配信 (8%)。",
+    "contentOutline": "【出題分野】1.0 Kubernetesの基礎 (46%)、2.0 コンテナオーケストレーション (22%)、3.0 クラウドネイティブアーキテクチャ (16%)、4.0 クラウドネイティブの可観測性 (8%)、5.0 クラウドネイティブアプリケーションの配信 (8%)。",
+    "contentHash": "ebc1437e836d8c53206c7a76216e14e44eeeac2fdb7129b27d4162140c822d65",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 107,
+        "name": "認定Kubernetesクラウドネイティブアソシエイト（KCNA-JP）"
+      }
+    ]
   }
 ]

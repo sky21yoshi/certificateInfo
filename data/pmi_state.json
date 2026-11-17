@@ -10,6 +10,14 @@
         "no": 104,
         "name": "Project Management Professional (PMP)"
       }
-    ]
+    ],
+    "category": "Professional",
+    "examDuration": "230分",
+    "examFormat": "CBT多肢選択式（一部ドラッグ&ドロップ等含む）、180問（うち採点対象175問）",
+    "cost": "PMI会員: 405 USD、非会員: 575 USD",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン監督試験",
+    "introduction": "プロジェクトマネジメントの国際標準（PMBOKガイド）に準拠し、プロジェクトをリード・指示する実務能力を証明する世界最高峰の資格です。",
+    "examContent": "人 (People: 42%)、プロセス (Process: 50%)、ビジネス環境 (Business Environment: 8%)。予測的（ウォーターフォール）、アジャイル、ハイブリッド手法を網羅。",
+    "contentOutline": "【出題ドメイン】1.0 人 (People: 42%) - リーダーシップ、チーム支援、コンフリクト管理。2.0 プロセス (Process: 50%) - 計画立案、進捗管理、品質・スコープ・調達統制。3.0 ビジネス環境 (Business Environment: 8%) - コンプライアンス、価値実現、組織変革支援。"
   }
 ]

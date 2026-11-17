@@ -1,6 +1,8 @@
 const assert = require('assert');
 const fs = require('fs');
 const vm = require('vm');
+const { DETAIL_FIELDS, loadQualificationRows } = require('../src/fetcher/qualification_details');
+const { resolveProviderDetailsMeta } = require('../src/fetcher/provider_details_meta');
 
 const scriptProperties = new Map([
   ['QUALIFICATIONS_SPREADSHEET_URL', 'https://docs.google.com/spreadsheets/d/test-sheet-id/edit'],
@@ -19,6 +21,7 @@ let openedUrl;
 const installedTriggers = [];
 const triggerCalls = [];
 const slackCalls = [];
+const fetchedUrls = [];
 
 const sheet = {
   getDataRange: () => ({ getValues: () => rows7Cols }),
@@ -109,6 +112,8 @@ const context = {
     fetch: (url, options) => {
       if (options && options.payload) {
         slackCalls.push({ url, payload: JSON.parse(options.payload) });
+      } else {
+        fetchedUrls.push(url);
       }
       return {
         getResponseCode: () => 200,
@@ -431,9 +436,78 @@ assert.strictEqual(associateWinActorDetails.cost, '7,150円（税込）');
 assert(associateWinActorDetails.examContent.includes('試験日時: 通年開催'));
 assert(associateWinActorDetails.contentOutline.includes('WinActorの概要'));
 assert.strictEqual(associateWinActorDetails.testingOptions, 'J-Testing');
+const projectPlusFallback = context.parseOtherCredentialDetails(
+  '<html></html>', 'CompTIA（コンプティア）', 'Project+'
+);
+assert.deepStrictEqual([
+  projectPlusFallback.category,
+  projectPlusFallback.examDuration,
+  projectPlusFallback.examFormat,
+  projectPlusFallback.cost,
+  projectPlusFallback.testingOptions,
+  projectPlusFallback.introduction,
+  projectPlusFallback.examContent,
+  projectPlusFallback.contentOutline,
+].filter(Boolean).length, 8, 'No.101のI〜P列を全項目補完すること');
+const projectPlusPageDetails = context.parseOtherCredentialDetails(
+  '<table><tr><td>試験時間</td><td>95分</td></tr></table>',
+  'CompTIA（コンプティア）',
+  'Project+'
+);
+assert.strictEqual(projectPlusPageDetails.examDuration, '95分', '公式ページから取得した値を補完値より優先すること');
+for (const row of loadQualificationRows().filter(item => item.no >= 101)) {
+  const expected = resolveProviderDetailsMeta(row.providerName, row.name, row.url);
+  const actual = context.parseOtherCredentialDetails('<html></html>', row.providerName, row.name);
+  for (const field of DETAIL_FIELDS) {
+    assert.strictEqual(actual[field], expected[field], `No.${row.no} ${field} のGAS補完値がNode定義と一致すること`);
+  }
+}
 context.checkNttAt(context.PropertiesService.getScriptProperties(), 'https://hooks.slack.com/services/TEST/MOCK/WEBHOOK');
 const savedWinActorSnapshot = JSON.parse(scriptProperties.get('SAVED_STATE_NTT_AT'));
 assert.deepStrictEqual(Array.from(savedWinActorSnapshot[0].relatedQualifications, item => item.no), [129, 130]);
+
+const allSheetDetailRows = [[
+  'No', '認定機関', '資格名', '資格情報取得元', '最終更新日時', 'タイトル', 'URL', '説明',
+  'カテゴリ', '試験期間', '試験の形態', '費用', '受験オプション', 'はじめに', '試験内容', '試験内容の概要'
+]];
+for (let no = 1; no <= 110; no++) {
+  allSheetDetailRows.push([
+    no, 'CompTIA（コンプティア）', no === 101 ? 'Project+' : `資格${no}`, `https://example.com/${no}`,
+    '', '', '', '', '', '', '', '', '', '', '', ''
+  ]);
+}
+const allSheetDetailSheet = {
+  getDataRange: () => ({ getValues: () => allSheetDetailRows }),
+  getRange: (row, column) => ({
+    setValue: value => {
+      allSheetDetailRows[row - 1][column - 1] = value;
+    },
+  }),
+};
+spreadsheet.getSheetByName = () => allSheetDetailSheet;
+spreadsheet.getSheets = () => [allSheetDetailSheet];
+fetchedUrls.length = 0;
+context.checkAllSheetCertificates(
+  context.PropertiesService.getScriptProperties(), '', ''
+);
+assert.strictEqual(fetchedUrls.length, 110, '1回の実行で全資格詳細を取得すること');
+assert(fetchedUrls.includes('https://example.com/101'), 'シート102行目（No.101）を取得すること');
+assert(fetchedUrls.includes('https://example.com/102'), 'シート103行目（No.102）も同じ実行で取得すること');
+assert.strictEqual(new Set(fetchedUrls).size, 110, '全資格詳細URLを重複なく取得すること');
+assert.deepStrictEqual(
+  allSheetDetailRows[101].slice(8, 16),
+  [
+    projectPlusFallback.category,
+    projectPlusFallback.examDuration,
+    projectPlusFallback.examFormat,
+    projectPlusFallback.cost,
+    projectPlusFallback.testingOptions,
+    projectPlusFallback.introduction,
+    projectPlusFallback.examContent,
+    projectPlusFallback.contentOutline,
+  ],
+  'シート102行目（No.101）のI〜P列が1回の実行で更新されること'
+);
 
 // 5. 毎平日トリガー（setupDailyTrigger）の検証
 installedTriggers.length = 0;

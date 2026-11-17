@@ -165,7 +165,7 @@ function extractSections(html) {
   }));
 }
 
-function parseCredentialDetails(html, providerName, url = '') {
+function parseCredentialDetails(html, providerName, url = '', qualificationName = '') {
   const rules = PROVIDER_RULES.find(rule => rule.match.test(providerName || ''));
   if (!rules) throw new Error(`詳細情報の抽出ルールがありません: ${providerName}`);
 
@@ -178,6 +178,10 @@ function parseCredentialDetails(html, providerName, url = '') {
     const { parseCiscoExamPage } = require('./cisco');
     return parseCiscoExamPage(html, url);
   }
+
+  // METAデータ参照（HTMLから取得できない場合のフォールバック）
+  const { resolveProviderDetailsMeta } = require('./provider_details_meta');
+  const meta = resolveProviderDetailsMeta(providerName, qualificationName, url);
 
   const plainText = htmlToText(html);
   const details = Object.fromEntries(DETAIL_FIELDS.map(field => [field, '']));
@@ -207,6 +211,15 @@ function parseCredentialDetails(html, providerName, url = '') {
       details.contentOutline = section.text.slice(0, 4000);
     } else if (!details.examContent && SECTION_RULES.examContent.test(section.title)) {
       details.examContent = section.text.slice(0, 4000);
+    }
+  }
+
+  // METAデータで空の項目を補完
+  if (meta) {
+    for (const field of DETAIL_FIELDS) {
+      if (!details[field] && meta[field]) {
+        details[field] = meta[field];
+      }
     }
   }
 
@@ -263,7 +276,7 @@ async function fetchQualificationDetails(providerKey, options = {}) {
       }
       const html = options.pages ? (options.pages[fetchUrl] || options.pages[target.url]) : await fetchPage(fetchUrl);
       if (typeof html !== 'string') throw new Error('公式ページからHTMLを取得できませんでした');
-      const details = parseCredentialDetails(html, target.providerName, target.url);
+      const details = parseCredentialDetails(html, target.providerName, target.url, target.qualifications[0] ? target.qualifications[0].name : '');
       if (!DETAIL_FIELDS.some(field => details[field])) continue;
       items.push({
         provider: target.providerName,

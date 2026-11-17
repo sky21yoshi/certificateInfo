@@ -5,9 +5,9 @@ const {
 } = require('./official_web');
 
 const PMAJ_QUALIFICATIONS = [
-  { no: 101, name: 'プロジェクトマネジメント・コーディネーター (PMC)', aliases: ['PMC', 'コーディネーター'] },
-  { no: 102, name: 'プロジェクトマネジメント・スペシャリスト (PMS)', aliases: ['PMS', 'スペシャリスト'] },
-  { no: 103, name: 'プログラムマネジャー・レジスタード (PMR)', aliases: ['PMR', 'プログラムマネジャー'] },
+  { no: 121, name: 'プロジェクトマネジメント・コーディネーター (PMC)', aliases: ['PMC', 'コーディネーター'] },
+  { no: 122, name: 'プロジェクトマネジメント・スペシャリスト (PMS)', aliases: ['PMS', 'スペシャリスト'] },
+  { no: 123, name: 'プログラムマネジャー・レジスタード (PMR)', aliases: ['PMR', 'プログラムマネジャー'] },
 ];
 
 function getPmajNewsUrls(year = Number(new Intl.DateTimeFormat('en-US', {

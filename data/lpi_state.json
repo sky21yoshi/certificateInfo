@@ -9132,5 +9132,166 @@
     "url": "https://www.lpi.or.jp/news/press/page/20180205_01/",
     "date": "2018.02.05",
     "relatedQualifications": []
+  },
+  {
+    "provider": "Linux Professional Institute (LPI)",
+    "title": "LPIC-1 資格詳細情報",
+    "url": "https://www.lpi.org/ja/our-certifications/lpic-1-overview/",
+    "date": "",
+    "description": "LPIC-1は、Linuxの基本操作、システム管理、ネットワーキングの基礎スキルを認定するエントリーレベルの国際資格です。Linuxディストリビューションに依存しない実務能力を証明します。",
+    "category": "Linux Professional Institute Certification (Level 1)",
+    "examDuration": "101試験: 90分、102試験: 90分",
+    "examFormat": "コンピュータベース試験（CBT）、各60問（単一選択、複数選択、穴埋め入力）",
+    "cost": "各試験 16,500円（税込、2試験合計 33,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたは OnVUE オンライン監督試験",
+    "introduction": "LPIC-1は、Linuxの基本操作、システム管理、ネットワーキングの基礎スキルを認定するエントリーレベルの国際資格です。Linuxディストリビューションに依存しない実務能力を証明します。",
+    "examContent": "システムアーキテクチャ、Linuxのインストールとパッケージ管理、GNUおよびUNIXコマンド、ファイル・ファイルシステム、シェル・スクリプト、データ管理、インターフェイスとディスプレイ、管理タスク、基本的なシステムサービス、ネットワークの基礎、セキュリティ。",
+    "contentOutline": "【出題分野】101試験: 1.0 システムアーキテクチャ、2.0 Linuxのインストールとパッケージ管理、3.0 GNUおよびUNIXコマンド、4.0 デバイス、Linuxファイルシステム、ファイルシステム階層標準。102試験: 1.0 シェル、スクリプト、データ管理、2.0 ユーザインターフェイスとデスクトップ、3.0 管理業務、4.0 必須システムサービス、5.0 ネットワーキングの基礎、6.0 セキュリティ。",
+    "contentHash": "9de34a2c7e134bf4743456e0a15aae05201c7667147156703d9c861a2428bb77",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 73,
+        "name": "LPIC-1"
+      }
+    ]
+  },
+  {
+    "provider": "Linux Professional Institute (LPI)",
+    "title": "LPIC-2 資格詳細情報",
+    "url": "https://www.lpi.org/ja/our-certifications/lpic-2-overview/",
+    "date": "",
+    "description": "LPIC-2は、小〜中規模の混在ネットワークを管理・運用できる高度なLinuxエンジニアスキルを認定する資格です。上位認定として業界で高く評価されています。",
+    "category": "Linux Professional Institute Certification (Level 2)",
+    "examDuration": "201試験: 90分、202試験: 90分",
+    "examFormat": "コンピュータベース試験（CBT）、各60問（単一選択、複数選択、穴埋め入力）",
+    "cost": "各試験 16,500円（税込、2試験合計 33,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたは OnVUE オンライン監督試験",
+    "introduction": "LPIC-2は、小〜中規模の混在ネットワークを管理・運用できる高度なLinuxエンジニアスキルを認定する資格です。上位認定として業界で高く評価されています。",
+    "examContent": "キャパシティプランニング、Linuxカーネル、システムの起動、ファイルシステムとデバイス、高度なストレージ管理、ネットワーク構成、システム保守、ドメインネームサーバー（DNS）、Webサービス、ファイル共有、ネットワーククライアント管理、電子メールサービス、システムセキュリティ。",
+    "contentOutline": "【出題分野】201試験: 1.0 キャパシティプランニング、2.0 Linuxカーネル、3.0 システムの起動、4.0 ファイルシステムとデバイス、5.0 高度なストレージ管理、6.0 ネットワーク構成、7.0 システム保守。202試験: 1.0 ドメインネームサーバー(DNS)、2.0 Webサービス、3.0 ファイル共有、4.0 ネットワーククライアント管理、5.0 電子メールサービス、6.0 システムセキュリティ。",
+    "contentHash": "a11cc5d3a001ac58c333a5aa53fff066fcb8dec0c32b0c72a0550c217d84652c",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 74,
+        "name": "LPIC-2"
+      }
+    ]
+  },
+  {
+    "provider": "Linux Professional Institute (LPI)",
+    "title": "LPIC-3 資格詳細情報",
+    "url": "https://www.lpi.org/ja/our-certifications/lpic-3-overview/",
+    "date": "",
+    "description": "LPIC-3は、エンタープライズレベルでのLinux専門知識（Mixed Environment, Security, Virtualization & High Availabilityなど）を証明する最高位資格です。",
+    "category": "Linux Professional Institute Certification (Level 3 - 最高峰)",
+    "examDuration": "90分",
+    "examFormat": "コンピュータベース試験（CBT）、約60問",
+    "cost": "各試験 16,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたは OnVUE オンライン監督試験",
+    "introduction": "LPIC-3は、エンタープライズレベルでのLinux専門知識（Mixed Environment, Security, Virtualization & High Availabilityなど）を証明する最高位資格です。",
+    "examContent": "エンタープライズレベルの大規模システム設計・構築・セキュリティ強化・クラスタリング・仮想化技術の実装と運用保守。300試験、303試験、305試験などの専門科目から1科目合格で認定。",
+    "contentOutline": "【専門試験】300試験: 混在環境・Samba/AD連携。303試験: 暗号化・アクセス制御・ネットワークセキュリティ。305試験: 仮想化技術（KVM等）・コンテナ・高可用性クラスタリング。",
+    "contentHash": "752cecee9c60cafec39209cd2df16a9bc20e61968e023314ae9773ca02131134",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 75,
+        "name": "LPIC-3"
+      }
+    ]
+  },
+  {
+    "provider": "LPI-Japan（エルピーアイジャパン）",
+    "title": "LinuC-1 資格詳細情報",
+    "url": "https://linuc.org/linuc1/",
+    "date": "",
+    "description": "LinuC-1は、仮想化環境やクラウド環境を含むLinuxシステムの基本操作、構築、運用に必要な基礎知識を証明する認定資格です。",
+    "category": "クラウド時代のLinux技術者認定（レベル1）",
+    "examDuration": "101試験: 90分、102試験: 90分",
+    "examFormat": "コンピュータベース試験（CBT）、各約60問（多肢選択、キー入力）",
+    "cost": "各試験 16,500円（税込、2試験合計 33,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたは自宅・職場からのオンライン受験",
+    "introduction": "LinuC-1は、仮想化環境やクラウド環境を含むLinuxシステムの基本操作、構築、運用に必要な基礎知識を証明する認定資格です。",
+    "examContent": "仮想マシン・コンテナの基礎、Linux環境の基本操作、システムアーキテクチャ、パッケージ管理、GNU/UNIXコマンド、デバイスとファイルシステム、ネットワークの基礎、セキュリティ。",
+    "contentOutline": "【出題範囲】101試験: システムアーキテクチャ、Linuxインストールとパッケージ管理、GNU/UNIXコマンド、デバイス・Linuxファイルシステム。102試験: シェルとスクリプト、ユーザインターフェースとデスクトップ、管理業務、必須システムサービス、ネットワークの基礎、セキュリティ。",
+    "contentHash": "05f20c9fdd8c6b9ae4654c5869a885482aab8159b26715af10979950d19141bd",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 76,
+        "name": "LinuC-1"
+      }
+    ]
+  },
+  {
+    "provider": "LPI-Japan（エルピーアイジャパン）",
+    "title": "LinuC-2 資格詳細情報",
+    "url": "https://linuc.org/linuc2/",
+    "date": "",
+    "description": "LinuC-2は、クラウドや仮想化環境におけるLinuxシステム全体の設計・構築・監視・ネットワークサービスの安定運用スキルを認定します。",
+    "category": "クラウド時代のLinux技術者認定（レベル2）",
+    "examDuration": "201試験: 90分、202試験: 90分",
+    "examFormat": "コンピュータベース試験（CBT）、各約60問",
+    "cost": "各試験 16,500円（税込、2試験合計 33,000円）",
+    "testingOptions": "ピアソンVUE テストセンターまたは自宅・職場からのオンライン受験",
+    "introduction": "LinuC-2は、クラウドや仮想化環境におけるLinuxシステム全体の設計・構築・監視・ネットワークサービスの安定運用スキルを認定します。",
+    "examContent": "リソース監視・キャパシティプランニング、カーネル運用、システム起動プロセス、ストレージ管理、ネットワーク構成、DNS/Web/ファイル共有等の各種ネットワークサービス構築、セキュリティ対策。",
+    "contentOutline": "【出題範囲】201試験: キャパシティプランニング、Linuxカーネル、システム起動、ファイルシステム・ストレージ、ネットワーク構成、保守・トラブルシューティング。202試験: ドメインネームサーバ、Webサービス、ファイル共有、クライアント管理、メール、セキュリティ。",
+    "contentHash": "a37a15226f1755f7813a614d72d7df507d6b722caef253cae86663ee65543e6e",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 77,
+        "name": "LinuC-2"
+      }
+    ]
+  },
+  {
+    "provider": "LPI-Japan（エルピーアイジャパン）",
+    "title": "LinuC-3 資格詳細情報",
+    "url": "https://linuc.org/linuc3/",
+    "date": "",
+    "description": "LinuC-3は、大規模エンタープライズシステムやクラウドネイティブ環境の設計・構築・セキュリティ・可用性設計を担うプロフェッショナル向け最高峰認定です。",
+    "category": "クラウド時代のLinux技術者認定（レベル3 - 最高峰）",
+    "examDuration": "90分",
+    "examFormat": "コンピュータベース試験（CBT）、約60問",
+    "cost": "16,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたは自宅・職場からのオンライン受験",
+    "introduction": "LinuC-3は、大規模エンタープライズシステムやクラウドネイティブ環境の設計・構築・セキュリティ・可用性設計を担うプロフェッショナル向け最高峰認定です。",
+    "examContent": "LinuC-3 303（セキュリティ）、304（仮想化と高可用性）など、特定分野における最高レベルの実践的スキルを検証。",
+    "contentOutline": "【出題範囲】暗号化技術、アクセス制御、侵入検知、仮想化基盤（KVM等）、コンテナオーケストレーション、高可用性クラスタリング、システム耐障害性設計。",
+    "contentHash": "d66ebddf47fb5d17cfb3b14abccc84691e65312fb347194f2a864bb79c9de480",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 78,
+        "name": "LinuC-3"
+      }
+    ]
+  },
+  {
+    "provider": "LPI-Japan（エルピーアイジャパン）",
+    "title": "HTML5プロフェッショナル認定試験 資格詳細情報",
+    "url": "https://html5exam.jp/",
+    "date": "",
+    "description": "HTML5プロフェッショナル認定試験は、HTML5、CSS3、JavaScriptなど最新のマークアップおよびWebアプリケーション開発技術力を客観的に証明する認定試験です。",
+    "category": "Web技術者認定（レベル1 / レベル2）",
+    "examDuration": "90分",
+    "examFormat": "コンピュータベース試験（CBT）、約60問",
+    "cost": "16,500円（税込）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン受験",
+    "introduction": "HTML5プロフェッショナル認定試験は、HTML5、CSS3、JavaScriptなど最新のマークアップおよびWebアプリケーション開発技術力を客観的に証明する認定試験です。",
+    "examContent": "HTML5マークアップ、CSS3スタイリング、レスポンシブWebデザイン、Web通信基礎、JavaScriptプログラミング、HTML5 API、パフォーマンスチューニング。",
+    "contentOutline": "【出題範囲】レベル1: Webの基礎知識、HTML5マークアップ、CSS3、レスポンシブWebデザイン。レベル2: JavaScript言語仕様、ブラウザAPI、グラフィックス・マルチメディア、Webストレージ、通信プロトコル、パフォーマンス最適化。",
+    "contentHash": "6805e50ce477c68861076731149a18361d1df05ff49d1ff4e2c27587ca21f821",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 79,
+        "name": "HTML5プロフェッショナル認定試験"
+      }
+    ]
   }
 ]

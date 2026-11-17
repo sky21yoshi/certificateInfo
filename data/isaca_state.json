@@ -323,5 +323,28 @@
         "name": "CISA (Certified Information Systems Auditor)"
       }
     ]
+  },
+  {
+    "provider": "ISACA（情報システムコントロール協会）",
+    "title": "CISA（Certified Information Systems Auditor） 資格詳細情報",
+    "url": "https://www.isaca.gr.jp/cisa/",
+    "date": "",
+    "description": "情報システムの監査、統制、保証、セキュリティの専門家として、世界的に最も認知されている国際資格です。",
+    "category": "Professional",
+    "examDuration": "4時間（240分）",
+    "examFormat": "CBT多肢選択式、150問",
+    "cost": "ISACA会員: 575 USD、非会員: 760 USD",
+    "testingOptions": "PSIテストセンターまたはオンライン遠隔監督試験",
+    "introduction": "情報システムの監査、統制、保証、セキュリティの専門家として、世界的に最も認知されている国際資格です。",
+    "examContent": "情報システムの監査プロセス、ITガバナンスとITマネジメント、情報システムの取得・開発・導入、運用とビジネスレジリエンス、情報資産の保護。",
+    "contentOutline": "【出題ドメイン】ドメイン1: 情報システムの監査プロセス (21%)、ドメイン2: ITガバナンスとITマネジメント (17%)、ドメイン3: 情報システムの取得、開発、導入 (12%)、ドメイン4: 情報システムの運用とビジネスレジリエンス (23%)、ドメイン5: 情報資産の保護 (27%)。",
+    "contentHash": "b869f34b881ddf2ce9fbe4269b847c1bfd37d7396a664d3d60bd3c03ee0e2a1d",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 125,
+        "name": "CISA（Certified Information Systems Auditor）"
+      }
+    ]
   }
 ]

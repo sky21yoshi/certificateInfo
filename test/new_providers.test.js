@@ -60,14 +60,14 @@ async function main() {
     <a href="/courses/ccar-f"><h2>Claude Certified Architect – Foundations (CCAR-F)</h2></a>
   `);
   assert.strictEqual(anthropic.length, 2);
-  assert.strictEqual(matchAnthropicQualifications('CCAO-F')[0].no, 88);
+  assert.strictEqual(matchAnthropicQualifications('CCAO-F')[0].no, 108);
 
   const uipath = await fetchUiPathUpdates(`
     <h1>認定資格</h1>
     <a href="/ja/learning/certification/agentic"><h2>エージェンティック オートメーション アソシエイト</h2></a>
   `);
   assert.strictEqual(uipath.length, 2);
-  assert.strictEqual(uipath[1].relatedQualifications[0].no, 94);
+  assert.strictEqual(uipath[1].relatedQualifications[0].no, 114);
 
   const certify = await fetchCertifyUpdates(`
     <h1>C言語プログラミング能力認定試験</h1>
@@ -87,8 +87,8 @@ async function main() {
   `;
   const python = await fetchPythonAssociationUpdates(pythonPages);
   assert.strictEqual(python.length, 3);
-  assert.strictEqual(python[0].relatedQualifications[0].no, 99);
-  assert.strictEqual(python[2].relatedQualifications[0].no, 99);
+  assert.strictEqual(python[0].relatedQualifications[0].no, 119);
+  assert.strictEqual(python[2].relatedQualifications[0].no, 119);
 
   const pmajUrls = getPmajNewsUrls(2026);
   assert.deepStrictEqual(pmajUrls, [
@@ -102,10 +102,10 @@ async function main() {
   const pmaj = await fetchPmajUpdates(pmajPages, 2026);
   assert.strictEqual(pmaj.length, 4);
   assert(pmaj.some(item => item.url === 'https://www.pmaj.or.jp/news/pmc.html'
-    && item.relatedQualifications[0].no === 101));
+    && item.relatedQualifications[0].no === 121));
   assert(pmaj.some(item => item.url === 'https://www.pmaj.or.jp/news/pmr.html'
-    && item.relatedQualifications[0].no === 103));
-  assert.strictEqual(matchPmajQualifications('PMC資格試験')[0].no, 101);
+    && item.relatedQualifications[0].no === 123));
+  assert.strictEqual(matchPmajQualifications('PMC資格試験')[0].no, 121);
 
   for (const key of [
     'broadcom',

@@ -9,12 +9,12 @@ const {
 const PYTHON_NEWS_FEED_URL = 'https://pythonic-exam.com/feed/';
 const PYTHON_EXAMS = [
   {
-    no: 99,
+    no: 119,
     name: 'Python3 エンジニア認定基礎試験',
     url: 'https://www.pythonic-exam.com/exam/basic',
   },
   {
-    no: 100,
+    no: 120,
     name: 'Python3 エンジニア認定データ分析試験',
     url: 'https://www.pythonic-exam.com/exam/data-analyst',
   },

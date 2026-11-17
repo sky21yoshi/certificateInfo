@@ -17,10 +17,10 @@ const UIPATH_NEWSROOM_URLS = [
 ];
 
 const UIPATH_QUALIFICATIONS = [
-  { no: 92, name: 'UiPath Automation Developer Associate', aliases: ['Automation Developer Associate', 'オートメーション デベロッパー アソシエイト'] },
-  { no: 93, name: 'UiPath Automation Developer Professional', aliases: ['Automation Developer Professional', 'オートメーション デベロッパー プロフェッショナル'] },
-  { no: 94, name: 'UiPath Agentic Automation Associate', aliases: ['Agentic Automation Associate', 'エージェンティック オートメーション アソシエイト'] },
-  { no: 95, name: 'UiPath Agentic Automation Professional', aliases: ['Agentic Automation Professional', 'エージェンティック オートメーション プロフェッショナル'] },
+  { no: 112, name: 'UiPath Automation Developer Associate', aliases: ['Automation Developer Associate', 'オートメーション デベロッパー アソシエイト'] },
+  { no: 113, name: 'UiPath Automation Developer Professional', aliases: ['Automation Developer Professional', 'オートメーション デベロッパー プロフェッショナル'] },
+  { no: 114, name: 'UiPath Agentic Automation Associate', aliases: ['Agentic Automation Associate', 'エージェンティック オートメーション アソシエイト'] },
+  { no: 115, name: 'UiPath Agentic Automation Professional', aliases: ['Agentic Automation Professional', 'エージェンティック オートメーション プロフェッショナル'] },
 ];
 
 function matchUiPathQualifications(text) {

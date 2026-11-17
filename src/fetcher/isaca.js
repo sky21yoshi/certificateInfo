@@ -8,7 +8,7 @@ const {
 
 const ISACA_TOPICS_URL = 'https://engage.isaca.org/tokyochapter';
 const ISACA_QUALIFICATIONS = [
-  { no: 105, name: 'CISA (Certified Information Systems Auditor)' },
+  { no: 125, name: 'CISA (Certified Information Systems Auditor)' },
 ];
 
 async function fetchIsacaUpdates(customHtml = null) {

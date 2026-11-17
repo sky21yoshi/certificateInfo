@@ -11,5 +11,28 @@
         "name": "Palo Alto Networks Network Security Professional"
       }
     ]
+  },
+  {
+    "provider": "Palo Alto Networks（パロアルトネットワークス）",
+    "title": "Paloalto / Network Security Professional 資格詳細情報",
+    "url": "https://www.paloaltonetworks.jp/services/education/certification",
+    "date": "",
+    "description": "Palo Alto Networks 次世代ファイアウォール（NGFW）の設計・導入・構成・トラブルシューティングを行うエンジニアを認定します。",
+    "category": "Professional",
+    "examDuration": "80〜90分",
+    "examFormat": "CBT多肢選択式（約50〜75問）",
+    "cost": "175 USD（PCNSA）/ 220 USD（PCNSE）",
+    "testingOptions": "ピアソンVUE テストセンターまたはオンライン",
+    "introduction": "Palo Alto Networks 次世代ファイアウォール（NGFW）の設計・導入・構成・トラブルシューティングを行うエンジニアを認定します。",
+    "examContent": "次世代ファイアウォールのアーキテクチャ、App-ID/User-ID/Content-IDの構成、パノラマ（Panorama）による集中管理、セキュリティポリシー設計、脅威防御。",
+    "contentOutline": "【出題分野】1.0 次世代ファイアウォールの初期構成と管理、2.0 セキュリティゾーンとルーティング、3.0 App-IDとセキュリティポリシー、4.0 User-IDと認証統合、5.0 Content-ID（脅威防御とURLフィルタリング）、6.0 GlobalProtect(VPN)、7.0 高可用性(HA)と監視。",
+    "contentHash": "7945a295c15152ce74f20fdc2415af2593c954aa0af0ae067ae6e3d3cb796560",
+    "detailsOnly": true,
+    "relatedQualifications": [
+      {
+        "no": 128,
+        "name": "Paloalto / Network Security Professional"
+      }
+    ]
   }
 ]

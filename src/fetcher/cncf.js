@@ -7,10 +7,10 @@ const {
 const CNCF_BLOG_URL = 'https://www.cncf.io/blog/';
 const LINUX_FOUNDATION_BLOG_URL = 'https://training.linuxfoundation.org/blog/';
 const CNCF_QUALIFICATIONS = [
-  { no: 84, name: 'Certified Kubernetes Administrator (CKA)', aliases: ['CKA', 'Kubernetes Administrator'] },
-  { no: 85, name: 'Certified Kubernetes Application Developer (CKAD)', aliases: ['CKAD', 'Kubernetes Application Developer'] },
-  { no: 86, name: 'Certified Kubernetes Security Specialist (CKS)', aliases: ['CKS', 'Kubernetes Security Specialist'] },
-  { no: 87, name: 'Kubernetes and Cloud Native Associate (KCNA)', aliases: ['KCNA', 'Cloud Native Associate'] },
+  { no: 104, name: 'Certified Kubernetes Administrator (CKA)', aliases: ['CKA', 'Kubernetes Administrator'] },
+  { no: 105, name: 'Certified Kubernetes Application Developer (CKAD)', aliases: ['CKAD', 'Kubernetes Application Developer'] },
+  { no: 106, name: 'Certified Kubernetes Security Specialist (CKS)', aliases: ['CKS', 'Kubernetes Security Specialist'] },
+  { no: 107, name: 'Kubernetes and Cloud Native Associate (KCNA)', aliases: ['KCNA', 'Cloud Native Associate'] },
 ];
 
 function matchCNCFQualifications(text) {
