@@ -22,8 +22,10 @@
  * 1. スプレッドシートのメニュー「拡張機能」>「Apps Script」を開きます。
  * 2. このコードをエディタに貼り付けて保存します。
  * 3. プロジェクト設定（歯車アイコン）>「スクリプト プロパティ」に以下を設定します：
- *    - キー: SLACK_WEBHOOK_URL
- *    - 値: CW-Consulting の Slack Incoming Webhook URL
+ *    - キー: SLACK_WEBHOOK_URL_1（または SLACK_WEBHOOK_URL）
+ *    - 値: 資格更新情報通知用 Slack Incoming Webhook URL (Webhook 1)
+ *    - キー: SLACK_WEBHOOK_URL_2（または SLACK_ERROR_WEBHOOK_URL）
+ *    - 値: プログラムエラー通知用 Slack Incoming Webhook URL (Webhook 2)
  *    - キー: QUALIFICATIONS_SPREADSHEET_URL（任意。未設定時は下記の既定URLを使用）
  *    - キー: QUALIFICATIONS_SHEET_NAME（任意。未設定時は先頭のシートを使用）
  * 4. setupDailyTrigger を一度実行し、毎日10時（日本時間）のトリガーを設定します。
@@ -115,170 +117,193 @@ function checkAllCertificateUpdates(options) {
   }
   console.log('=== 資格情報更新チェック開始 ===');
   const properties = PropertiesService.getScriptProperties();
-  const webhookUrl = properties.getProperty('SLACK_WEBHOOK_URL');
+  const updateWebhookUrl = properties.getProperty('SLACK_WEBHOOK_URL_1') || properties.getProperty('SLACK_WEBHOOK_URL');
+  const errorWebhookUrl = properties.getProperty('SLACK_WEBHOOK_URL_2') || properties.getProperty('SLACK_ERROR_WEBHOOK_URL');
 
   // 1. IPA
   try {
-    checkIpa(properties, webhookUrl);
+    checkIpa(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('IPA チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'IPA チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   // 2. AWS
   try {
-    checkAws(properties, webhookUrl);
+    checkAws(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('AWS チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'AWS チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   // 3. Microsoft
   try {
-    checkMicrosoft(properties, webhookUrl);
+    checkMicrosoft(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Microsoft チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Microsoft チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   // 4. LPI & LinuC
   try {
-    checkLpi(properties, webhookUrl);
+    checkLpi(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('LPI チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'LPI & LinuC チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   try {
-    checkCisco(properties, webhookUrl);
+    checkCisco(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Cisco チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Cisco チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   try {
-    checkGoogleCloud(properties, webhookUrl);
+    checkGoogleCloud(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Google Cloud チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Google Cloud チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
 
   try {
-    checkOracle(properties, webhookUrl);
+    checkOracle(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Oracle チェック失敗:', e.message);
+    // ORACLEは常に403エラーが発生するため通知対象外
   }
 
   Utilities.sleep(1500);
   try {
-    checkBroadcom(properties, webhookUrl);
+    checkBroadcom(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Broadcom チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Broadcom チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkCompTIA(properties, webhookUrl);
+    checkCompTIA(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('CompTIA チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'CompTIA チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkCNCF(properties, webhookUrl);
+    checkCNCF(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('CNCF / Linux Foundation チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'CNCF / Linux Foundation チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkAnthropic(properties, webhookUrl);
+    checkAnthropic(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Anthropic チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Anthropic チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkUiPath(properties, webhookUrl);
+    checkUiPath(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('UiPath チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'UiPath チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkCertify(properties, webhookUrl);
+    checkCertify(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('サーティファイ チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'サーティファイ チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkPythonAssociation(properties, webhookUrl);
+    checkPythonAssociation(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Pythonエンジニア育成推進協会 チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Pythonエンジニア育成推進協会 チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkPmaj(properties, webhookUrl);
+    checkPmaj(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('PMAJ チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'PMAJ チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkPmi(properties, webhookUrl);
+    checkPmi(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('PMI チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'PMI チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkIsaca(properties, webhookUrl);
+    checkIsaca(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('ISACA チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'ISACA チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkPeopleCert(properties, webhookUrl);
+    checkPeopleCert(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('PeopleCert チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'PeopleCert チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkFortinet(properties, webhookUrl);
+    checkFortinet(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Fortinet チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Fortinet チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkPaloAlto(properties, webhookUrl);
+    checkPaloAlto(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('Palo Alto Networks チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'Palo Alto Networks チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
-    checkNttAt(properties, webhookUrl);
+    checkNttAt(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('NTT-AT チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'NTT-AT チェック', errorWebhookUrl);
   }
 
   Utilities.sleep(1500);
   try {
     // スプレッドシートの全レコード（A〜D列）を動的走査してE〜H列およびI〜P列を取得・更新検知
-    checkAllSheetCertificates(properties, webhookUrl);
+    checkAllSheetCertificates(properties, updateWebhookUrl, errorWebhookUrl);
   } catch (e) {
     console.error('スプレッドシート全レコード詳細チェック失敗:', e.message);
+    sendSlackErrorNotification(e, 'スプレッドシート全レコード詳細チェック', errorWebhookUrl);
   }
 
   console.log('=== 全プロバイダーのチェック完了 ===');
@@ -2445,7 +2470,7 @@ function fetchQualificationDetails(url, providerName, qualificationName) {
  * スプレッドシートの全レコード（A〜D列）を動的に読み込み、
  * E〜H列（タイトル、URL、説明）および I〜P列（詳細情報）を取得・更新検知する
  */
-function checkAllSheetCertificates(properties, webhookUrl) {
+function checkAllSheetCertificates(properties, webhookUrl, errorWebhookUrl) {
   const spreadsheetUrl = properties.getProperty('QUALIFICATIONS_SPREADSHEET_URL') || DEFAULT_SPREADSHEET_URL;
   const sheetName = properties.getProperty('QUALIFICATIONS_SHEET_NAME');
   const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
@@ -2501,6 +2526,9 @@ function checkAllSheetCertificates(properties, webhookUrl) {
       });
     } catch (e) {
       console.warn(`[${providerName}] 資格詳細情報取得エラー (${qualificationName}):`, e.message);
+      if (errorWebhookUrl) {
+        sendSlackErrorNotification(e, `${providerName} (${qualificationName}) 詳細取得`, errorWebhookUrl);
+      }
     }
   }
 
@@ -3085,4 +3113,60 @@ function sendSlackNotification(item, webhookUrl) {
     payload: JSON.stringify(payload),
     muteHttpExceptions: true
   });
+}
+
+/**
+ * プログラム実行時エラーをSlackに送信する (Webhook 2)
+ * @param {Error|string} error エラーオブジェクトまたはメッセージ
+ * @param {string} contextName エラー発生処理名（例: "IPA チェック"）
+ * @param {string} webhookUrl エラー通知用Webhook URL (Webhook 2)
+ */
+function sendSlackErrorNotification(error, contextName, webhookUrl) {
+  if (!webhookUrl) return;
+  const contextStr = String(contextName || '');
+  // ORACLEは常に403エラーが発生するため通知対象外とする
+  if (/Oracle/i.test(contextStr)) return;
+  const errorMsg = error && error.message ? error.message : String(error || '');
+  if (/Oracle/i.test(errorMsg) && /403/i.test(errorMsg)) return;
+
+  const nowJst = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd HH:mm:ss');
+  const payload = {
+    text: `🚨【プログラムエラー検知】${contextStr} でエラーが発生しました`,
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '🚨 資格情報監視 プログラムエラー通知',
+          emoji: true
+        }
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*発生日時:*\n${nowJst}` },
+          { type: 'mrkdwn', text: `*発生箇所:*\n${contextStr}` }
+        ]
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*エラー内容:*\n\`\`\`${errorMsg.slice(0, 1000)}\`\`\``
+        }
+      },
+      { type: 'divider' }
+    ]
+  };
+
+  try {
+    UrlFetchApp.fetch(webhookUrl, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+  } catch (e) {
+    console.error('Slackエラー通知の送信に失敗しました:', e.message);
+  }
 }

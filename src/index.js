@@ -28,6 +28,7 @@ const {
   detectDiff,
   isWeekdayJST,
   sendSlackNotification,
+  sendSlackErrorNotification,
   notifySlackUpdates,
 } = require('./checker');
 
@@ -227,9 +228,9 @@ async function runProviderMonitor(key, provider) {
       saveProviderState(key, mergeProviderState(currentItems, prevState));
       console.log('状態ファイルを最新に更新しました。');
 
-      // Slack通知（環境変数 SLACK_WEBHOOK_URL が設定されている場合）
-      const webhookUrl = process.env.SLACK_WEBHOOK_URL;
-      if (webhookUrl) {
+      // Slack通知（Webhook 1: 更新通知用）
+      const webhook1 = process.env.SLACK_WEBHOOK_URL_1 || process.env.SLACK_WEBHOOK_URL;
+      if (webhook1) {
         const qualificationUpdates = [];
         diffs.forEach(item => {
           const qualifications = item.relatedQualifications || [];
@@ -258,7 +259,7 @@ async function runProviderMonitor(key, provider) {
         });
         if (qualificationUpdates.length > 0) {
           console.log(`Slackへ ${qualificationUpdates.length} 件の更新情報を個別に投稿中...`);
-          await notifySlackUpdates(qualificationUpdates, webhookUrl, 1000);
+          await notifySlackUpdates(qualificationUpdates, webhook1, 1000);
           console.log('Slackへの投稿が完了しました。');
         }
       }
@@ -268,6 +269,10 @@ async function runProviderMonitor(key, provider) {
 
   } catch (error) {
     console.error(`❌ [${provider.name}] の処理中にエラーが発生しました:`, error.message);
+    const webhook2 = process.env.SLACK_WEBHOOK_URL_2 || process.env.SLACK_ERROR_WEBHOOK_URL;
+    if (webhook2) {
+      await sendSlackErrorNotification(error, provider.name, webhook2);
+    }
     return { key, error: error.message };
   }
 }

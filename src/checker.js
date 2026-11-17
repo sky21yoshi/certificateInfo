@@ -412,6 +412,64 @@ async function notifySlackUpdates(updates, webhookUrl, intervalMs = 500) {
   return successCount;
 }
 
+/**
+ * プログラムエラー通知送信 (Webhook 2)
+ * @param {Error|string} error
+ * @param {string} contextName
+ * @param {string} webhookUrl
+ * @returns {Promise<boolean>}
+ */
+async function sendSlackErrorNotification(error, contextName, webhookUrl) {
+  if (!webhookUrl) return false;
+  const contextStr = String(contextName || '');
+  // ORACLEは常に403エラーが発生するため通知対象外とする
+  if (/Oracle/i.test(contextStr)) return false;
+  const errorMsg = error && error.message ? error.message : String(error || '');
+  if (/Oracle/i.test(errorMsg) && /403/i.test(errorMsg)) return false;
+
+  const nowJst = getNowJstString();
+  const payload = {
+    text: `🚨【プログラムエラー検知】${contextStr} でエラーが発生しました`,
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '🚨 資格情報監視 プログラムエラー通知',
+          emoji: true,
+        },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*発生日時:*\n${nowJst}` },
+          { type: 'mrkdwn', text: `*発生箇所:*\n${contextStr}` },
+        ],
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*エラー内容:*\n\`\`\`${errorMsg.slice(0, 1000)}\`\`\``,
+        },
+      },
+      { type: 'divider' },
+    ],
+  };
+
+  try {
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Slackエラー通知の送信に失敗しました:', err.message);
+    return false;
+  }
+}
+
 // 既存後方互換用
 function loadPreviousState() {
   return loadProviderState('ipa');
@@ -437,5 +495,6 @@ module.exports = {
   checkQualificationRecordDiff,
   getUpdateTimestamp,
   sendSlackNotification,
+  sendSlackErrorNotification,
   notifySlackUpdates,
 };
