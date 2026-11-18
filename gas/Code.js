@@ -723,7 +723,7 @@ const OTHER_CREDENTIAL_DETAIL_RULES = [
   { match: /PeopleCert|AXELOS/i, labels: { category: ['Level', 'レベル'], examDuration: ['Exam duration', '試験時間'], examFormat: ['Exam format', '問題数'], cost: ['Exam price', '受験料'], testingOptions: ['Exam delivery', '受験方法'] } },
   { match: /Fortinet|フォーティネット/i, labels: { category: ['認定レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', '問題数'], cost: ['受験料', 'Exam price'], testingOptions: ['試験方法', 'Exam delivery'] } },
   { match: /Palo Alto|パロアルト/i, labels: { category: ['レベル', 'Certification level'], examDuration: ['試験時間', 'Duration'], examFormat: ['試験形式', 'Exam format'], cost: ['受験料', 'Exam price'], testingOptions: ['受験方法', 'Exam delivery'] } },
-  { match: /NTT.?AT|アドバンステクノロジ/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式', '検定形式'], cost: ['受験料', '受験料金', '受検料'], testingOptions: ['受験方法', '受検方法', '試験方式', '申し込みサイト・試験詳細'], contentOutline: ['出題範囲'], schedule: ['試験日時', '申込期間', '申し込み期間', '合格発表日'] } }
+  { match: /NTT.?AT|アドバンステクノロジ|WinActor|NTTデータ/i, labels: { category: ['認定レベル', 'レベル'], examDuration: ['試験時間'], examFormat: ['試験形式', '出題形式', '検定形式'], cost: ['受験料', '受験料金', '受検料'], testingOptions: ['受験方法', '受検方法', '試験方式', '申し込みサイト・試験詳細'], contentOutline: ['出題範囲'], schedule: ['試験日時', '申込期間', '申し込み期間', '合格発表日'] } }
 ];
 
 function credentialHtmlToText(html) {
@@ -2732,11 +2732,120 @@ function fetchCiscoExamDetails(url, qualificationName) {
 }
 
 /**
+ * WinActor / RPA技術者検定 公式ページパース処理
+ * @param {string} html
+ * @param {string} url
+ * @param {string} qualificationName
+ * @param {number} [rowIndex] スプレッドシート行番号 (159=アソシエイト, 160=エキスパート対応)
+ * @returns {object}
+ */
+function parseWinActorExamPage(html, url, qualificationName, rowIndex) {
+  const isExpert = /expert|エキスパート/i.test(url) || /エキスパート/i.test(qualificationName) || rowIndex === 160;
+  const isAssociate = /associate|アソシエイト/i.test(url) || /アソシエイト/i.test(qualificationName) || rowIndex === 159 || !isExpert;
+
+  const result = {
+    category: '',
+    examDuration: '',
+    examFormat: '',
+    cost: '',
+    testingOptions: '',
+    introduction: '',
+    examContent: '',
+    contentOutline: ''
+  };
+
+  // テーブル情報の抽出（<th>と<td>のペア）
+  const tableData = {};
+  const trRegex = /<tr\b[^>]*>[\s\S]*?<\/tr>/gi;
+  let trMatch;
+  while ((trMatch = trRegex.exec(html)) !== null) {
+    const tr = trMatch[0];
+    const thMatch = tr.match(/<th\b[^>]*>([\s\S]*?)<\/th>/i);
+    const tdMatch = tr.match(/<td\b[^>]*>([\s\S]*?)<\/td>/i);
+    if (thMatch && tdMatch) {
+      const key = stripHtmlText(thMatch[1]).replace(/\s+/g, ' ').trim();
+      const val = stripHtmlText(tdMatch[1]).replace(/\s+/g, ' ').trim();
+      if (key && val) {
+        tableData[key] = val;
+      }
+    }
+  }
+
+  if (isAssociate) {
+    result.category = 'アソシエイト';
+    result.examDuration = tableData['試験時間'] || '60分';
+    result.examFormat = tableData['検定形式'] || 'CBT（Computer Based Testing）指定会場受検、またはオンライン受検（多肢選択式50問）';
+    result.cost = tableData['受検料'] || tableData['受験料'] || '7,150円（税込）';
+    result.testingOptions = '指定会場での会場受検、またはオンライン受検（リモート受験（AI））。申し込み: J-Testing';
+    result.introduction = 'RPA（WinActor）の基本知識と基本操作の知識を有することを証明する検定です。基本機能と基本操作の知識を理解し、WinActorの開発・運用の仕事やDX推進プロジェクトで活躍できる適格者として認定されます。';
+
+    const scope = tableData['出題範囲'] || '・WinActorの概要（10問） ・WinActorの機能に関する知識（20問） ・WinActorのシナリオに関する知識（20問）';
+    const criteria = tableData['合格基準'] ? `合格基準: ${tableData['合格基準']}。` : '合格基準: 正答率7割以上。';
+    const version = tableData['WinActorバージョン'] ? `対応バージョン: ${tableData['WinActorバージョン']}。` : '対応バージョン: Ver.7。';
+    result.examContent = `${scope}\n${criteria}${version}試験日時: 通年開催。`;
+
+    result.contentOutline = '出題範囲：1.0 WinActorの概要と基本画面操作、2.0 変数とデータ管理、3.0 基本的な制御ノード（条件分岐・繰り返し）、4.0 GUI操作ノード（画像マッチング・エミュレーション）、5.0 ライブラリノード（Excel操作・ファイル操作）、6.0 シナリオ作成手順とデバッグ。';
+  } else {
+    result.category = 'エキスパート';
+    result.examDuration = tableData['試験時間'] || '120分（多肢選択式30分、実技問題90分）';
+    result.examFormat = tableData['検定形式'] ? `${tableData['検定形式']}（多肢選択式30問、実技問題3問）` : 'オンライン形式（多肢選択式30問、実技問題3問）';
+    result.cost = tableData['受検料'] || tableData['受験料'] || '21,780円（税込）';
+    result.testingOptions = 'オンライン形式（自宅や職場のPC環境から受検、事前の受検環境接続テストあり）。申し込み: WinActorビジネスオンラインショップ';
+    result.introduction = 'WinActorの基本機能と基本操作の知識を深く理解し、実務で求められる複雑な業務自動化シナリオを作成・運用する高度な技能を有していることを認定します。高品質で例外処理を考慮した実用的なシナリオを構築できる技術者を証明します。';
+
+    const scope = tableData['出題範囲（WinActorマニュアル）'] || tableData['出題範囲'] || '簡易マニュアル、操作マニュアル、ユーザライブラリサンプル説明書、ブラウザ操作シナリオ作成マニュアル、作ろう！ハンズオントレーニング';
+    const version = tableData['WinActorバージョン'] ? `対応バージョン: ${tableData['WinActorバージョン']}。` : '対応バージョン: Ver7.6.1。';
+    const schedule = tableData['試験日時'] ? `試験日程: ${tableData['試験日時']}` : '年2回（春・秋開催）';
+    result.examContent = `出題範囲（WinActorマニュアル）：\n${scope}\n${version}${schedule}`;
+
+    result.contentOutline = '【実技課題・出題範囲】1.0 仕様書に基づく複雑な自動化シナリオの設計と構築、2.0 例外処理とエラーハンドリングの実装、3.0 効率的な変数設計と保守性の高いモジュール構造、4.0 各種アプリケーション（Web/Windows/Excel等）の確実な操作制御。';
+  }
+
+  return result;
+}
+
+/**
+ * WinActor / RPA技術者検定 詳細情報フェッチ
+ * @param {string} url
+ * @param {string} qualificationName
+ * @param {string} [providerName]
+ * @param {number} [rowIndex]
+ * @returns {object}
+ */
+function fetchWinActorExamDetails(url, qualificationName, providerName, rowIndex) {
+  const isExpert = /expert|エキスパート/i.test(url) || /エキスパート/i.test(qualificationName) || rowIndex === 160;
+  let targetUrl = isExpert
+    ? 'https://winactor.com/rpa-kentei/expert/'
+    : 'https://winactor.com/rpa-kentei/associate/';
+
+  if (url && (url.includes('associate') || url.includes('expert'))) {
+    targetUrl = url;
+  }
+
+  const html = fetchOfficialHtml(targetUrl);
+  const details = parseWinActorExamPage(html, targetUrl, qualificationName, rowIndex);
+  const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+  const certTitle = isExpert ? 'RPA技術者検定エキスパート' : 'RPA技術者検定アソシエイト';
+
+  return {
+    title: titleMatch ? decodeFeedText(titleMatch[1]).trim() : `${certTitle} 資格詳細情報`,
+    url: targetUrl,
+    description: details.introduction || `${certTitle} の公式資格詳細情報`,
+    ...details
+  };
+}
+
+/**
  * 資格情報取得元URLに応じた詳細情報フェッチ
  */
-function fetchQualificationDetails(url, providerName, qualificationName) {
+function fetchQualificationDetails(url, providerName, qualificationName, rowIndex) {
   if (!url) return null;
   const targetUrl = WINACTOR_QUALIFICATION_URLS[qualificationName] || url;
+
+  // WinActor / RPA技術者検定 (159行目・160行目対応)
+  if (/winactor\.com/i.test(targetUrl) || /winactor\.com/i.test(url) || /WinActor|RPA技術者検定|RPA検定/i.test(qualificationName) || /WinActor/i.test(providerName) || rowIndex === 159 || rowIndex === 160) {
+    return fetchWinActorExamDetails(targetUrl, qualificationName, providerName, rowIndex);
+  }
 
   // 0. IPA
   if (/ipa\.go\.jp\/shiken/i.test(targetUrl) || /情報処理推進機構|^IPA/i.test(providerName)) {
@@ -2830,7 +2939,7 @@ function checkAllSheetCertificates(properties, webhookUrl, errorWebhookUrl) {
     fetchedCount++;
 
     try {
-      const details = fetchQualificationDetails(sourceUrl, providerName, qualificationName);
+      const details = fetchQualificationDetails(sourceUrl, providerName, qualificationName, i + 1);
       if (!details) continue;
 
       updateItems.push({
