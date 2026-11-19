@@ -328,6 +328,36 @@ const PROVIDER_DETAILS_META = {
     examContent: 'クラウドの概念、ビジネスの原則、運用の優先順位、ガバナンス・リスク・コンプライアンス。',
     contentOutline: '【出題分野】1.0 クラウドの概念 (24%)、2.0 ビジネス原則 (21%)、3.0 管理と運用 (25%)、4.0 ガバナンス、リスク、コンプライアンス (30%)。',
   },
+  'comptia-cysa': {
+    category: 'Cybersecurity',
+    examDuration: '165分',
+    examFormat: '多肢選択式およびパフォーマンスベーステスト、最大85問',
+    cost: '55,440円（税込）',
+    testingOptions: 'ピアソンVUE テストセンターまたはオンライン',
+    introduction: 'セキュリティの振る舞い分析、継続的なセキュリティ監視、脅威インテリジェンス、インシデントレスポンスの実践能力を証明します。',
+    examContent: 'セキュリティオペレーション、脆弱性管理、インシデント対応と管理、レポーティングとコミュニケーション。',
+    contentOutline: '【出題分野】1.0 セキュリティオペレーション (33%)、2.0 脆弱性管理 (30%)、3.0 インシデント対応と管理 (20%)、4.0 レポーティングとコミュニケーション (17%)。',
+  },
+  'comptia-data': {
+    category: 'Data and Analytics',
+    examDuration: '90分',
+    examFormat: '多肢選択式、最大90問',
+    cost: '49,500円（税込）',
+    testingOptions: 'ピアソンVUE テストセンターまたはオンライン',
+    introduction: 'データ駆動型のビジネス意思決定を促進するために、データ分析、統計概念の適用、データの可視化とレポーティング能力を認定します。',
+    examContent: 'データマイニング、データ操作、データの可視化、データガバナンスとセキュリティ。',
+    contentOutline: '【出題分野】1.0 データの概念と環境 (12%)、2.0 データマイニング (22%)、3.0 データ分析 (24%)、4.0 可視化 (23%)、5.0 データガバナンス・品質・管理 (19%)。',
+  },
+  'comptia-datasys': {
+    category: 'Data and Analytics',
+    examDuration: '90分',
+    examFormat: '多肢選択式、最大90問',
+    cost: '49,500円（税込）',
+    testingOptions: 'ピアソンVUE テストセンターまたはオンライン',
+    introduction: 'リレーショナルデータベースの設計、保守、セキュリティ、障害復旧など、データベース管理・運用に不可欠な基礎スキルを証明します。',
+    examContent: 'データベース構造、データベース運用、セキュリティとコンプライアンス、トラブルシューティング。',
+    contentOutline: '【出題分野】1.0 データベース構造とツール (28%)、2.0 データベース運用 (27%)、3.0 セキュリティとコンプライアンス (26%)、4.0 データベースのトラブルシューティング (19%)。',
+  },
 
   // --- CNCF / Linux Foundation ---
   'cncf-cka': {
@@ -671,6 +701,9 @@ function resolveProviderDetailsMeta(providerName = '', qualificationName = '', u
   if (/project\+/i.test(combined)) return PROVIDER_DETAILS_META['comptia-project'];
   if (/ctt\+/i.test(combined)) return PROVIDER_DETAILS_META['comptia-ctt'];
   if (/cloud essentials/i.test(combined)) return PROVIDER_DETAILS_META['comptia-cloud-essentials'];
+  if (/cysa/i.test(combined)) return PROVIDER_DETAILS_META['comptia-cysa'];
+  if (/datasys/i.test(combined)) return PROVIDER_DETAILS_META['comptia-datasys'];
+  if (/data\+/i.test(combined)) return PROVIDER_DETAILS_META['comptia-data'];
 
   // CNCF / Linux Foundation
   if (/cka/i.test(combined)) return PROVIDER_DETAILS_META['cncf-cka'];
